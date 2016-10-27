@@ -44,7 +44,7 @@ class Nestable extends Component {
         maxDepth:     10,
         group:        0,
         childrenProp: 'children',
-        renderItem:   item => item,
+        renderItem:   ({ item }) => item.toString(),
         onChange:     () => {}
     };
 
