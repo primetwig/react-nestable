@@ -1,0 +1,60 @@
+{
+  "name": "react-nestable",
+  "version": "1.0.0",
+  "description": "Drag & drop hierarchical list made as a react component",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "npm run build:assets && node tools/devServer.js",
+    "build": "npm run build:assets && npm run build:webpack",
+    "prod": "npm run build:assets && npm run prod:webpack",
+    "clean": "rimraf ./dist",
+    "prebuild:assets": "npm run clean && mkdirp dist",
+    "build:assets": "cpy src/example/index.html dist",
+    "build:webpack": "webpack --colors --progress",
+    "prod:webpack": "webpack -p --colors --progress"
+  },
+  "devDependencies": {
+    "autoprefixer": "6.4.0",
+    "autoprefixer-loader": "^3.1.0",
+    "babel-core": "6.14.0",
+    "babel-loader": "6.2.5",
+    "babel-plugin-transform-class-properties": "6.11.5",
+    "babel-plugin-transform-object-rest-spread": "6.8.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "classnames": "^2.2.5",
+    "cpy": "^3.4.1",
+    "css-loader": "0.24.0",
+    "file-loader": "0.9.0",
+    "nib": "^1.1.2",
+    "react-addons-shallow-compare": "^15.3.1",
+    "react-addons-update": "^15.3.2",
+    "rimraf": "2.5.4",
+    "style-loader": "0.13.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.3.1",
+    "url-loader": "0.5.7",
+    "webpack": "1.13.2",
+    "webpack-dev-server": "1.15.1",
+    "webpack-hot-middleware": "^2.12.2"
+  },
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primetwig/react-nestable"
+  },
+  "keywords": [
+    "react",
+    "nestable",
+    "react-nestable",
+    "sortable",
+    "dragndrop",
+    "draggable"
+  ],
+  "author": "primetwig",
+  "license": "ISC"
+}
