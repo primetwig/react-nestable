@@ -3,13 +3,18 @@ This project was bootstrapped by [primetwig](mailto:primetwig@gmail.com).
 ## Table of Contents
 
 - [Installation](#installation)
+- [Demo](#demo)
 - [Usage](#usage)
 - [Options](#options)
 - [License](#license)
 
 ## Installation
 
-`npm install -save-dev react-nestable`
+`npm install -save react-nestable`
+
+## Demo
+
+[Demo](https://primetwig.github.io/react-nestable/dist/)
 
 ## Usage
 

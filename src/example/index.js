@@ -11,9 +11,10 @@ const styles = {
 };
 
 class ComponentName extends Component {
-    renderItem = ({ item }) => {
+    renderItem = ({ item, collapseIcon }) => {
         return (
             <div style={styles}>
+                {collapseIcon}
                 {item.text}
             </div>
         );
