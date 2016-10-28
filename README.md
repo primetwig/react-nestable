@@ -6,11 +6,14 @@ This project was bootstrapped by [primetwig](mailto:primetwig@gmail.com).
 - [Demo](#demo)
 - [Usage](#usage)
 - [Options](#options)
+- [Todo](#todo)
 - [License](#license)
 
 ## Installation
 
-`npm install -save react-nestable`
+```
+npm install -save react-nestable
+```
 
 ## Demo
 
@@ -54,6 +57,12 @@ every item must have unique `id` in order to distinguish elements
 | childrenProp | String | `"children"` | Optional name of property with children. |
 | renderItem | function | `({ item }) => item.toString()` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `collapseIcon` - icon of item which has children (you may toggle collapsing of children by clicking on this icon). |
 | onChange | function | `() => {}` | Callback which has two parameters: `items` - new array after position was changed, `item` - item which was moved. |
+
+## Todo
+
+- add drag handler
+- remove stylus from dependencies
+- cover with tests
 
 ## License
 
