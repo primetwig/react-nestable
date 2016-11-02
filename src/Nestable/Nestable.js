@@ -3,7 +3,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import update from 'react-addons-update';
 import cn from 'classnames';
 
-import { closest, getOffsetRect, listWithChildren } from 'utils';
+import { closest, getOffsetRect, listWithChildren } from '../utils';
 
 import './Nestable.styl';
 import NestableItem from './NestableItem';

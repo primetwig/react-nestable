@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Nestable from 'Nestable';
+import Nestable from '../Nestable';
 
 const styles = {
     padding:    "20px 15px",

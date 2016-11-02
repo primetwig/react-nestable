@@ -1,5 +1,3 @@
-'use strict';
+import Nestable from './Nestable';
 
-var Nestable = require('./Nestable');
-
-module.exports = Nestable;
+export default Nestable;

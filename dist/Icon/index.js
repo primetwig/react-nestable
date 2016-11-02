@@ -4,10 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Nestable = require('./Nestable');
+var _Icon = require('./Icon');
 
-var _Nestable2 = _interopRequireDefault(_Nestable);
+var _Icon2 = _interopRequireDefault(_Icon);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _Nestable2.default;
+exports.default = _Icon2.default;

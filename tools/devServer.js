@@ -24,7 +24,7 @@ app.use(webpackHotMiddleware(compiler));
 app.use('/', express.static(path.join(__dirname, '../dist')));
 
 app.use(function(req, res) {
-    res.sendFile(path.resolve(__dirname, "../dist/index.html"));
+    res.sendFile(path.resolve(__dirname, "../dist/example/index.html"));
 });
 
 app.listen(port, function(error) {

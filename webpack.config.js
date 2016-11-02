@@ -10,19 +10,13 @@ const argv = yargs
 
 module.exports = {
 	entry: {
-		index: (function() {
-			const entrypoint = [];
-
-			!argv.p && entrypoint.push("webpack-hot-middleware/client");
-
-			entrypoint.push(path.join(__dirname, "src",  "example", "index.js"));
-
-			return entrypoint;
-		})()
+		example: [
+			path.join(__dirname, "src", "example", "example.js")
+		]
 	},
 
 	output: {
-		path:       path.join(__dirname, "dist"),
+		path:       path.join(__dirname, "dist", "example"),
 		filename:   "[name].js",
 		publicPath: "/"
 	},

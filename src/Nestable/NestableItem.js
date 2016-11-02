@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import cn from 'classnames';
 
-import Icon from 'Icon';
+import Icon from '../Icon';
 
 class NestableItem extends Component {
     render() {

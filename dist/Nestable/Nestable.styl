@@ -1,0 +1,52 @@
+@import 'nib'
+
+
+.nestable
+  position relative
+  .nestable-list
+    margin 0
+    padding 0 0 0 40px
+    list-style-type none
+  > .nestable-list
+    padding 0
+
+.nestable-item
+.nestable-item-copy
+  margin 10px 0 0
+  &:first-child
+    margin-top 0
+  .nestable-list
+    margin-top 10px
+
+.nestable-item
+  position relative
+  &.is-dragging
+    .nestable-list
+      pointer-events none
+    *
+      opacity 0
+    &:before
+      content ' '
+      absolute top left
+      right 0
+      bottom 0
+      background skyblue
+      border 1px dashed steelblue
+      border-radius 5px
+
+.nestable-item-icon
+  margin-right 5px
+  cursor pointer
+
+
+.nestable-drag-layer
+  fixed top left
+  z-index 100
+  pointer-events none
+  > .nestable-list
+    absolute top left
+    padding 0
+
+
+
+

@@ -2,16 +2,15 @@
   "name": "react-nestable",
   "version": "1.0.3",
   "description": "Drag & drop hierarchical list made as a react component",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "npm run build:assets && node tools/devServer.js",
-    "build": "npm run build:assets && npm run build:webpack",
-    "prod": "npm run build:assets && npm run prod:webpack",
     "clean": "rimraf ./dist",
-    "prebuild:assets": "npm run clean && mkdirp dist",
-    "build:assets": "cpy src/example/index.html dist",
-    "build:webpack": "webpack --colors --progress",
-    "prod:webpack": "webpack -p --colors --progress"
+    "webpack": "webpack --colors --progress",
+    "predev": "npm run build",
+    "dev": "npm run webpack && node tools/devServer.js",
+    "build": "babel src -d dist",
+    "prebuild": "npm run clean && mkdirp dist",
+    "postbuild": "cpy ./**/*.html ../dist/ --cwd=src --parents && cpy ./**/*.s* ../dist/ --cwd=src --parents && npm run webpack"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",
