@@ -26,7 +26,7 @@ var _classnames2 = _interopRequireDefault(_classnames);
 
 var _utils = require('../utils');
 
-require('./Nestable.styl');
+require('./Nestable.css');
 
 var _NestableItem = require('./NestableItem');
 
