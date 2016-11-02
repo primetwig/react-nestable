@@ -2,22 +2,23 @@ This project was bootstrapped by [primetwig](mailto:primetwig@gmail.com).
 
 ## Table of Contents
 
-- [Installation](#installation)
 - [Demo](#demo)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
 - [Todo](#todo)
 - [License](#license)
+
+## Demo
+
+[Demo](https://primetwig.github.io/react-nestable/dist/example/)
+
 
 ## Installation
 
 ```
 npm install -save react-nestable
 ```
-
-## Demo
-
-[Demo](https://primetwig.github.io/react-nestable/dist/)
 
 ## Usage
 
@@ -61,7 +62,6 @@ every item must have unique `id` in order to distinguish elements
 ## Todo
 
 - add drag handler
-- remove stylus from dependencies
 - cover with tests
 
 ## License

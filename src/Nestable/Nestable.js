@@ -5,7 +5,7 @@ import cn from 'classnames';
 
 import { closest, getOffsetRect, listWithChildren } from '../utils';
 
-import './Nestable.styl';
+import './Nestable.css';
 import NestableItem from './NestableItem';
 
 class Nestable extends Component {

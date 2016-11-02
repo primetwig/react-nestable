@@ -38,6 +38,14 @@ module.exports = {
 					"stylus"
 				]
 			},
+            {
+                test:    /\.css$/,
+                loaders: [
+                    "style",
+                    "css",
+                    "autoprefixer?browsers=last 2 version"
+                ]
+            },
 			{
 				test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
 				loader: "url?limit=10000&mimetype=image/svg+xml"
@@ -46,7 +54,7 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: ["", ".js", ".styl"],
+		extensions: ["", ".js", ".css", ".styl"],
 		root: [
 			path.join(__dirname, "src")
 		]

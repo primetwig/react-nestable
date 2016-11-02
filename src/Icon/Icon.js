@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import cn from 'classnames';
 
-import './Icon.styl';
+import './Icon.css';
 
 class Icon extends Component {
     render() {
