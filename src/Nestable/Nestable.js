@@ -33,10 +33,8 @@ class Nestable extends Component {
         ),
         threshold:    PropTypes.number,
         maxDepth:     PropTypes.number,
-        group:        PropTypes.number,
         childrenProp: PropTypes.string,
         renderItem:   PropTypes.func,
-        handler:      PropTypes.object,
         onChange:     PropTypes.func
     };
     static defaultProps = {
