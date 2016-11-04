@@ -559,10 +559,8 @@ Nestable.propTypes = {
     })),
     threshold: _react.PropTypes.number,
     maxDepth: _react.PropTypes.number,
-    group: _react.PropTypes.number,
     childrenProp: _react.PropTypes.string,
     renderItem: _react.PropTypes.func,
-    handler: _react.PropTypes.object,
     onChange: _react.PropTypes.func
 };
 Nestable.defaultProps = {

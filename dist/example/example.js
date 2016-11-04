@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4478d67d6b9ad2ef0a15"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6d6f55e98643046155c4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12482,10 +12482,8 @@
 	    })),
 	    threshold: _react.PropTypes.number,
 	    maxDepth: _react.PropTypes.number,
-	    group: _react.PropTypes.number,
 	    childrenProp: _react.PropTypes.string,
 	    renderItem: _react.PropTypes.func,
-	    handler: _react.PropTypes.object,
 	    onChange: _react.PropTypes.func
 	};
 	Nestable.defaultProps = {
