@@ -13,7 +13,7 @@
     "build:css": "cpy ./**/*.css ../dist/ --cwd=src --parents",
     "build:images": "cpy ./**/*.svg ../dist/ --cwd=src --parents",
     "prebuild": "npm run clean && mkdirp dist",
-    "postbuild": "npm run build:html && npm run build:css && npm run build:images"
+    "postbuild": "npm run build:html && npm run build:css && npm run build:images && npm run webpack"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",
