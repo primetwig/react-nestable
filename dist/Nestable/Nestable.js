@@ -54,6 +54,24 @@ var Nestable = (function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (Nestable.__proto__ || Object.getPrototypeOf(Nestable)).call(this, props));
 
+        _this.collapse = function (itemIds) {
+            if (itemIds == 'NONE') {
+                _this.setState({
+                    collapsedGroups: []
+                });
+            } else if (itemIds == 'ALL') {
+                _this.setState({
+                    collapsedGroups: _this.state.items.map(function (item) {
+                        return item.id;
+                    })
+                });
+            } else if ((0, _utils.isArray)(itemIds)) {
+                _this.setState({
+                    collapsedGroups: itemIds
+                });
+            }
+        };
+
         _this.startTrackMouse = function () {
             document.addEventListener('mousemove', _this.onMouseMove);
             document.addEventListener('mouseup', _this.onDragEnd);
@@ -112,10 +130,14 @@ var Nestable = (function (_Component) {
 
             if (!_this.elCopyStyles) {
                 var offset = (0, _utils.getOffsetRect)(el);
+                var scroll = {
+                    top: document.body.scrollTop,
+                    left: document.body.scrollLeft
+                };
 
                 _this.elCopyStyles = {
-                    marginTop: offset.top - clientY,
-                    marginLeft: offset.left - clientX,
+                    marginTop: offset.top - clientY - scroll.top,
+                    marginLeft: offset.left - clientX - scroll.left,
                     transform: _this.getTransformProps(clientX, clientY).transform
                 };
             } else {
@@ -224,6 +246,10 @@ var Nestable = (function (_Component) {
         value: function componentWillUnmount() {
             this.stopTrackMouse();
         }
+
+        // ––––––––––––––––––––––––––––––––––––
+        // Public Methods
+        // ––––––––––––––––––––––––––––––––––––
 
         // ––––––––––––––––––––––––––––––––––––
         // Methods
@@ -437,6 +463,7 @@ var Nestable = (function (_Component) {
         value: function getItemOptions() {
             var _props2 = this.props,
                 renderItem = _props2.renderItem,
+                handler = _props2.handler,
                 childrenProp = _props2.childrenProp;
             var _state = this.state,
                 dragItem = _state.dragItem,
@@ -447,6 +474,7 @@ var Nestable = (function (_Component) {
                 collapsedGroups: collapsedGroups,
                 childrenProp: childrenProp,
                 renderItem: renderItem,
+                handler: handler,
 
                 onDragStart: this.onDragStart,
                 onMouseEnter: this.onMouseEnter,
@@ -534,6 +562,7 @@ Nestable.propTypes = {
     group: _react.PropTypes.number,
     childrenProp: _react.PropTypes.string,
     renderItem: _react.PropTypes.func,
+    handler: _react.PropTypes.object,
     onChange: _react.PropTypes.func
 };
 Nestable.defaultProps = {

@@ -9,8 +9,11 @@
     "predev": "npm run build",
     "dev": "npm run webpack && node tools/devServer.js",
     "build": "babel src -d dist",
+    "build:html": "cpy ./**/*.html ../dist/ --cwd=src --parents",
+    "build:css": "cpy ./**/*.css ../dist/ --cwd=src --parents",
+    "build:images": "cpy ./**/*.svg ../dist/ --cwd=src --parents",
     "prebuild": "npm run clean && mkdirp dist",
-    "postbuild": "cpy ./**/*.html ../dist/ --cwd=src --parents && cpy ./**/*.s* ../dist/ --cwd=src --parents && npm run webpack"
+    "postbuild": "npm run build:html && npm run build:css && npm run build:images"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",

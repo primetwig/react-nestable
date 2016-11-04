@@ -6,6 +6,28 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var objectType = exports.objectType = function objectType(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+};
+var isDefined = exports.isDefined = function isDefined(param) {
+    return typeof param != "undefined";
+};
+var isUndefined = exports.isUndefined = function isUndefined(param) {
+    return typeof param == "undefined";
+};
+var isFunction = exports.isFunction = function isFunction(param) {
+    return typeof param == "function";
+};
+var isNumber = exports.isNumber = function isNumber(param) {
+    return typeof param == "number" && !isNaN(param);
+};
+var isString = exports.isString = function isString(str) {
+    return objectType(str) === "String";
+};
+var isArray = exports.isArray = function isArray(arr) {
+    return objectType(arr) === "Array";
+};
+
 var closest = exports.closest = function closest(target, selector) {
     // closest(e.target, '.field')
     while (target) {

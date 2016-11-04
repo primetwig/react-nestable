@@ -47,6 +47,7 @@ var NestableItem = (function (_Component) {
             var dragItem = options.dragItem,
                 collapsedGroups = options.collapsedGroups,
                 renderItem = options.renderItem,
+                handler = options.handler,
                 childrenProp = options.childrenProp;
             var _onDragStart = options.onDragStart,
                 _onMouseEnter = options.onMouseEnter,
@@ -55,6 +56,8 @@ var NestableItem = (function (_Component) {
             var isDragging = !isCopy && dragItem && dragItem.id === item.id;
             var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
             var isCollapsed = collapsedGroups.indexOf(item.id) > -1;
+
+            var Handler = undefined;
 
             var itemProps = {
                 className: (0, _classnames2.default)("nestable-item" + (isCopy ? '-copy' : ''), "nestable-item" + (isCopy ? '-copy' : '') + '-' + item.id, {
@@ -81,7 +84,11 @@ var NestableItem = (function (_Component) {
                 }
             }
 
-            rowProps = _extends({}, rowProps, handlerProps);
+            if (handler) {
+                Handler = _react2.default.cloneElement(handler, handlerProps);
+            } else {
+                rowProps = _extends({}, rowProps, handlerProps);
+            }
 
             var collapseIcon = hasChildren ? _react2.default.createElement(_Icon2.default, {
                 className: (0, _classnames2.default)("nestable-item-icon", isCollapsed ? "icon-plus-gray" : "icon-minus-gray"),
@@ -96,7 +103,7 @@ var NestableItem = (function (_Component) {
                 _react2.default.createElement(
                     'div',
                     _extends({ className: 'nestable-item-name' }, rowProps),
-                    renderItem({ item: item, collapseIcon: collapseIcon })
+                    renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler })
                 ),
                 hasChildren && !isCollapsed && _react2.default.createElement(
                     'ol',

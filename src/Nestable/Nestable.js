@@ -3,7 +3,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import update from 'react-addons-update';
 import cn from 'classnames';
 
-import { closest, getOffsetRect, listWithChildren } from '../utils';
+import { isArray, closest, getOffsetRect, listWithChildren } from '../utils';
 
 import './Nestable.css';
 import NestableItem from './NestableItem';
@@ -36,6 +36,7 @@ class Nestable extends Component {
         group:        PropTypes.number,
         childrenProp: PropTypes.string,
         renderItem:   PropTypes.func,
+        handler:      PropTypes.object,
         onChange:     PropTypes.func
     };
     static defaultProps = {
@@ -75,6 +76,27 @@ class Nestable extends Component {
     componentWillUnmount() {
         this.stopTrackMouse();
     }
+
+    // ––––––––––––––––––––––––––––––––––––
+    // Public Methods
+    // ––––––––––––––––––––––––––––––––––––
+    collapse = (itemIds) => {
+        if (itemIds == 'NONE') {
+            this.setState({
+                collapsedGroups: []
+            });
+
+        } else if (itemIds == 'ALL') {
+            this.setState({
+                collapsedGroups: this.state.items.map(item => item.id)
+            });
+
+        } else if ( isArray(itemIds) ) {
+            this.setState({
+                collapsedGroups: itemIds
+            });
+        }
+    };
 
     // ––––––––––––––––––––––––––––––––––––
     // Methods
@@ -271,7 +293,7 @@ class Nestable extends Component {
     }
 
     getItemOptions() {
-        const { renderItem, childrenProp } = this.props;
+        const { renderItem, handler, childrenProp } = this.props;
         const { dragItem, collapsedGroups } = this.state;
 
         return {
@@ -279,6 +301,7 @@ class Nestable extends Component {
             collapsedGroups,
             childrenProp,
             renderItem,
+            handler,
 
             onDragStart:      this.onDragStart,
             onMouseEnter:     this.onMouseEnter,
@@ -328,10 +351,14 @@ class Nestable extends Component {
 
         if (!this.elCopyStyles) {
             const offset = getOffsetRect(el);
+            const scroll = {
+                top:  document.body.scrollTop,
+                left: document.body.scrollLeft
+            };
 
             this.elCopyStyles = {
-                marginTop:  offset.top - clientY,
-                marginLeft: offset.left - clientX,
+                marginTop:  offset.top - clientY - scroll.top,
+                marginLeft: offset.left - clientX - scroll.left,
                 transform:  this.getTransformProps(clientX, clientY).transform
             };
 

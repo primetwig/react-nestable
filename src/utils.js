@@ -1,3 +1,25 @@
+export const objectType = (obj) => {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+};
+export const isDefined = (param) => {
+    return typeof param != "undefined";
+};
+export const isUndefined = (param) => {
+    return typeof param == "undefined";
+};
+export const isFunction = (param) => {
+    return typeof param == "function";
+};
+export const isNumber = (param) => {
+    return typeof param == "number" && !isNaN(param);
+};
+export const isString = (str) => {
+    return objectType(str) === "String";
+};
+export const isArray = (arr) => {
+    return objectType(arr) === "Array";
+};
+
 export const closest = (target, selector) => {
     // closest(e.target, '.field')
     while (target) {

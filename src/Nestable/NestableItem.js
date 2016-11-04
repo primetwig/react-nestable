@@ -6,12 +6,14 @@ import Icon from '../Icon';
 class NestableItem extends Component {
     render() {
         const { item, isCopy, options } = this.props;
-        const { dragItem, collapsedGroups, renderItem, childrenProp } = options;
+        const { dragItem, collapsedGroups, renderItem, handler, childrenProp } = options;
         const { onDragStart, onMouseEnter, onToggleCollapse } = options;
 
         const isDragging = !isCopy && dragItem && dragItem.id === item.id;
         const hasChildren = item[childrenProp] && item[childrenProp].length > 0;
         const isCollapsed = collapsedGroups.indexOf(item.id) > -1;
+
+        let Handler;
 
         let itemProps = {
             className:    cn(
@@ -40,10 +42,14 @@ class NestableItem extends Component {
             }
         }
 
-        rowProps = {
-            ...rowProps,
-            ...handlerProps
-        };
+        if (handler) {
+            Handler = React.cloneElement(handler, handlerProps);
+        } else {
+            rowProps = {
+                ...rowProps,
+                ...handlerProps
+            };
+        }
 
         const collapseIcon = hasChildren ? (
             <Icon
@@ -55,7 +61,7 @@ class NestableItem extends Component {
         return (
             <li {...itemProps}>
                 <div className="nestable-item-name" {...rowProps}>
-                    {renderItem({ item, collapseIcon })}
+                    {renderItem({ item, collapseIcon, handler: Handler })}
                 </div>
 
                 {hasChildren && !isCollapsed && (
