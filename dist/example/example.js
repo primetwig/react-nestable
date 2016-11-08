@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6d6f55e98643046155c4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "26b0dc2a17eb1dd602f1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -11974,19 +11974,31 @@
 	        var _this = _possibleConstructorReturn(this, (Nestable.__proto__ || Object.getPrototypeOf(Nestable)).call(this, props));
 	
 	        _this.collapse = function (itemIds) {
+	            var childrenProp = _this.props.childrenProp;
+	            var items = _this.state.items;
+	
+	
 	            if (itemIds == 'NONE') {
 	                _this.setState({
 	                    collapsedGroups: []
 	                });
 	            } else if (itemIds == 'ALL') {
 	                _this.setState({
-	                    collapsedGroups: _this.state.items.map(function (item) {
+	                    collapsedGroups: items.filter(function (item) {
+	                        return item[childrenProp].length;
+	                    }).map(function (item) {
 	                        return item.id;
 	                    })
 	                });
 	            } else if ((0, _utils.isArray)(itemIds)) {
+	                var groups = items.filter(function (item) {
+	                    return item[childrenProp].length && itemIds.indexOf(item.id);
+	                }).map(function (item) {
+	                    return item.id;
+	                });
+	
 	                _this.setState({
-	                    collapsedGroups: itemIds
+	                    collapsedGroups: groups
 	                });
 	            }
 	        };
@@ -12592,7 +12604,12 @@
 	            }
 	
 	            if (handler) {
-	                Handler = _react2.default.cloneElement(handler, handlerProps);
+	                Handler = _react2.default.createElement(
+	                    'span',
+	                    _extends({ className: 'nestable-item-handler' }, handlerProps),
+	                    handler
+	                );
+	                //Handler = React.cloneElement(handler, handlerProps);
 	            } else {
 	                rowProps = _extends({}, rowProps, handlerProps);
 	            }
@@ -12786,7 +12803,7 @@
 	                    { type: 'button', onClick: function onClick(e) {
 	                            return _this2.collapse(0);
 	                        } },
-	                    'Collapse none'
+	                    'Expand all'
 	                ),
 	                _react2.default.createElement(
 	                    'button',
@@ -12800,7 +12817,7 @@
 	                    { type: 'button', onClick: function onClick(e) {
 	                            return _this2.collapse(2);
 	                        } },
-	                    'Collapse Harry'
+	                    'Collapse Harry only'
 	                ),
 	                _react2.default.createElement('br', null),
 	                _react2.default.createElement('br', null),

@@ -79,6 +79,9 @@ class Nestable extends Component {
     // Public Methods
     // ––––––––––––––––––––––––––––––––––––
     collapse = (itemIds) => {
+        const { childrenProp } = this.props;
+        const { items } = this.state;
+
         if (itemIds == 'NONE') {
             this.setState({
                 collapsedGroups: []
@@ -86,12 +89,16 @@ class Nestable extends Component {
 
         } else if (itemIds == 'ALL') {
             this.setState({
-                collapsedGroups: this.state.items.map(item => item.id)
+                collapsedGroups: items.filter(item => item[childrenProp].length).map(item => item.id)
             });
 
         } else if ( isArray(itemIds) ) {
+            const groups = items
+                .filter(item => item[childrenProp].length && itemIds.indexOf(item.id))
+                .map(item => item.id);
+
             this.setState({
-                collapsedGroups: itemIds
+                collapsedGroups: groups
             });
         }
     };

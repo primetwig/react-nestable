@@ -89,9 +89,9 @@ class ComponentName extends Component {
                 />
 
                 <br/>
-                <button type="button" onClick={e => this.collapse(0)}>Collapse none</button>
+                <button type="button" onClick={e => this.collapse(0)}>Expand all</button>
                 <button type="button" onClick={e => this.collapse(1)}>Collapse all</button>
-                <button type="button" onClick={e => this.collapse(2)}>Collapse Harry</button>
+                <button type="button" onClick={e => this.collapse(2)}>Collapse Harry only</button>
 
                 <br/><br/><hr/><br/>
 

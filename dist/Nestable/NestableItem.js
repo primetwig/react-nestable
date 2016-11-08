@@ -85,10 +85,15 @@ var NestableItem = (function (_Component) {
             }
 
             if (handler) {
-                Handler = _react2.default.cloneElement(handler, handlerProps);
+                Handler = _react2.default.createElement(
+                    'span',
+                    _extends({ className: 'nestable-item-handler' }, handlerProps),
+                    handler
+                );
+                //Handler = React.cloneElement(handler, handlerProps);
             } else {
-                rowProps = _extends({}, rowProps, handlerProps);
-            }
+                    rowProps = _extends({}, rowProps, handlerProps);
+                }
 
             var collapseIcon = hasChildren ? _react2.default.createElement(_Icon2.default, {
                 className: (0, _classnames2.default)("nestable-item-icon", isCollapsed ? "icon-plus-gray" : "icon-minus-gray"),

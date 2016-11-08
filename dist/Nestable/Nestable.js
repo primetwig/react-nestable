@@ -55,19 +55,30 @@ var Nestable = (function (_Component) {
         var _this = _possibleConstructorReturn(this, (Nestable.__proto__ || Object.getPrototypeOf(Nestable)).call(this, props));
 
         _this.collapse = function (itemIds) {
+            var childrenProp = _this.props.childrenProp;
+            var items = _this.state.items;
+
             if (itemIds == 'NONE') {
                 _this.setState({
                     collapsedGroups: []
                 });
             } else if (itemIds == 'ALL') {
                 _this.setState({
-                    collapsedGroups: _this.state.items.map(function (item) {
+                    collapsedGroups: items.filter(function (item) {
+                        return item[childrenProp].length;
+                    }).map(function (item) {
                         return item.id;
                     })
                 });
             } else if ((0, _utils.isArray)(itemIds)) {
+                var groups = items.filter(function (item) {
+                    return item[childrenProp].length && itemIds.indexOf(item.id);
+                }).map(function (item) {
+                    return item.id;
+                });
+
                 _this.setState({
-                    collapsedGroups: itemIds
+                    collapsedGroups: groups
                 });
             }
         };

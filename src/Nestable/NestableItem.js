@@ -43,7 +43,8 @@ class NestableItem extends Component {
         }
 
         if (handler) {
-            Handler = React.cloneElement(handler, handlerProps);
+            Handler = <span className="nestable-item-handler" {...handlerProps}>{handler}</span>;
+            //Handler = React.cloneElement(handler, handlerProps);
         } else {
             rowProps = {
                 ...rowProps,
