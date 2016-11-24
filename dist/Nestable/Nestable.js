@@ -246,7 +246,7 @@ var Nestable = (function (_Component) {
                 this.stopTrackMouse();
 
                 this.setState({
-                    items: itemsNew,
+                    items: (0, _utils.listWithChildren)(itemsNew),
                     dragItem: null,
                     isDirty: false
                 });

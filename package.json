@@ -7,7 +7,7 @@
     "clean": "rimraf ./dist",
     "webpack": "webpack --colors --progress",
     "predev": "npm run build",
-    "dev": "npm run webpack && node tools/devServer.js",
+    "dev": "node tools/devServer.js",
     "build": "babel src -d dist",
     "build:html": "cpy ./**/*.html ../dist/ --cwd=src --parents",
     "build:css": "cpy ./**/*.css ../dist/ --cwd=src --parents",

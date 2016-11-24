@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "26b0dc2a17eb1dd602f1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7a6801a376ecaba37f07"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -12167,7 +12167,7 @@
 	                this.stopTrackMouse();
 	
 	                this.setState({
-	                    items: itemsNew,
+	                    items: (0, _utils.listWithChildren)(itemsNew),
 	                    dragItem: null,
 	                    isDirty: false
 	                });

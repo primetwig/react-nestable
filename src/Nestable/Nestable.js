@@ -64,9 +64,9 @@ class Nestable extends Component {
             this.stopTrackMouse();
 
             this.setState({
-                items: itemsNew,
+                items:    listWithChildren(itemsNew),
                 dragItem: null,
-                isDirty: false
+                isDirty:  false
             });
         }
     }
@@ -150,11 +150,11 @@ class Nestable extends Component {
         const { maxDepth, childrenProp } = this.props;
         const { collapsedGroups } = this.state;
         const pathFrom = this.getPathById(dragItem.id);
-        const lastIndex = pathFrom.length - 1;
-        const itemIndex = pathFrom[lastIndex];
+        const itemIndex = pathFrom[pathFrom.length - 1];
+        const newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
         // has previous sibling and isn't at max depth
-        if (itemIndex > 0 && pathFrom.length < maxDepth) {
+        if (itemIndex > 0 && newDepth <= maxDepth) {
             const prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 
             // previous sibling is not collapsed
@@ -172,8 +172,7 @@ class Nestable extends Component {
     tryDecreaseDepth(dragItem) {
         const { childrenProp } = this.props;
         const pathFrom = this.getPathById(dragItem.id);
-        const lastIndex = pathFrom.length - 1;
-        const itemIndex = pathFrom[lastIndex];
+        const itemIndex = pathFrom[pathFrom.length - 1];
 
         // has parent
         if (pathFrom.length > 1) {
@@ -230,6 +229,30 @@ class Nestable extends Component {
 
         return item;
     }
+
+    /*getItemById(id, items = this.state.items) {
+        const { childrenProp } = this.props;
+        let item = null;
+
+        items.forEach((index, i) => {
+            const list = item ? item[childrenProp] : items;
+            item = list[index];
+        });
+
+        return item;
+    }*/
+
+    getItemDepth = (item) => {
+        const { childrenProp } = this.props;
+        let level = 1;
+
+        if (item[childrenProp].length > 0) {
+            const childrenDepths = item[childrenProp].map(this.getItemDepth);
+            level += Math.max(childrenDepths)
+        }
+
+        return level;
+    };
 
     getSplicePath(path, options = {}) {
         const splicePath = {};
