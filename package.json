@@ -1,6 +1,6 @@
 {
   "name": "react-nestable",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Drag & drop hierarchical list made as a react component",
   "main": "dist/index.js",
   "scripts": {
