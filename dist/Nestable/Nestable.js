@@ -94,6 +94,19 @@ var Nestable = (function (_Component) {
             _this.elCopyStyles = null;
         };
 
+        _this.getItemDepth = function (item) {
+            var childrenProp = _this.props.childrenProp;
+
+            var level = 1;
+
+            if (item[childrenProp].length > 0) {
+                var childrenDepths = item[childrenProp].map(_this.getItemDepth);
+                level += Math.max(childrenDepths);
+            }
+
+            return level;
+        };
+
         _this.onDragStart = function (e, item) {
             if (e) {
                 e.preventDefault();
@@ -308,11 +321,11 @@ var Nestable = (function (_Component) {
             var collapsedGroups = this.state.collapsedGroups;
 
             var pathFrom = this.getPathById(dragItem.id);
-            var lastIndex = pathFrom.length - 1;
-            var itemIndex = pathFrom[lastIndex];
+            var itemIndex = pathFrom[pathFrom.length - 1];
+            var newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
             // has previous sibling and isn't at max depth
-            if (itemIndex > 0 && pathFrom.length < maxDepth) {
+            if (itemIndex > 0 && newDepth <= maxDepth) {
                 var prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 
                 // previous sibling is not collapsed
@@ -329,8 +342,7 @@ var Nestable = (function (_Component) {
             var childrenProp = this.props.childrenProp;
 
             var pathFrom = this.getPathById(dragItem.id);
-            var lastIndex = pathFrom.length - 1;
-            var itemIndex = pathFrom[lastIndex];
+            var itemIndex = pathFrom[pathFrom.length - 1];
 
             // has parent
             if (pathFrom.length > 1) {
@@ -398,6 +410,17 @@ var Nestable = (function (_Component) {
 
             return item;
         }
+
+        /*getItemById(id, items = this.state.items) {
+            const { childrenProp } = this.props;
+            let item = null;
+             items.forEach((index, i) => {
+                const list = item ? item[childrenProp] : items;
+                item = list[index];
+            });
+             return item;
+        }*/
+
     }, {
         key: 'getSplicePath',
         value: function getSplicePath(path) {
