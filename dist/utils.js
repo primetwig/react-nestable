@@ -72,3 +72,15 @@ var listWithChildren = exports.listWithChildren = function listWithChildren(list
         return _extends({}, item, _defineProperty({}, childrenProp, item[childrenProp] ? listWithChildren(item[childrenProp], childrenProp) : []));
     });
 };
+
+var getAllNonEmptyNodesIds = exports.getAllNonEmptyNodesIds = function getAllNonEmptyNodesIds(items, childrenProp) {
+    var childrenIds = [];
+    var ids = items.filter(function (item) {
+        return item[childrenProp].length;
+    }).map(function (item) {
+        childrenIds = childrenIds.concat(getAllNonEmptyNodesIds(item[childrenProp], childrenProp));
+        return item.id;
+    });
+
+    return ids.concat(childrenIds);
+};

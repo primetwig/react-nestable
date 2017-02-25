@@ -37,6 +37,12 @@ class ComponentName extends Component {
         }
     };
 
+    isCollapsed = () => {
+        const form = document.forms[0] || null;
+
+        return form && form.elements["collapsed"].checked;
+    };
+
     renderItem = ({ item, collapseIcon, handler }) => {
         return (
             <div style={styles}>
@@ -84,6 +90,7 @@ class ComponentName extends Component {
                 <Nestable
                     group="0"
                     items={items}
+                    collapsed={this.isCollapsed()}
                     renderItem={this.renderItem}
                     ref={el => this.refNestable = el}
                 />
@@ -92,10 +99,16 @@ class ComponentName extends Component {
                 <button type="button" onClick={e => this.collapse(0)}>Expand all</button>
                 <button type="button" onClick={e => this.collapse(1)}>Collapse all</button>
                 <button type="button" onClick={e => this.collapse(2)}>Collapse Harry only</button>
+                <form style={{ display: "inline-block" }}>
+                    <label>
+                        <input type="checkbox" name="collapsed" onChange={e => this.setState({})} />
+                        Collapsed by default
+                    </label>
+                </form>
 
                 <br/><br/><hr/><br/>
 
-                <h2>Example with handler</h2>
+                <h2>Example with handlers</h2>
 
                 <Nestable
                     group="1"

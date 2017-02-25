@@ -6,12 +6,11 @@ import Icon from '../Icon';
 class NestableItem extends Component {
     render() {
         const { item, isCopy, options } = this.props;
-        const { dragItem, collapsedGroups, renderItem, handler, childrenProp } = options;
-        const { onDragStart, onMouseEnter, onToggleCollapse } = options;
+        const { dragItem, renderItem, handler, childrenProp } = options;
+        const isCollapsed = options.isCollapsed(item);
 
         const isDragging = !isCopy && dragItem && dragItem.id === item.id;
         const hasChildren = item[childrenProp] && item[childrenProp].length > 0;
-        const isCollapsed = collapsedGroups.indexOf(item.id) > -1;
 
         let Handler;
 
@@ -31,13 +30,13 @@ class NestableItem extends Component {
             if (dragItem) {
                 rowProps = {
                     ...rowProps,
-                    onMouseEnter: (e) => onMouseEnter(e, item)
+                    onMouseEnter: (e) => options.onMouseEnter(e, item)
                 };
             } else {
                 handlerProps = {
                     ...handlerProps,
                     draggable:   true,
-                    onDragStart: (e) => onDragStart(e, item)
+                    onDragStart: (e) => options.onDragStart(e, item)
                 };
             }
         }
@@ -55,7 +54,7 @@ class NestableItem extends Component {
         const collapseIcon = hasChildren ? (
             <Icon
                 className={cn("nestable-item-icon", isCollapsed ? "icon-plus-gray" : "icon-minus-gray")}
-                onClick={e => onToggleCollapse(item)}
+                onClick={e => options.onToggleCollapse(item)}
             />
         ) : '';
 

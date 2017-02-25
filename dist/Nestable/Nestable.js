@@ -53,32 +53,26 @@ var Nestable = (function (_Component) {
         var _this = _possibleConstructorReturn(this, (Nestable.__proto__ || Object.getPrototypeOf(Nestable)).call(this, props));
 
         _this.collapse = function (itemIds) {
-            var childrenProp = _this.props.childrenProp;
+            var _this$props = _this.props,
+                childrenProp = _this$props.childrenProp,
+                collapsed = _this$props.collapsed;
             var items = _this.state.items;
 
             if (itemIds == 'NONE') {
                 _this.setState({
-                    collapsedGroups: []
+                    collapsedGroups: collapsed ? (0, _utils.getAllNonEmptyNodesIds)(items, childrenProp) : []
                 });
             } else if (itemIds == 'ALL') {
                 _this.setState({
-                    collapsedGroups: items.filter(function (item) {
-                        return item[childrenProp].length;
-                    }).map(function (item) {
-                        return item.id;
-                    })
+                    collapsedGroups: collapsed ? [] : (0, _utils.getAllNonEmptyNodesIds)(items, childrenProp)
                 });
             } else if ((0, _utils.isArray)(itemIds)) {
-                var groups = items.filter(function (item) {
-                    return item[childrenProp].length && itemIds.indexOf(item.id) > -1;
-                }).map(function (item) {
-                    return item.id;
-                });
-
                 _this.setState({
-                    collapsedGroups: groups
+                    collapsedGroups: (0, _utils.getAllNonEmptyNodesIds)(items, childrenProp).filter(function (id) {
+                        return itemIds.indexOf(id) > -1 ^ collapsed;
+                    })
                 });
-            }
+            } else {}
         };
 
         _this.startTrackMouse = function () {
@@ -107,6 +101,13 @@ var Nestable = (function (_Component) {
             return level;
         };
 
+        _this.isCollapsed = function (item) {
+            var collapsed = _this.props.collapsed;
+            var collapsedGroups = _this.state.collapsedGroups;
+
+            return !!(collapsedGroups.indexOf(item.id) > -1 ^ collapsed);
+        };
+
         _this.onDragStart = function (e, item) {
             if (e) {
                 e.preventDefault();
@@ -131,9 +132,9 @@ var Nestable = (function (_Component) {
         };
 
         _this.onMouseMove = function (e) {
-            var _this$props = _this.props,
-                group = _this$props.group,
-                threshold = _this$props.threshold;
+            var _this$props2 = _this.props,
+                group = _this$props2.group,
+                threshold = _this$props2.threshold;
             var dragItem = _this.state.dragItem;
             var target = e.target,
                 clientX = e.clientX,
@@ -188,6 +189,9 @@ var Nestable = (function (_Component) {
                 e.stopPropagation();
             }
 
+            var _this$props3 = _this.props,
+                collapsed = _this$props3.collapsed,
+                childrenProp = _this$props3.childrenProp;
             var dragItem = _this.state.dragItem;
 
             if (dragItem.id === item.id) return;
@@ -195,24 +199,36 @@ var Nestable = (function (_Component) {
             var pathFrom = _this.getPathById(dragItem.id);
             var pathTo = _this.getPathById(item.id);
 
-            _this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo });
+            // if collapsed by default
+            // and move last (by count) child
+            // remove parent node from list of open nodes
+            var collapseProps = {};
+            if (collapsed && pathFrom.length > 1) {
+                var parent = _this.getItemByPath(pathFrom.slice(0, -1));
+                if (parent[childrenProp].length == 1) {
+                    collapseProps = _this.onToggleCollapse(parent, true);
+                }
+            }
+
+            _this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo }, collapseProps);
         };
 
-        _this.onToggleCollapse = function (item) {
+        _this.onToggleCollapse = function (item, isGetter) {
+            var collapsed = _this.props.collapsed;
             var collapsedGroups = _this.state.collapsedGroups;
 
-            var index = collapsedGroups.indexOf(item.id);
+            var isCollapsed = _this.isCollapsed(item);
 
-            if (index > -1) {
-                _this.setState({
-                    collapsedGroups: collapsedGroups.filter(function (id) {
-                        return id != item.id;
-                    })
-                });
+            var newState = {
+                collapsedGroups: isCollapsed ^ collapsed ? collapsedGroups.filter(function (id) {
+                    return id != item.id;
+                }) : collapsedGroups.concat(item.id)
+            };
+
+            if (isGetter) {
+                return newState;
             } else {
-                _this.setState({
-                    collapsedGroups: collapsedGroups.concat(item.id)
-                });
+                _this.setState(newState);
             }
         };
 
@@ -263,11 +279,17 @@ var Nestable = (function (_Component) {
             if (isPropsUpdated) {
                 this.stopTrackMouse();
 
-                this.setState({
+                var extra = {};
+
+                if (this.props.collapsed !== nextProps.collapsed) {
+                    extra.collapsedGroups = [];
+                }
+
+                this.setState(_extends({
                     items: (0, _utils.listWithChildren)(itemsNew, childrenProp),
                     dragItem: null,
                     isDirty: false
-                });
+                }, extra));
             }
         }
     }, {
@@ -290,6 +312,7 @@ var Nestable = (function (_Component) {
             var dragItem = _ref.dragItem,
                 pathFrom = _ref.pathFrom,
                 pathTo = _ref.pathTo;
+            var extraProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
             var childrenProp = this.props.childrenProp;
             var items = this.state.items;
 
@@ -312,18 +335,18 @@ var Nestable = (function (_Component) {
             items = (0, _reactAddonsUpdate2.default)(items, removePath);
             items = (0, _reactAddonsUpdate2.default)(items, insertPath);
 
-            this.setState({
+            this.setState(_extends({
                 items: items,
                 isDirty: true
-            });
+            }, extraProps));
         }
     }, {
         key: 'tryIncreaseDepth',
         value: function tryIncreaseDepth(dragItem) {
             var _props2 = this.props,
                 maxDepth = _props2.maxDepth,
-                childrenProp = _props2.childrenProp;
-            var collapsedGroups = this.state.collapsedGroups;
+                childrenProp = _props2.childrenProp,
+                collapsed = _props2.collapsed;
 
             var pathFrom = this.getPathById(dragItem.id);
             var itemIndex = pathFrom[pathFrom.length - 1];
@@ -334,17 +357,27 @@ var Nestable = (function (_Component) {
                 var prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 
                 // previous sibling is not collapsed
-                if (collapsedGroups.indexOf(prevSibling.id) == -1) {
+                if (!prevSibling[childrenProp].length || !this.isCollapsed(prevSibling)) {
                     var pathTo = pathFrom.slice(0, -1).concat(itemIndex - 1).concat(prevSibling[childrenProp].length);
 
-                    this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo });
+                    // if collapsed by default
+                    // and was no children here
+                    // open this node
+                    var collapseProps = {};
+                    if (collapsed && !prevSibling[childrenProp].length) {
+                        collapseProps = this.onToggleCollapse(prevSibling, true);
+                    }
+
+                    this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo }, collapseProps);
                 }
             }
         }
     }, {
         key: 'tryDecreaseDepth',
         value: function tryDecreaseDepth(dragItem) {
-            var childrenProp = this.props.childrenProp;
+            var _props3 = this.props,
+                childrenProp = _props3.childrenProp,
+                collapsed = _props3.collapsed;
 
             var pathFrom = this.getPathById(dragItem.id);
             var itemIndex = pathFrom[pathFrom.length - 1];
@@ -353,12 +386,20 @@ var Nestable = (function (_Component) {
             if (pathFrom.length > 1) {
                 var parent = this.getItemByPath(pathFrom.slice(0, -1));
 
-                // is last item in array
+                // is last (by order) item in array
                 if (itemIndex + 1 == parent[childrenProp].length) {
                     var pathTo = pathFrom.slice(0, -1);
                     pathTo[pathTo.length - 1] += 1;
 
-                    this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo });
+                    // if collapsed by default
+                    // and is last (by count) item in array
+                    // remove this node from list of open nodes
+                    var collapseProps = {};
+                    if (collapsed && parent[childrenProp].length == 1) {
+                        collapseProps = this.onToggleCollapse(parent, true);
+                    }
+
+                    this.moveItem({ dragItem: dragItem, pathFrom: pathFrom, pathTo: pathTo }, collapseProps);
                 }
             }
         }
@@ -372,6 +413,7 @@ var Nestable = (function (_Component) {
                 dragItem = _state.dragItem;
 
             this.setState({
+                itemsOld: null,
                 dragItem: null,
                 isDirty: false
             });
@@ -385,6 +427,7 @@ var Nestable = (function (_Component) {
 
             this.setState({
                 items: itemsOld,
+                itemsOld: null,
                 dragItem: null,
                 isDirty: false
             });
@@ -462,7 +505,6 @@ var Nestable = (function (_Component) {
         key: 'getRealNextPath',
         value: function getRealNextPath(prevPath, nextPath) {
             var childrenProp = this.props.childrenProp;
-            var collapsedGroups = this.state.collapsedGroups;
 
             var ppLastIndex = prevPath.length - 1;
             var npLastIndex = nextPath.length - 1;
@@ -492,7 +534,7 @@ var Nestable = (function (_Component) {
                 if (nextPath[npLastIndex] > prevPath[npLastIndex]) {
                     var target = this.getItemByPath(nextPath);
 
-                    if (target[childrenProp] && target[childrenProp].length && collapsedGroups.indexOf(target.id) == -1) {
+                    if (target[childrenProp] && target[childrenProp].length && !this.isCollapsed(target)) {
                         return nextPath.slice(0, -1).concat(nextPath[npLastIndex] - 1).concat(0);
                     }
                 }
@@ -503,23 +545,21 @@ var Nestable = (function (_Component) {
     }, {
         key: 'getItemOptions',
         value: function getItemOptions() {
-            var _props3 = this.props,
-                renderItem = _props3.renderItem,
-                handler = _props3.handler,
-                childrenProp = _props3.childrenProp;
-            var _state2 = this.state,
-                dragItem = _state2.dragItem,
-                collapsedGroups = _state2.collapsedGroups;
+            var _props4 = this.props,
+                renderItem = _props4.renderItem,
+                handler = _props4.handler,
+                childrenProp = _props4.childrenProp;
+            var dragItem = this.state.dragItem;
 
             return {
                 dragItem: dragItem,
-                collapsedGroups: collapsedGroups,
                 childrenProp: childrenProp,
                 renderItem: renderItem,
                 handler: handler,
 
                 onDragStart: this.onDragStart,
                 onMouseEnter: this.onMouseEnter,
+                isCollapsed: this.isCollapsed,
                 onToggleCollapse: this.onToggleCollapse
             };
         }
@@ -540,9 +580,10 @@ var Nestable = (function (_Component) {
 
             var el = document.querySelector('.nestable-' + group + ' .nestable-item-' + dragItem.id);
 
-            var listStyles = {
-                width: el.clientWidth
-            };
+            var listStyles = {};
+            if (el) {
+                listStyles.width = el.clientWidth;
+            }
             if (this.elCopyStyles) {
                 listStyles = _extends({}, listStyles, this.elCopyStyles);
             }
@@ -566,9 +607,9 @@ var Nestable = (function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _state3 = this.state,
-                items = _state3.items,
-                dragItem = _state3.dragItem;
+            var _state2 = this.state,
+                items = _state2.items,
+                dragItem = _state2.dragItem;
             var group = this.props.group;
 
             var options = this.getItemOptions();
@@ -601,6 +642,7 @@ Nestable.propTypes = {
     })),
     threshold: _react.PropTypes.number,
     maxDepth: _react.PropTypes.number,
+    collapsed: _react.PropTypes.bool,
     childrenProp: _react.PropTypes.string,
     renderItem: _react.PropTypes.func,
     onChange: _react.PropTypes.func
@@ -609,6 +651,7 @@ Nestable.defaultProps = {
     items: [],
     threshold: 30,
     maxDepth: 10,
+    collapsed: false,
     group: 0,
     childrenProp: 'children',
     renderItem: function renderItem(_ref2) {

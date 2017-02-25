@@ -45,17 +45,14 @@ var NestableItem = (function (_Component) {
                 isCopy = _props.isCopy,
                 options = _props.options;
             var dragItem = options.dragItem,
-                collapsedGroups = options.collapsedGroups,
                 renderItem = options.renderItem,
                 handler = options.handler,
                 childrenProp = options.childrenProp;
-            var _onDragStart = options.onDragStart,
-                _onMouseEnter = options.onMouseEnter,
-                onToggleCollapse = options.onToggleCollapse;
+
+            var isCollapsed = options.isCollapsed(item);
 
             var isDragging = !isCopy && dragItem && dragItem.id === item.id;
             var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
-            var isCollapsed = collapsedGroups.indexOf(item.id) > -1;
 
             var Handler = undefined;
 
@@ -71,14 +68,14 @@ var NestableItem = (function (_Component) {
                 if (dragItem) {
                     rowProps = _extends({}, rowProps, {
                         onMouseEnter: function onMouseEnter(e) {
-                            return _onMouseEnter(e, item);
+                            return options.onMouseEnter(e, item);
                         }
                     });
                 } else {
                     handlerProps = _extends({}, handlerProps, {
                         draggable: true,
                         onDragStart: function onDragStart(e) {
-                            return _onDragStart(e, item);
+                            return options.onDragStart(e, item);
                         }
                     });
                 }
@@ -98,7 +95,7 @@ var NestableItem = (function (_Component) {
             var collapseIcon = hasChildren ? _react2.default.createElement(_Icon2.default, {
                 className: (0, _classnames2.default)("nestable-item-icon", isCollapsed ? "icon-plus-gray" : "icon-minus-gray"),
                 onClick: function onClick(e) {
-                    return onToggleCollapse(item);
+                    return options.onToggleCollapse(item);
                 }
             }) : '';
 

@@ -67,3 +67,15 @@ export const listWithChildren = (list, childrenProp) => {
         };
     });
 };
+
+export const getAllNonEmptyNodesIds = (items, childrenProp) => {
+    let childrenIds = [];
+    let ids = items
+        .filter(item => item[childrenProp].length)
+        .map(item => {
+            childrenIds = childrenIds.concat( getAllNonEmptyNodesIds(item[childrenProp], childrenProp) );
+            return item.id;
+        });
+
+    return ids.concat(childrenIds);
+};
