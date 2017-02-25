@@ -45,7 +45,7 @@ var Icon = (function (_Component) {
                 className = _props.className,
                 props = _objectWithoutProperties(_props, ['children', 'className']);
 
-            return _react2.default.createElement('i', _extends({ className: (0, _classnames2.default)("icon", className) }, props));
+            return _react2.default.createElement('i', _extends({ className: (0, _classnames2.default)("nestable-icon", className) }, props));
         }
     }]);
 

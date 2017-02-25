@@ -8,7 +8,7 @@ class Icon extends Component {
         const { children, className, ...props } = this.props;
 
         return (
-            <i className={cn("icon", className)} {...props} />
+            <i className={cn("nestable-icon", className)} {...props} />
         );
     }
 }

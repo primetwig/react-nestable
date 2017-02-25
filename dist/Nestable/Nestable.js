@@ -34,8 +34,6 @@ var _NestableItem2 = _interopRequireDefault(_NestableItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -72,7 +70,7 @@ var Nestable = (function (_Component) {
                 });
             } else if ((0, _utils.isArray)(itemIds)) {
                 var groups = items.filter(function (item) {
-                    return item[childrenProp].length && itemIds.indexOf(item.id);
+                    return item[childrenProp].length && itemIds.indexOf(item.id) > -1;
                 }).map(function (item) {
                     return item.id;
                 });
@@ -86,11 +84,13 @@ var Nestable = (function (_Component) {
         _this.startTrackMouse = function () {
             document.addEventListener('mousemove', _this.onMouseMove);
             document.addEventListener('mouseup', _this.onDragEnd);
+            document.addEventListener('keydown', _this.onKeyDown);
         };
 
         _this.stopTrackMouse = function () {
             document.removeEventListener('mousemove', _this.onMouseMove);
             document.removeEventListener('mouseup', _this.onDragEnd);
+            document.removeEventListener('keydown', _this.onKeyDown);
             _this.elCopyStyles = null;
         };
 
@@ -117,27 +117,17 @@ var Nestable = (function (_Component) {
             _this.onMouseMove(e);
 
             _this.setState({
-                dragItem: item
+                dragItem: item,
+                itemsOld: _this.state.items
             });
         };
 
-        _this.onDragEnd = function (e) {
+        _this.onDragEnd = function (e, isCancel) {
             e && e.preventDefault();
-
-            var onChange = _this.props.onChange;
-            var _this$state = _this.state,
-                items = _this$state.items,
-                isDirty = _this$state.isDirty,
-                dragItem = _this$state.dragItem;
 
             _this.stopTrackMouse();
 
-            _this.setState({
-                dragItem: null,
-                isDirty: false
-            });
-
-            onChange && isDirty && onChange(items, dragItem);
+            isCancel ? _this.dragRevert() : _this.dragApply();
         };
 
         _this.onMouseMove = function (e) {
@@ -149,6 +139,7 @@ var Nestable = (function (_Component) {
                 clientX = e.clientX,
                 clientY = e.clientY;
 
+            var transformProps = (0, _utils.getTransformProps)(clientX, clientY);
             var el = (0, _utils.closest)(target, '.nestable-item');
             var elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
 
@@ -159,14 +150,17 @@ var Nestable = (function (_Component) {
                     left: document.body.scrollLeft
                 };
 
-                _this.elCopyStyles = {
+                _this.elCopyStyles = _extends({
                     marginTop: offset.top - clientY - scroll.top,
-                    marginLeft: offset.left - clientX - scroll.left,
-                    transform: _this.getTransformProps(clientX, clientY).transform
-                };
+                    marginLeft: offset.left - clientX - scroll.left
+                }, transformProps);
             } else {
-                _this.elCopyStyles.transform = _this.getTransformProps(clientX, clientY).transform;
-                elCopy.style.transform = _this.elCopyStyles.transform;
+                _this.elCopyStyles = _extends({}, _this.elCopyStyles, transformProps);
+                for (var key in transformProps) {
+                    if (transformProps.hasOwnProperty(key)) {
+                        elCopy.style[key] = transformProps[key];
+                    }
+                }
 
                 var diffX = clientX - _this.mouse.last.x;
                 if (diffX >= 0 && _this.mouse.shift.x >= 0 || diffX <= 0 && _this.mouse.shift.x <= 0) {
@@ -222,8 +216,16 @@ var Nestable = (function (_Component) {
             }
         };
 
+        _this.onKeyDown = function (e) {
+            if (e.which === 27) {
+                // ESC
+                _this.onDragEnd(null, true);
+            }
+        };
+
         _this.state = {
             items: [],
+            itemsOld: null, // snap copy in case of canceling drag
             dragItem: null,
             isDirty: false,
             collapsedGroups: []
@@ -240,18 +242,21 @@ var Nestable = (function (_Component) {
     _createClass(Nestable, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var items = this.props.items;
+            var _props = this.props,
+                items = _props.items,
+                childrenProp = _props.childrenProp;
 
             // make sure every item has property 'children'
 
-            items = (0, _utils.listWithChildren)(items);
+            items = (0, _utils.listWithChildren)(items, childrenProp);
 
             this.setState({ items: items });
         }
     }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(nextProps) {
-            var itemsNew = nextProps.items;
+            var itemsNew = nextProps.items,
+                childrenProp = nextProps.childrenProp;
 
             var isPropsUpdated = (0, _reactAddonsShallowCompare2.default)({ props: this.props, state: {} }, nextProps, {});
 
@@ -259,7 +264,7 @@ var Nestable = (function (_Component) {
                 this.stopTrackMouse();
 
                 this.setState({
-                    items: (0, _utils.listWithChildren)(itemsNew),
+                    items: (0, _utils.listWithChildren)(itemsNew, childrenProp),
                     dragItem: null,
                     isDirty: false
                 });
@@ -315,9 +320,9 @@ var Nestable = (function (_Component) {
     }, {
         key: 'tryIncreaseDepth',
         value: function tryIncreaseDepth(dragItem) {
-            var _props = this.props,
-                maxDepth = _props.maxDepth,
-                childrenProp = _props.childrenProp;
+            var _props2 = this.props,
+                maxDepth = _props2.maxDepth,
+                childrenProp = _props2.childrenProp;
             var collapsedGroups = this.state.collapsedGroups;
 
             var pathFrom = this.getPathById(dragItem.id);
@@ -357,18 +362,38 @@ var Nestable = (function (_Component) {
                 }
             }
         }
+    }, {
+        key: 'dragApply',
+        value: function dragApply() {
+            var onChange = this.props.onChange;
+            var _state = this.state,
+                items = _state.items,
+                isDirty = _state.isDirty,
+                dragItem = _state.dragItem;
+
+            this.setState({
+                dragItem: null,
+                isDirty: false
+            });
+
+            onChange && isDirty && onChange(items, dragItem);
+        }
+    }, {
+        key: 'dragRevert',
+        value: function dragRevert() {
+            var itemsOld = this.state.itemsOld;
+
+            this.setState({
+                items: itemsOld,
+                dragItem: null,
+                isDirty: false
+            });
+        }
 
         // ––––––––––––––––––––––––––––––––––––
         // Getter methods
         // ––––––––––––––––––––––––––––––––––––
 
-    }, {
-        key: 'getTransformProps',
-        value: function getTransformProps(x, y) {
-            return {
-                transform: 'translate(' + x + 'px, ' + y + 'px)'
-            };
-        }
     }, {
         key: 'getPathById',
         value: function getPathById(id) {
@@ -410,17 +435,6 @@ var Nestable = (function (_Component) {
 
             return item;
         }
-
-        /*getItemById(id, items = this.state.items) {
-            const { childrenProp } = this.props;
-            let item = null;
-             items.forEach((index, i) => {
-                const list = item ? item[childrenProp] : items;
-                item = list[index];
-            });
-             return item;
-        }*/
-
     }, {
         key: 'getSplicePath',
         value: function getSplicePath(path) {
@@ -454,31 +468,25 @@ var Nestable = (function (_Component) {
             var npLastIndex = nextPath.length - 1;
 
             if (prevPath.length < nextPath.length) {
-                var _ret = (function () {
-                    // move into deep
-                    var wasShifted = false;
+                // move into deep
+                var wasShifted = false;
 
-                    return {
-                        v: nextPath.map(function (nextIndex, i) {
-                            if (wasShifted) {
-                                return i == npLastIndex ? nextIndex + 1 : nextIndex;
-                            }
+                return nextPath.map(function (nextIndex, i) {
+                    if (wasShifted) {
+                        return i == npLastIndex ? nextIndex + 1 : nextIndex;
+                    }
 
-                            if (typeof prevPath[i] !== 'number') {
-                                return nextIndex;
-                            }
+                    if (typeof prevPath[i] !== 'number') {
+                        return nextIndex;
+                    }
 
-                            if (nextPath[i] > prevPath[i] && i == ppLastIndex) {
-                                wasShifted = true;
-                                return nextIndex - 1;
-                            }
+                    if (nextPath[i] > prevPath[i] && i == ppLastIndex) {
+                        wasShifted = true;
+                        return nextIndex - 1;
+                    }
 
-                            return nextIndex;
-                        })
-                    };
-                })();
-
-                if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+                    return nextIndex;
+                });
             } else if (prevPath.length == nextPath.length) {
                 // if move bottom + move to item with children => make it a first child instead of swap
                 if (nextPath[npLastIndex] > prevPath[npLastIndex]) {
@@ -495,13 +503,13 @@ var Nestable = (function (_Component) {
     }, {
         key: 'getItemOptions',
         value: function getItemOptions() {
-            var _props2 = this.props,
-                renderItem = _props2.renderItem,
-                handler = _props2.handler,
-                childrenProp = _props2.childrenProp;
-            var _state = this.state,
-                dragItem = _state.dragItem,
-                collapsedGroups = _state.collapsedGroups;
+            var _props3 = this.props,
+                renderItem = _props3.renderItem,
+                handler = _props3.handler,
+                childrenProp = _props3.childrenProp;
+            var _state2 = this.state,
+                dragItem = _state2.dragItem,
+                collapsedGroups = _state2.collapsedGroups;
 
             return {
                 dragItem: dragItem,
@@ -558,9 +566,9 @@ var Nestable = (function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _state2 = this.state,
-                items = _state2.items,
-                dragItem = _state2.dragItem;
+            var _state3 = this.state,
+                items = _state3.items,
+                dragItem = _state3.dragItem;
             var group = this.props.group;
 
             var options = this.getItemOptions();

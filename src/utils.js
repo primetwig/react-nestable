@@ -51,13 +51,19 @@ export const getOffsetRect = (elem) => {
     return { top: Math.round(top), left: Math.round(left) };
 };
 
-export const listWithChildren = (list) => {
+export const getTransformProps = (x, y) => {
+    return {
+        transform: 'translate('+ x +'px, '+ y +'px)'
+    };
+};
+
+export const listWithChildren = (list, childrenProp) => {
     return list.map(item => {
         return {
             ...item,
-            children: item.children
-                          ? listWithChildren(item.children)
-                          : []
+            [childrenProp]: item[childrenProp]
+                                ? listWithChildren(item[childrenProp], childrenProp)
+                                : []
         };
     });
 };

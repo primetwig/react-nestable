@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var objectType = exports.objectType = function objectType(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
 };
@@ -59,10 +61,14 @@ var getOffsetRect = exports.getOffsetRect = function getOffsetRect(elem) {
     return { top: Math.round(top), left: Math.round(left) };
 };
 
-var listWithChildren = exports.listWithChildren = function listWithChildren(list) {
+var getTransformProps = exports.getTransformProps = function getTransformProps(x, y) {
+    return {
+        transform: 'translate(' + x + 'px, ' + y + 'px)'
+    };
+};
+
+var listWithChildren = exports.listWithChildren = function listWithChildren(list, childrenProp) {
     return list.map(function (item) {
-        return _extends({}, item, {
-            children: item.children ? listWithChildren(item.children) : []
-        });
+        return _extends({}, item, _defineProperty({}, childrenProp, item[childrenProp] ? listWithChildren(item[childrenProp], childrenProp) : []));
     });
 };

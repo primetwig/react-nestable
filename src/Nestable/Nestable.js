@@ -3,7 +3,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import update from 'react-addons-update';
 import cn from 'classnames';
 
-import { isArray, closest, getOffsetRect, listWithChildren } from '../utils';
+import { isArray, closest, getOffsetRect, getTransformProps, listWithChildren } from '../utils';
 
 import './Nestable.css';
 import NestableItem from './NestableItem';
@@ -13,6 +13,7 @@ class Nestable extends Component {
         super(props);
         this.state = {
             items:           [],
+            itemsOld:        null, // snap copy in case of canceling drag
             dragItem:        null,
             isDirty:         false,
             collapsedGroups: []
@@ -48,23 +49,23 @@ class Nestable extends Component {
     };
 
     componentDidMount() {
-        let { items } = this.props;
+        let { items, childrenProp } = this.props;
 
         // make sure every item has property 'children'
-        items = listWithChildren(items);
+        items = listWithChildren(items, childrenProp);
 
         this.setState({ items });
     }
 
     componentWillReceiveProps(nextProps) {
-        const { items: itemsNew } = nextProps;
+        const { items: itemsNew, childrenProp } = nextProps;
         const isPropsUpdated = shallowCompare({ props: this.props, state: {} }, nextProps, {});
 
         if (isPropsUpdated) {
             this.stopTrackMouse();
 
             this.setState({
-                items:    listWithChildren(itemsNew),
+                items:    listWithChildren(itemsNew, childrenProp),
                 dragItem: null,
                 isDirty:  false
             });
@@ -94,7 +95,7 @@ class Nestable extends Component {
 
         } else if ( isArray(itemIds) ) {
             const groups = items
-                .filter(item => item[childrenProp].length && itemIds.indexOf(item.id))
+                .filter(item => item[childrenProp].length && itemIds.indexOf(item.id) > -1)
                 .map(item => item.id);
 
             this.setState({
@@ -109,11 +110,13 @@ class Nestable extends Component {
     startTrackMouse = () => {
         document.addEventListener('mousemove', this.onMouseMove);
         document.addEventListener('mouseup', this.onDragEnd);
+        document.addEventListener('keydown', this.onKeyDown);
     };
 
     stopTrackMouse = () => {
         document.removeEventListener('mousemove', this.onMouseMove);
         document.removeEventListener('mouseup', this.onDragEnd);
+        document.removeEventListener('keydown', this.onKeyDown);
         this.elCopyStyles = null;
     };
 
@@ -188,15 +191,31 @@ class Nestable extends Component {
         }
     }
 
+    dragApply() {
+        const { onChange } = this.props;
+        const { items, isDirty, dragItem } = this.state;
+
+        this.setState({
+            dragItem: null,
+            isDirty:  false
+        });
+
+        onChange && isDirty && onChange(items, dragItem);
+    }
+
+    dragRevert() {
+        const { itemsOld } = this.state;
+
+        this.setState({
+            items:    itemsOld,
+            dragItem: null,
+            isDirty:  false
+        });
+    }
+
     // ––––––––––––––––––––––––––––––––––––
     // Getter methods
     // ––––––––––––––––––––––––––––––––––––
-    getTransformProps(x, y) {
-        return {
-            transform: 'translate('+ x +'px, '+ y +'px)'
-        };
-    }
-
     getPathById(id, items = this.state.items) {
         const { childrenProp } = this.props;
         let path = [];
@@ -229,18 +248,6 @@ class Nestable extends Component {
 
         return item;
     }
-
-    /*getItemById(id, items = this.state.items) {
-        const { childrenProp } = this.props;
-        let item = null;
-
-        items.forEach((index, i) => {
-            const list = item ? item[childrenProp] : items;
-            item = list[index];
-        });
-
-        return item;
-    }*/
 
     getItemDepth = (item) => {
         const { childrenProp } = this.props;
@@ -350,30 +357,26 @@ class Nestable extends Component {
         this.onMouseMove(e);
 
         this.setState({
-            dragItem: item
+            dragItem: item,
+            itemsOld: this.state.items
         });
     };
 
-    onDragEnd = (e) => {
+    onDragEnd = (e, isCancel) => {
         e && e.preventDefault();
-
-        const { onChange } = this.props;
-        const { items, isDirty, dragItem } = this.state;
 
         this.stopTrackMouse();
 
-        this.setState({
-            dragItem: null,
-            isDirty: false
-        });
-
-        onChange && isDirty && onChange(items, dragItem);
+        isCancel
+            ? this.dragRevert()
+            : this.dragApply();
     };
 
     onMouseMove = (e) => {
         const { group, threshold } = this.props;
         const { dragItem } = this.state;
         const { target, clientX, clientY } = e;
+        const transformProps = getTransformProps(clientX, clientY);
         const el = closest(target, '.nestable-item');
         const elCopy = document.querySelector('.nestable-'+ group +' .nestable-drag-layer > .nestable-list');
 
@@ -387,12 +390,19 @@ class Nestable extends Component {
             this.elCopyStyles = {
                 marginTop:  offset.top - clientY - scroll.top,
                 marginLeft: offset.left - clientX - scroll.left,
-                transform:  this.getTransformProps(clientX, clientY).transform
+                ...transformProps
             };
 
         } else {
-            this.elCopyStyles.transform = this.getTransformProps(clientX, clientY).transform;
-            elCopy.style.transform = this.elCopyStyles.transform;
+            this.elCopyStyles = {
+                ...this.elCopyStyles,
+                ...transformProps
+            };
+            for (let key in transformProps) {
+                if (transformProps.hasOwnProperty(key)) {
+                    elCopy.style[key] = transformProps[key];
+                }
+            }
 
             const diffX = clientX - this.mouse.last.x;
             if (
@@ -447,13 +457,20 @@ class Nestable extends Component {
         }
     };
 
+    onKeyDown = (e) => {
+        if (e.which === 27) {
+            // ESC
+            this.onDragEnd(null, true);
+        }
+    };
+
     // ––––––––––––––––––––––––––––––––––––
     // Render methods
     // ––––––––––––––––––––––––––––––––––––
     renderDragLayer() {
         const { group } = this.props;
         const { dragItem } = this.state;
-        const el = document.querySelector('.nestable-'+ group +' .nestable-item-' + dragItem.id);
+        const el = document.querySelector('.nestable-' + group + ' .nestable-item-' + dragItem.id);
 
         let listStyles = {
             width: el.clientWidth

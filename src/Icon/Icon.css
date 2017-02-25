@@ -1,4 +1,4 @@
-.icon {
+.nestable-icon {
   position: relative;
   display: inline-block;
   width: 20px;
@@ -7,7 +7,7 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
-.icon:before {
+.nestable-icon:before {
   content: '-';
   display: inline-block;
   width: 0;
