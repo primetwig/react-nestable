@@ -94,8 +94,10 @@ var Nestable = (function (_Component) {
             var level = 1;
 
             if (item[childrenProp].length > 0) {
+                var _Math;
+
                 var childrenDepths = item[childrenProp].map(_this.getItemDepth);
-                level += Math.max(childrenDepths);
+                level += (_Math = Math).max.apply(_Math, _toConsumableArray(childrenDepths));
             }
 
             return level;
@@ -353,6 +355,7 @@ var Nestable = (function (_Component) {
             var newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
             // has previous sibling and isn't at max depth
+            console.log({ itemIndex: itemIndex, pathFrom: pathFrom, newDepth: newDepth });
             if (itemIndex > 0 && newDepth <= maxDepth) {
                 var prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 

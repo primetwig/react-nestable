@@ -169,6 +169,7 @@ class Nestable extends Component {
         const newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
         // has previous sibling and isn't at max depth
+        console.log({ itemIndex, pathFrom, newDepth });
         if (itemIndex > 0 && newDepth <= maxDepth) {
             const prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 
@@ -285,7 +286,7 @@ class Nestable extends Component {
 
         if (item[childrenProp].length > 0) {
             const childrenDepths = item[childrenProp].map(this.getItemDepth);
-            level += Math.max(childrenDepths)
+            level += Math.max(...childrenDepths);
         }
 
         return level;

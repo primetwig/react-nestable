@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ac1f8a2dd6c6b9417d87"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1c3cb90cfd890affbf53"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -10440,7 +10440,7 @@
 	
 	            if (item[childrenProp].length > 0) {
 	                var childrenDepths = item[childrenProp].map(_this.getItemDepth);
-	                level += Math.max(childrenDepths);
+	                level += Math.max.apply(Math, _toConsumableArray(childrenDepths));
 	            }
 	
 	            return level;
@@ -10700,6 +10700,7 @@
 	            var newDepth = pathFrom.length + this.getItemDepth(dragItem);
 	
 	            // has previous sibling and isn't at max depth
+	            console.log({ itemIndex: itemIndex, pathFrom: pathFrom, newDepth: newDepth });
 	            if (itemIndex > 0 && newDepth <= maxDepth) {
 	                var prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 	
