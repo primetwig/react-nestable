@@ -6,11 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
@@ -44,7 +48,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Nestable = (function (_Component) {
+var Nestable = function (_Component) {
     _inherits(Nestable, _Component);
 
     function Nestable(props) {
@@ -57,6 +61,7 @@ var Nestable = (function (_Component) {
                 childrenProp = _this$props.childrenProp,
                 collapsed = _this$props.collapsed;
             var items = _this.state.items;
+
 
             if (itemIds == 'NONE') {
                 _this.setState({
@@ -94,10 +99,8 @@ var Nestable = (function (_Component) {
             var level = 1;
 
             if (item[childrenProp].length > 0) {
-                var _Math;
-
                 var childrenDepths = item[childrenProp].map(_this.getItemDepth);
-                level += (_Math = Math).max.apply(_Math, _toConsumableArray(childrenDepths));
+                level += Math.max.apply(Math, _toConsumableArray(childrenDepths));
             }
 
             return level;
@@ -106,6 +109,7 @@ var Nestable = (function (_Component) {
         _this.isCollapsed = function (item) {
             var collapsed = _this.props.collapsed;
             var collapsedGroups = _this.state.collapsedGroups;
+
 
             return !!(collapsedGroups.indexOf(item.id) > -1 ^ collapsed);
         };
@@ -304,6 +308,7 @@ var Nestable = (function (_Component) {
         // Public Methods
         // ––––––––––––––––––––––––––––––––––––
 
+
         // ––––––––––––––––––––––––––––––––––––
         // Methods
         // ––––––––––––––––––––––––––––––––––––
@@ -415,6 +420,7 @@ var Nestable = (function (_Component) {
                 isDirty = _state.isDirty,
                 dragItem = _state.dragItem;
 
+
             this.setState({
                 itemsOld: null,
                 dragItem: null,
@@ -427,6 +433,7 @@ var Nestable = (function (_Component) {
         key: 'dragRevert',
         value: function dragRevert() {
             var itemsOld = this.state.itemsOld;
+
 
             this.setState({
                 items: itemsOld,
@@ -554,6 +561,7 @@ var Nestable = (function (_Component) {
                 childrenProp = _props4.childrenProp;
             var dragItem = this.state.dragItem;
 
+
             return {
                 dragItem: dragItem,
                 childrenProp: childrenProp,
@@ -573,6 +581,7 @@ var Nestable = (function (_Component) {
 
     }, {
         key: 'renderDragLayer',
+
 
         // ––––––––––––––––––––––––––––––––––––
         // Render methods
@@ -637,18 +646,18 @@ var Nestable = (function (_Component) {
     }]);
 
     return Nestable;
-})(_react.Component);
+}(_react.Component);
 
 Nestable.propTypes = {
-    items: _react.PropTypes.arrayOf(_react.PropTypes.shape({
-        id: _react.PropTypes.any.isRequired
+    items: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+        id: _propTypes2.default.any.isRequired
     })),
-    threshold: _react.PropTypes.number,
-    maxDepth: _react.PropTypes.number,
-    collapsed: _react.PropTypes.bool,
-    childrenProp: _react.PropTypes.string,
-    renderItem: _react.PropTypes.func,
-    onChange: _react.PropTypes.func
+    threshold: _propTypes2.default.number,
+    maxDepth: _propTypes2.default.number,
+    collapsed: _propTypes2.default.bool,
+    childrenProp: _propTypes2.default.string,
+    renderItem: _propTypes2.default.func,
+    onChange: _propTypes2.default.func
 };
 Nestable.defaultProps = {
     items: [],
