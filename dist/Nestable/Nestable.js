@@ -120,6 +120,8 @@ var Nestable = function (_Component) {
                 e.stopPropagation();
             }
 
+            _this.el = (0, _utils.closest)(e.target, '.nestable-item');
+
             _this.startTrackMouse();
             _this.onMouseMove(e);
 
@@ -133,6 +135,7 @@ var Nestable = function (_Component) {
             e && e.preventDefault();
 
             _this.stopTrackMouse();
+            _this.el = null;
 
             isCancel ? _this.dragRevert() : _this.dragApply();
         };
@@ -147,11 +150,10 @@ var Nestable = function (_Component) {
                 clientY = e.clientY;
 
             var transformProps = (0, _utils.getTransformProps)(clientX, clientY);
-            var el = (0, _utils.closest)(target, '.nestable-item');
             var elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
 
             if (!_this.elCopyStyles) {
-                var offset = (0, _utils.getOffsetRect)(el);
+                var offset = (0, _utils.getOffsetRect)(_this.el);
                 var scroll = {
                     top: document.body.scrollTop,
                     left: document.body.scrollLeft
@@ -253,6 +255,7 @@ var Nestable = function (_Component) {
             collapsedGroups: []
         };
 
+        _this.el = null;
         _this.elCopyStyles = null;
         _this.mouse = {
             last: { x: 0 },
@@ -360,7 +363,6 @@ var Nestable = function (_Component) {
             var newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
             // has previous sibling and isn't at max depth
-            console.log({ itemIndex: itemIndex, pathFrom: pathFrom, newDepth: newDepth });
             if (itemIndex > 0 && newDepth <= maxDepth) {
                 var prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 

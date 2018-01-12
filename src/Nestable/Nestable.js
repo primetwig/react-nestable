@@ -4,7 +4,14 @@ import shallowCompare from 'react-addons-shallow-compare';
 import update from 'react-addons-update';
 import cn from 'classnames';
 
-import { isArray, closest, getOffsetRect, getTransformProps, listWithChildren, getAllNonEmptyNodesIds } from '../utils';
+import {
+    isArray,
+    closest,
+    getOffsetRect,
+    getTransformProps,
+    listWithChildren,
+    getAllNonEmptyNodesIds
+} from '../utils';
 
 import './Nestable.css';
 import NestableItem from './NestableItem';
@@ -20,6 +27,7 @@ class Nestable extends Component {
             collapsedGroups: []
         };
 
+        this.el = null;
         this.elCopyStyles = null;
         this.mouse = {
             last:  { x: 0 },
@@ -170,7 +178,6 @@ class Nestable extends Component {
         const newDepth = pathFrom.length + this.getItemDepth(dragItem);
 
         // has previous sibling and isn't at max depth
-        console.log({ itemIndex, pathFrom, newDepth });
         if (itemIndex > 0 && newDepth <= maxDepth) {
             const prevSibling = this.getItemByPath(pathFrom.slice(0, -1).concat(itemIndex - 1));
 
@@ -391,6 +398,8 @@ class Nestable extends Component {
             e.stopPropagation();
         }
 
+        this.el = closest(e.target, '.nestable-item');
+
         this.startTrackMouse();
         this.onMouseMove(e);
 
@@ -404,6 +413,7 @@ class Nestable extends Component {
         e && e.preventDefault();
 
         this.stopTrackMouse();
+        this.el = null;
 
         isCancel
             ? this.dragRevert()
@@ -415,11 +425,10 @@ class Nestable extends Component {
         const { dragItem } = this.state;
         const { target, clientX, clientY } = e;
         const transformProps = getTransformProps(clientX, clientY);
-        const el = closest(target, '.nestable-item');
         const elCopy = document.querySelector('.nestable-'+ group +' .nestable-drag-layer > .nestable-list');
 
         if (!this.elCopyStyles) {
-            const offset = getOffsetRect(el);
+            const offset = getOffsetRect(this.el);
             const scroll = {
                 top:  document.body.scrollTop,
                 left: document.body.scrollLeft
