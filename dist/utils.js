@@ -61,6 +61,18 @@ var getOffsetRect = exports.getOffsetRect = function getOffsetRect(elem) {
     return { top: Math.round(top), left: Math.round(left) };
 };
 
+var getTotalScroll = exports.getTotalScroll = function getTotalScroll(elem) {
+    var top = 0;
+    var left = 0;
+
+    while (elem = elem.parentNode) {
+        top += elem.scrollTop || 0;
+        left += elem.scrollLeft || 0;
+    }
+
+    return { top: top, left: left };
+};
+
 var getTransformProps = exports.getTransformProps = function getTransformProps(x, y) {
     return {
         transform: 'translate(' + x + 'px, ' + y + 'px)'

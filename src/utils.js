@@ -51,6 +51,18 @@ export const getOffsetRect = (elem) => {
     return { top: Math.round(top), left: Math.round(left) };
 };
 
+export const getTotalScroll = (elem) => {
+    let top = 0;
+    let left = 0;
+
+    while (elem = elem.parentNode) {
+        top += elem.scrollTop || 0;
+        left += elem.scrollLeft || 0;
+    }
+
+    return { top, left };
+};
+
 export const getTransformProps = (x, y) => {
     return {
         transform: 'translate('+ x +'px, '+ y +'px)'

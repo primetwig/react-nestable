@@ -49,21 +49,21 @@ const renderItem = ({ item }) => {
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| items | Array | `[]` | Array of items. Every item must be of shape `{ id: @uniq }`. |
-| threshold | Int | `30` | Amount of pixels which mouse should move horizontally before increasing/decreasing level (nesting) of current element. |
-| maxDepth | Int | `10` | Maximum available level of nesting. |
-| collapsed | Boolean | `false` | Are groups collapsed by default. |
-| group | String or Int | `0` | Different group numbers are required if you have more than one nestable component on a page. |
-| handler | Component | | If you pass react component here, you may use it in your render method. |
-| childrenProp | String | `"children"` | Optional name of property with children. |
+| items | array | `[]` | Array of items. Every item must be of shape `{ id: @uniq }`. |
+| threshold | int | `30` | Amount of pixels which mouse should move horizontally before increasing/decreasing level (nesting) of current element. |
+| maxDepth | int | `10` | Maximum available level of nesting. |
+| collapsed | boolean | `false` | Are groups collapsed by default. |
+| group | string or int | `0` | Different group numbers are required if you have more than one nestable component on a page. |
+| handler | component | | If you pass react component here, you may use it in your render method. |
+| childrenProp | string | `"children"` | Optional name of property with children. |
 | renderItem | function | `({ item }) => item.toString()` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `collapseIcon` - icon for items with children (allows you to collapse group), `handler` - component which you have passed via the same property, but covered with some additional events. |
-| onChange | function | `() => {}` | Callback which has two parameters: `items` - new array after position was changed, `item` - item which was moved. |
+| onChange | function | `() => {}` | Callback which has two parameters: `items` - new array after position was changed, `item` - item which has been moved. |
 
 #### Public methods
 
 | Method | Accepts | Description |
 |--------|---------|-------------|
-| collapse | String or Array | `"NONE"` - expand all groups; `"ALL"` - collapse all groups; `[]` - collapse all groups with ids from given array |
+| collapse | string or array | `"NONE"` - expand all groups; `"ALL"` - collapse all groups; `[]` - collapse all groups with ids from given array |
 
 ## Todo
 

@@ -8,6 +8,7 @@ import {
     isArray,
     closest,
     getOffsetRect,
+    getTotalScroll,
     getTransformProps,
     listWithChildren,
     getAllNonEmptyNodesIds
@@ -429,10 +430,8 @@ class Nestable extends Component {
 
         if (!this.elCopyStyles) {
             const offset = getOffsetRect(this.el);
-            const scroll = {
-                top:  document.body.scrollTop,
-                left: document.body.scrollLeft
-            };
+            window.el = this.el;
+            const scroll = getTotalScroll(this.el);
 
             this.elCopyStyles = {
                 marginTop:  offset.top - clientY - scroll.top,

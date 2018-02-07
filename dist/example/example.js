@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "5384d00de989046f0c4b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "600a888927aafe7a9031"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -10684,10 +10684,8 @@
 	
 	            if (!_this.elCopyStyles) {
 	                var offset = (0, _utils.getOffsetRect)(_this.el);
-	                var scroll = {
-	                    top: document.body.scrollTop,
-	                    left: document.body.scrollLeft
-	                };
+	                window.el = _this.el;
+	                var scroll = (0, _utils.getTotalScroll)(_this.el);
 	
 	                _this.elCopyStyles = _extends({
 	                    marginTop: offset.top - clientY - scroll.top,
@@ -11615,6 +11613,18 @@
 	    var left = box.left + scrollLeft - clientLeft;
 	
 	    return { top: Math.round(top), left: Math.round(left) };
+	};
+	
+	var getTotalScroll = exports.getTotalScroll = function getTotalScroll(elem) {
+	    var top = 0;
+	    var left = 0;
+	
+	    while (elem = elem.parentNode) {
+	        top += elem.scrollTop || 0;
+	        left += elem.scrollLeft || 0;
+	    }
+	
+	    return { top: top, left: left };
 	};
 	
 	var getTransformProps = exports.getTransformProps = function getTransformProps(x, y) {
