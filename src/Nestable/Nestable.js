@@ -430,7 +430,6 @@ class Nestable extends Component {
 
         if (!this.elCopyStyles) {
             const offset = getOffsetRect(this.el);
-            window.el = this.el;
             const scroll = getTotalScroll(this.el);
 
             this.elCopyStyles = {
