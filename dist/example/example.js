@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "600a888927aafe7a9031"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "68e39696909410876fc3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -10684,7 +10684,6 @@
 	
 	            if (!_this.elCopyStyles) {
 	                var offset = (0, _utils.getOffsetRect)(_this.el);
-	                window.el = _this.el;
 	                var scroll = (0, _utils.getTotalScroll)(_this.el);
 	
 	                _this.elCopyStyles = _extends({
