@@ -5,7 +5,7 @@ import Icon from '../Icon';
 
 class NestableItem extends Component {
     render() {
-        const { item, isCopy, options } = this.props;
+        const { item, isCopy, options, index } = this.props;
         const { dragItem, renderItem, handler, childrenProp } = options;
         const isCollapsed = options.isCollapsed(item);
 
@@ -61,7 +61,7 @@ class NestableItem extends Component {
         return (
             <li {...itemProps}>
                 <div className="nestable-item-name" {...rowProps}>
-                    {renderItem({ item, collapseIcon, handler: Handler })}
+                    {renderItem({ item, collapseIcon, handler: Handler, index })}
                 </div>
 
                 {hasChildren && !isCollapsed && (
@@ -70,6 +70,7 @@ class NestableItem extends Component {
                             return (
                                 <NestableItem
                                     key={i}
+                                    index={i}
                                     item={item}
                                     options={options}
                                     isCopy={isCopy}
