@@ -43,7 +43,8 @@ var NestableItem = function (_Component) {
             var _props = this.props,
                 item = _props.item,
                 isCopy = _props.isCopy,
-                options = _props.options;
+                options = _props.options,
+                index = _props.index;
             var dragItem = options.dragItem,
                 renderItem = options.renderItem,
                 handler = options.handler,
@@ -105,7 +106,7 @@ var NestableItem = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     _extends({ className: 'nestable-item-name' }, rowProps),
-                    renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler })
+                    renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler, index: index })
                 ),
                 hasChildren && !isCollapsed && _react2.default.createElement(
                     'ol',
@@ -113,6 +114,7 @@ var NestableItem = function (_Component) {
                     item[childrenProp].map(function (item, i) {
                         return _react2.default.createElement(NestableItem, {
                             key: i,
+                            index: i,
                             item: item,
                             options: options,
                             isCopy: isCopy
