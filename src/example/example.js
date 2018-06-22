@@ -43,11 +43,12 @@ class ComponentName extends Component {
         return form && form.elements["collapsed"].checked;
     };
 
-    renderItem = ({ item, collapseIcon, handler }) => {
+    renderItem = ({ item, collapseIcon, handler, index }) => {
         return (
             <div style={styles}>
                 {handler}
                 {collapseIcon}
+                {index !== undefined ? `${index + 1}. ` : null}
                 {item.text}
             </div>
         );

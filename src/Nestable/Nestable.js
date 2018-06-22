@@ -570,6 +570,7 @@ class Nestable extends Component {
                         return (
                             <NestableItem
                                 key={i}
+                                index={i}
                                 item={item}
                                 options={options}
                             />

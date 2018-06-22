@@ -634,6 +634,7 @@ var Nestable = function (_Component) {
                     items.map(function (item, i) {
                         return _react2.default.createElement(_NestableItem2.default, {
                             key: i,
+                            index: i,
                             item: item,
                             options: options
                         });
