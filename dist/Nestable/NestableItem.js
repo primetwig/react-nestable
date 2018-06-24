@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -11,6 +11,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _classnames = require('classnames');
 
@@ -29,103 +33,130 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var NestableItem = function (_Component) {
-    _inherits(NestableItem, _Component);
+  _inherits(NestableItem, _Component);
 
-    function NestableItem() {
-        _classCallCheck(this, NestableItem);
+  function NestableItem() {
+    var _ref;
 
-        return _possibleConstructorReturn(this, (NestableItem.__proto__ || Object.getPrototypeOf(NestableItem)).apply(this, arguments));
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, NestableItem);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
 
-    _createClass(NestableItem, [{
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                item = _props.item,
-                isCopy = _props.isCopy,
-                options = _props.options,
-                index = _props.index;
-            var dragItem = options.dragItem,
-                renderItem = options.renderItem,
-                handler = options.handler,
-                childrenProp = options.childrenProp;
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = NestableItem.__proto__ || Object.getPrototypeOf(NestableItem)).call.apply(_ref, [this].concat(args))), _this), _this.renderCollapseIcon = function (_ref2) {
+      var isCollapsed = _ref2.isCollapsed;
+      return _react2.default.createElement(_Icon2.default, {
+        className: (0, _classnames2.default)("nestable-item-icon", {
+          "icon-plus-gray": isCollapsed,
+          "icon-minus-gray": !isCollapsed
+        })
+      });
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
 
-            var isCollapsed = options.isCollapsed(item);
+  _createClass(NestableItem, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          item = _props.item,
+          isCopy = _props.isCopy,
+          options = _props.options,
+          index = _props.index;
+      var dragItem = options.dragItem,
+          renderItem = options.renderItem,
+          handler = options.handler,
+          childrenProp = options.childrenProp,
+          _options$renderCollap = options.renderCollapseIcon,
+          renderCollapseIcon = _options$renderCollap === undefined ? this.renderCollapseIcon : _options$renderCollap;
 
-            var isDragging = !isCopy && dragItem && dragItem.id === item.id;
-            var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
+      var isCollapsed = options.isCollapsed(item);
 
-            var Handler = void 0;
+      var isDragging = !isCopy && dragItem && dragItem.id === item.id;
+      var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
 
-            var itemProps = {
-                className: (0, _classnames2.default)("nestable-item" + (isCopy ? '-copy' : ''), "nestable-item" + (isCopy ? '-copy' : '') + '-' + item.id, {
-                    'is-dragging': isDragging
-                })
-            };
+      var Handler = void 0;
 
-            var rowProps = {};
-            var handlerProps = {};
-            if (!isCopy) {
-                if (dragItem) {
-                    rowProps = _extends({}, rowProps, {
-                        onMouseEnter: function onMouseEnter(e) {
-                            return options.onMouseEnter(e, item);
-                        }
-                    });
-                } else {
-                    handlerProps = _extends({}, handlerProps, {
-                        draggable: true,
-                        onDragStart: function onDragStart(e) {
-                            return options.onDragStart(e, item);
-                        }
-                    });
-                }
+      var itemProps = {
+        className: (0, _classnames2.default)("nestable-item" + (isCopy ? '-copy' : ''), "nestable-item" + (isCopy ? '-copy' : '') + '-' + item.id, {
+          'is-dragging': isDragging
+        })
+      };
+
+      var rowProps = {};
+      var handlerProps = {};
+      if (!isCopy) {
+        if (dragItem) {
+          rowProps = _extends({}, rowProps, {
+            onMouseEnter: function onMouseEnter(e) {
+              return options.onMouseEnter(e, item);
             }
-
-            if (handler) {
-                Handler = _react2.default.createElement(
-                    'span',
-                    _extends({ className: 'nestable-item-handler' }, handlerProps),
-                    handler
-                );
-                //Handler = React.cloneElement(handler, handlerProps);
-            } else {
-                rowProps = _extends({}, rowProps, handlerProps);
+          });
+        } else {
+          handlerProps = _extends({}, handlerProps, {
+            draggable: true,
+            onDragStart: function onDragStart(e) {
+              return options.onDragStart(e, item);
             }
-
-            var collapseIcon = hasChildren ? _react2.default.createElement(_Icon2.default, {
-                className: (0, _classnames2.default)("nestable-item-icon", isCollapsed ? "icon-plus-gray" : "icon-minus-gray"),
-                onClick: function onClick(e) {
-                    return options.onToggleCollapse(item);
-                }
-            }) : '';
-
-            return _react2.default.createElement(
-                'li',
-                itemProps,
-                _react2.default.createElement(
-                    'div',
-                    _extends({ className: 'nestable-item-name' }, rowProps),
-                    renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler, index: index })
-                ),
-                hasChildren && !isCollapsed && _react2.default.createElement(
-                    'ol',
-                    { className: 'nestable-list' },
-                    item[childrenProp].map(function (item, i) {
-                        return _react2.default.createElement(NestableItem, {
-                            key: i,
-                            index: i,
-                            item: item,
-                            options: options,
-                            isCopy: isCopy
-                        });
-                    })
-                )
-            );
+          });
         }
-    }]);
+      }
 
-    return NestableItem;
+      if (handler) {
+        Handler = _react2.default.createElement(
+          'span',
+          _extends({ className: 'nestable-item-handler' }, handlerProps),
+          handler
+        );
+        //Handler = React.cloneElement(handler, handlerProps);
+      } else {
+        rowProps = _extends({}, rowProps, handlerProps);
+      }
+
+      var collapseIcon = hasChildren ? _react2.default.createElement(
+        'span',
+        { onClick: function onClick() {
+            return options.onToggleCollapse(item);
+          } },
+        renderCollapseIcon({ isCollapsed: isCollapsed })
+      ) : null;
+
+      return _react2.default.createElement(
+        'li',
+        itemProps,
+        _react2.default.createElement(
+          'div',
+          _extends({ className: 'nestable-item-name' }, rowProps),
+          renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler, index: index })
+        ),
+        hasChildren && !isCollapsed && _react2.default.createElement(
+          'ol',
+          { className: 'nestable-list' },
+          item[childrenProp].map(function (item, i) {
+            return _react2.default.createElement(NestableItem, {
+              key: i,
+              index: i,
+              item: item,
+              options: options,
+              isCopy: isCopy
+            });
+          })
+        )
+      );
+    }
+  }]);
+
+  return NestableItem;
 }(_react.Component);
 
+NestableItem.propTypes = {
+  item: _propTypes2.default.shape({
+    id: _propTypes2.default.any.isRequired
+  }),
+  isCopy: _propTypes2.default.bool,
+  options: _propTypes2.default.object,
+  index: _propTypes2.default.number
+};
 exports.default = NestableItem;
