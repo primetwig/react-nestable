@@ -86,6 +86,16 @@ class ComponentName extends Component {
 
         return (
             <div>
+                <a href="https://github.com/primetwig/react-nestable">
+                    <img
+                        style={{position: 'fixed', top: 0, right: 0, border: 0}}
+                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"
+                        alt="Fork me on GitHub"
+                    />
+                </a>
+                <h1>React Nestable</h1>
+
+                <hr/>
                 <h2>Basic example</h2>
 
                 <Nestable

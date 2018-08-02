@@ -1,5 +1,6 @@
 .nestable {
   position: relative;
+  touch-action: none;
 }
 .nestable .nestable-list {
   margin: 0;
