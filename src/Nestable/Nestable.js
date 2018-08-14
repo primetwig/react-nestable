@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
 import update from 'react-addons-update';
 import cn from 'classnames';
-
+import translatedPosition from 'get-css-translated-position';
 import {
     isArray,
     closest,
@@ -17,6 +17,7 @@ import {
 import './Nestable.css';
 import NestableItem from './NestableItem';
 
+window.translatedPosition = translatedPosition
 class Nestable extends Component {
     constructor(props) {
         super(props);
@@ -525,6 +526,22 @@ class Nestable extends Component {
     };
 
     // ––––––––––––––––––––––––––––––––––––
+    // Get offset value if CSS property `transfrom: translate` exsits
+    // ––––––––––––––––––––––––––––––––––––
+    getOffset(el, offset = {x: 0, y: 0}) {
+        if (el === document.body) {
+            return offset;
+        }
+        try {
+            const elOffset = translatedPosition(el);
+            offset.x += elOffset.x + el.offsetLeft;
+            offset.y += elOffset.y + el.offsetTop;
+        }
+        catch (e) {}
+        return this.getOffset(el.parentElement, offset);
+    }
+
+    // ––––––––––––––––––––––––––––––––––––
     // Render methods
     // ––––––––––––––––––––––––––––––––––––
     renderDragLayer() {
@@ -536,6 +553,8 @@ class Nestable extends Component {
         if (el) {
             listStyles.width = el.clientWidth;
         }
+        
+        const offset = this.getOffset(el);
         if (this.elCopyStyles) {
             listStyles = {
                 ...listStyles,
@@ -546,7 +565,9 @@ class Nestable extends Component {
         const options = this.getItemOptions();
 
         return (
-            <div className="nestable-drag-layer">
+            <div className="nestable-drag-layer" style={{
+                transform: `translate(${-offset.x}px, ${-offset.y}px)`
+            }}>
                 <ol className="nestable-list" style={listStyles}>
                     <NestableItem
                         item={dragItem}
