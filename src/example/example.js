@@ -97,7 +97,6 @@ class ComponentName extends Component {
 
                 <hr/>
                 <h2>Basic example</h2>
-
                 <Nestable
                     group="0"
                     items={items}
@@ -105,7 +104,6 @@ class ComponentName extends Component {
                     renderItem={this.renderItem}
                     ref={el => this.refNestable = el}
                 />
-
                 <br/>
                 <button type="button" onClick={e => this.collapse(0)}>Expand all</button>
                 <button type="button" onClick={e => this.collapse(1)}>Collapse all</button>

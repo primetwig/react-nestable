@@ -69,14 +69,20 @@ var NestableItem = function (_Component) {
                 if (dragItem) {
                     rowProps = _extends({}, rowProps, {
                         onMouseEnter: function onMouseEnter(e) {
-                            return options.onMouseEnter(e, item);
+                            options.onMouseEnter(e, item);
+                        },
+                        onTouchMove: function onTouchMove(e) {
+                            options.onTouchMove(e, item);
                         }
                     });
                 } else {
                     handlerProps = _extends({}, handlerProps, {
-                        draggable: true,
+                        draggable: !options.isTouch,
                         onDragStart: function onDragStart(e) {
                             return options.onDragStart(e, item);
+                        },
+                        onTouchStart: function onTouchStart(e) {
+                            return options.onTouchStart(e, item);
                         }
                     });
                 }

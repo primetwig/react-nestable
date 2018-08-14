@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c1885f545b9c853277db"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "035ec6706d0bb5a467ec"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -11168,6 +11168,20 @@
 	            _this.elCopyStyles = null;
 	        };
 	
+	        _this.startTrackTouch = function () {
+	            document.addEventListener('touchmove', _this.onTouchMove);
+	            document.addEventListener('touchend', _this.onTouchEnd);
+	            document.addEventListener('touchcancel', function (e) {
+	                console.log('canceled');
+	            });
+	        };
+	
+	        _this.stopTrackTouch = function () {
+	            document.removeEventListener('touchmove', _this.onTouchMove);
+	            document.removeEventListener('touchend', _this.onTouchEnd);
+	            _this.elCopyStyles = null;
+	        };
+	
 	        _this.getItemDepth = function (item) {
 	            var childrenProp = _this.props.childrenProp;
 	
@@ -11206,19 +11220,100 @@
 	            });
 	        };
 	
-	        _this.onDragEnd = function (e, isCancel) {
+	        _this.onTouchStart = function (e, item) {
+	            if (e) {
+	                e.preventDefault();
+	                e.stopPropagation();
+	            }
+	
+	            _this.el = (0, _utils.closest)(e.target, '.nestable-item');
+	
+	            _this.startTrackTouch();
+	            _this.onTouchMove(e);
+	            _this.setState({
+	                isTouch: true,
+	                dragItem: item,
+	                itemsOld: _this.state.items
+	            });
+	        };
+	
+	        _this.onTouchMove = function (e) {
+	            var _this$props2 = _this.props,
+	                group = _this$props2.group,
+	                threshold = _this$props2.threshold;
+	            var dragItem = _this.state.dragItem;
+	            var _e$touches$ = e.touches[0],
+	                clientX = _e$touches$.clientX,
+	                clientY = _e$touches$.clientY;
+	
+	            var transformProps = (0, _utils.getTransformProps)(clientX, clientY);
+	            var elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
+	
+	            if (!_this.elCopyStyles) {
+	                var offset = (0, _utils.getOffsetRect)(_this.el);
+	                var scroll = (0, _utils.getTotalScroll)(_this.el);
+	
+	                _this.elCopyStyles = _extends({
+	                    marginTop: offset.top - clientY - scroll.top,
+	                    marginLeft: offset.left - clientX - scroll.left
+	                }, transformProps);
+	            } else {
+	                _this.elCopyStyles = _extends({}, _this.elCopyStyles, transformProps);
+	                for (var key in transformProps) {
+	                    if (transformProps.hasOwnProperty(key)) {
+	                        elCopy.style[key] = transformProps[key];
+	                    }
+	                }
+	                var _e$touches$2 = e.touches[0],
+	                    _clientX = _e$touches$2.clientX,
+	                    _clientY = _e$touches$2.clientY;
+	
+	                var el = document.elementFromPoint(_clientX, _clientY);
+	                console.log(el, dragItem);
+	                el.style.background = 'blue';
+	                // const diffX = clientX - this.mouse.last.x;
+	                // if (
+	                //     (diffX >= 0 && this.mouse.shift.x >= 0) ||
+	                //     (diffX <= 0 && this.mouse.shift.x <= 0)
+	                // ) {
+	                //     this.mouse.shift.x += diffX;
+	                // } else {
+	                //     this.mouse.shift.x = 0;
+	                // }
+	                // this.mouse.last.x = clientX;
+	
+	                // if (Math.abs(this.mouse.shift.x) > threshold) {
+	                //     if (this.mouse.shift.x > 0) {
+	                //         this.tryIncreaseDepth(dragItem);
+	                //     } else {
+	                //         this.tryDecreaseDepth(dragItem);
+	                //     }
+	                //     this.mouse.shift.x = 0;
+	                // }
+	            }
+	        };
+	
+	        _this.onTouchEnd = function (e, isCancel) {
 	            e && e.preventDefault();
 	
-	            _this.stopTrackMouse();
+	            _this.stopTrackTouch();
 	            _this.el = null;
 	
 	            isCancel ? _this.dragRevert() : _this.dragApply();
 	        };
 	
+	        _this.onDragEnd = function (e, isCancel) {
+	            e && e.preventDefault();
+	
+	            _this.stopTrackMouse();
+	            _this.el = null;
+	            _this.dragApply();
+	        };
+	
 	        _this.onMouseMove = function (e) {
-	            var _this$props2 = _this.props,
-	                group = _this$props2.group,
-	                threshold = _this$props2.threshold;
+	            var _this$props3 = _this.props,
+	                group = _this$props3.group,
+	                threshold = _this$props3.threshold;
 	            var dragItem = _this.state.dragItem;
 	            var target = e.target,
 	                clientX = e.clientX,
@@ -11269,9 +11364,9 @@
 	                e.stopPropagation();
 	            }
 	
-	            var _this$props3 = _this.props,
-	                collapsed = _this$props3.collapsed,
-	                childrenProp = _this$props3.childrenProp;
+	            var _this$props4 = _this.props,
+	                collapsed = _this$props4.collapsed,
+	                childrenProp = _this$props4.childrenProp;
 	            var dragItem = _this.state.dragItem;
 	
 	            if (dragItem.id === item.id) return;
@@ -11633,7 +11728,9 @@
 	                renderItem = _props4.renderItem,
 	                handler = _props4.handler,
 	                childrenProp = _props4.childrenProp;
-	            var dragItem = this.state.dragItem;
+	            var _state2 = this.state,
+	                dragItem = _state2.dragItem,
+	                isTouch = _state2.isTouch;
 	
 	
 	            return {
@@ -11641,9 +11738,12 @@
 	                childrenProp: childrenProp,
 	                renderItem: renderItem,
 	                handler: handler,
+	                isTouch: isTouch,
 	
 	                onDragStart: this.onDragStart,
 	                onMouseEnter: this.onMouseEnter,
+	                onTouchStart: this.onTouchStart,
+	                onTouchMove: this.onTouchMove,
 	                isCollapsed: this.isCollapsed,
 	                onToggleCollapse: this.onToggleCollapse
 	            };
@@ -11651,6 +11751,11 @@
 	
 	        // ––––––––––––––––––––––––––––––––––––
 	        // Click handlers or event handlers
+	        // ––––––––––––––––––––––––––––––––––––
+	
+	
+	        // ––––––––––––––––––––––––––––––––––––
+	        // Touch handlers or event handlers
 	        // ––––––––––––––––––––––––––––––––––––
 	
 	    }, {
@@ -11693,9 +11798,9 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _state2 = this.state,
-	                items = _state2.items,
-	                dragItem = _state2.dragItem;
+	            var _state3 = this.state,
+	                items = _state3.items,
+	                dragItem = _state3.dragItem;
 	            var group = this.props.group;
 	
 	            var options = this.getItemOptions();
@@ -11824,14 +11929,20 @@
 	                if (dragItem) {
 	                    rowProps = _extends({}, rowProps, {
 	                        onMouseEnter: function onMouseEnter(e) {
-	                            return options.onMouseEnter(e, item);
+	                            options.onMouseEnter(e, item);
+	                        },
+	                        onTouchMove: function onTouchMove(e) {
+	                            options.onTouchMove(e, item);
 	                        }
 	                    });
 	                } else {
 	                    handlerProps = _extends({}, handlerProps, {
-	                        draggable: true,
+	                        draggable: !options.isTouch,
 	                        onDragStart: function onDragStart(e) {
 	                            return options.onDragStart(e, item);
+	                        },
+	                        onTouchStart: function onTouchStart(e) {
+	                            return options.onTouchStart(e, item);
 	                        }
 	                    });
 	                }
@@ -12026,10 +12137,20 @@
 	                'div',
 	                null,
 	                _react2.default.createElement(
+	                    'a',
+	                    { href: 'https://github.com/primetwig/react-nestable' },
+	                    _react2.default.createElement('img', {
+	                        style: { position: 'fixed', top: 0, right: 0, border: 0 },
+	                        src: 'https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png',
+	                        alt: 'Fork me on GitHub'
+	                    })
+	                ),
+	                _react2.default.createElement(
 	                    'h1',
 	                    null,
 	                    'React Nestable'
 	                ),
+	                _react2.default.createElement('hr', null),
 	                _react2.default.createElement(
 	                    'h2',
 	                    null,
