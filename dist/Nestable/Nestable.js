@@ -195,13 +195,21 @@ var Nestable = function (_Component) {
 
       var _this$props3 = _this.props,
           collapsed = _this$props3.collapsed,
-          childrenProp = _this$props3.childrenProp;
+          childrenProp = _this$props3.childrenProp,
+          maxDepth = _this$props3.maxDepth;
       var dragItem = _this.state.dragItem;
 
       if (dragItem.id === item.id) return;
 
       var pathFrom = _this.getPathById(dragItem.id);
       var pathTo = _this.getPathById(item.id);
+
+      // if move to new depth greater than max depth,
+      // don't move
+      var newDepth = pathTo.length + _this.getItemDepth(dragItem);
+      if (newDepth > maxDepth) {
+        return;
+      }
 
       // if collapsed by default
       // and move last (by count) child

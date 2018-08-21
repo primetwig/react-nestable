@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7270b742ec22bfa4664a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "367f626f016c70fa4742"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -11315,13 +11315,21 @@
 	
 	      var _this$props3 = _this.props,
 	          collapsed = _this$props3.collapsed,
-	          childrenProp = _this$props3.childrenProp;
+	          childrenProp = _this$props3.childrenProp,
+	          maxDepth = _this$props3.maxDepth;
 	      var dragItem = _this.state.dragItem;
 	
 	      if (dragItem.id === item.id) return;
 	
 	      var pathFrom = _this.getPathById(dragItem.id);
 	      var pathTo = _this.getPathById(item.id);
+	
+	      // if move to new depth greater than max depth,
+	      // don't move
+	      var newDepth = pathTo.length + _this.getItemDepth(dragItem);
+	      if (newDepth > maxDepth) {
+	        return;
+	      }
 	
 	      // if collapsed by default
 	      // and move last (by count) child
@@ -12062,7 +12070,8 @@
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Example.__proto__ || Object.getPrototypeOf(Example)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
 	      example: 1,
-	      defaultCollapsed: false
+	      defaultCollapsed: false,
+	      maxDepth: 3
 	    }, _this.collapse = function (collapseCase) {
 	      if (_this.refNestable) {
 	        switch (collapseCase) {
@@ -12094,7 +12103,9 @@
 	        item.text
 	      );
 	    }, _this.renderExampleOne = function () {
-	      var defaultCollapsed = _this.state.defaultCollapsed;
+	      var _this$state = _this.state,
+	          defaultCollapsed = _this$state.defaultCollapsed,
+	          maxDepth = _this$state.maxDepth;
 	
 	      var onDefaultCollapsed = function onDefaultCollapsed() {
 	        return _this.setState({
@@ -12111,6 +12122,7 @@
 	          'Basic example'
 	        ),
 	        _react2.default.createElement(_Nestable2.default, {
+	          maxDepth: maxDepth,
 	          items: items,
 	          collapsed: defaultCollapsed,
 	          renderItem: _this.renderItem,
@@ -12149,6 +12161,20 @@
 	            _react2.default.createElement('input', { type: 'checkbox', name: 'collapsed', onChange: onDefaultCollapsed }),
 	            'Collapsed by default'
 	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'label',
+	          null,
+	          'Max depth',
+	          _react2.default.createElement('input', {
+	            type: 'number',
+	            value: maxDepth,
+	            onChange: function onChange(_ref3) {
+	              var value = _ref3.target.value;
+	              return _this.setState({ maxDepth: parseInt(value) });
+	            }
+	          })
 	        )
 	      );
 	    }, _this.renderExampleTwo = function () {

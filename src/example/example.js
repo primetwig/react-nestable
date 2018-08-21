@@ -50,7 +50,8 @@ const items = [
 class Example extends Component {
   state = {
     example: 1,
-    defaultCollapsed: false
+    defaultCollapsed: false,
+    maxDepth: 3
   };
 
   collapse = (collapseCase) => {
@@ -86,7 +87,7 @@ class Example extends Component {
   };
 
   renderExampleOne = () => {
-    const { defaultCollapsed } = this.state;
+    const { defaultCollapsed, maxDepth } = this.state;
     const onDefaultCollapsed = () => this.setState({
       defaultCollapsed: !defaultCollapsed
     });
@@ -96,6 +97,7 @@ class Example extends Component {
         <h2>Basic example</h2>
 
         <Nestable
+          maxDepth={maxDepth}
           items={items}
           collapsed={defaultCollapsed}
           renderItem={this.renderItem}
@@ -112,6 +114,17 @@ class Example extends Component {
             Collapsed by default
           </label>
         </form>
+        <br />
+        <label>
+          Max depth
+          <input
+            type="number"
+            value={maxDepth}
+            onChange={({ target: { value } }) =>
+              this.setState({ maxDepth: parseInt(value) })
+            }
+          />
+        </label>
       </div>
     );
   };

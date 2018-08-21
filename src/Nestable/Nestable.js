@@ -484,12 +484,19 @@ class Nestable extends Component {
       e.stopPropagation();
     }
 
-    const { collapsed, childrenProp } = this.props;
+    const { collapsed, childrenProp, maxDepth } = this.props;
     const { dragItem } = this.state;
     if (dragItem.id === item.id) return;
 
     const pathFrom = this.getPathById(dragItem.id);
     const pathTo = this.getPathById(item.id);
+
+    // if move to new depth greater than max depth,
+    // don't move
+    const newDepth = pathTo.length + this.getItemDepth(dragItem);
+    if (newDepth > maxDepth) {
+      return;
+    }
 
     // if collapsed by default
     // and move last (by count) child
