@@ -53,6 +53,7 @@ class Nestable extends Component {
     renderItem: PropTypes.func,
     renderCollapseIcon: PropTypes.func,
     handler: PropTypes.node,
+    onMove: PropTypes.func,
     onChange: PropTypes.func
   };
   static defaultProps = {
@@ -63,6 +64,9 @@ class Nestable extends Component {
     group: Math.random().toString(36).slice(2),
     childrenProp: 'children',
     renderItem: ({ item }) => item.toString(),
+    onMove: () => {
+      return true;
+    },
     onChange: () => {
     }
   };
@@ -235,8 +239,15 @@ class Nestable extends Component {
   }
 
   dragApply() {
-    const { onChange } = this.props;
+    const { onMove, onChange } = this.props;
     const { items, isDirty, dragItem } = this.state;
+
+
+    if (onMove && isDirty && !onMove(items, dragItem)) {
+      this.dragRevert();
+      return;
+    }
+
 
     this.setState({
       itemsOld: null,

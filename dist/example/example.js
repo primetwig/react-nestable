@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7270b742ec22bfa4664a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3b203e1fd73c2b8e7436"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -11532,12 +11532,19 @@
 	  }, {
 	    key: 'dragApply',
 	    value: function dragApply() {
-	      var onChange = this.props.onChange;
+	      var _props4 = this.props,
+	          onMove = _props4.onMove,
+	          onChange = _props4.onChange;
 	      var _state = this.state,
 	          items = _state.items,
 	          isDirty = _state.isDirty,
 	          dragItem = _state.dragItem;
 	
+	
+	      if (onMove && isDirty && !onMove(items, dragItem)) {
+	        this.dragRevert();
+	        return;
+	      }
 	
 	      this.setState({
 	        itemsOld: null,
@@ -11673,11 +11680,11 @@
 	  }, {
 	    key: 'getItemOptions',
 	    value: function getItemOptions() {
-	      var _props4 = this.props,
-	          renderItem = _props4.renderItem,
-	          renderCollapseIcon = _props4.renderCollapseIcon,
-	          handler = _props4.handler,
-	          childrenProp = _props4.childrenProp;
+	      var _props5 = this.props,
+	          renderItem = _props5.renderItem,
+	          renderCollapseIcon = _props5.renderCollapseIcon,
+	          handler = _props5.handler,
+	          childrenProp = _props5.childrenProp;
 	      var dragItem = this.state.dragItem;
 	
 	
@@ -11781,6 +11788,7 @@
 	  renderItem: _propTypes2.default.func,
 	  renderCollapseIcon: _propTypes2.default.func,
 	  handler: _propTypes2.default.node,
+	  onMove: _propTypes2.default.func,
 	  onChange: _propTypes2.default.func
 	};
 	Nestable.defaultProps = {
@@ -11793,6 +11801,9 @@
 	  renderItem: function renderItem(_ref2) {
 	    var item = _ref2.item;
 	    return item.toString();
+	  },
+	  onMove: function onMove() {
+	    return true;
 	  },
 	  onChange: function onChange() {}
 	};
