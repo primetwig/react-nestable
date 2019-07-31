@@ -195,16 +195,13 @@ var Nestable = function (_Component) {
 
       var _this$props3 = _this.props,
           collapsed = _this$props3.collapsed,
-          childrenProp = _this$props3.childrenProp,
-          maxDepth = _this$props3.maxDepth;
+          childrenProp = _this$props3.childrenProp;
       var dragItem = _this.state.dragItem;
 
       if (dragItem.id === item.id) return;
 
       var pathFrom = _this.getPathById(dragItem.id);
       var pathTo = _this.getPathById(item.id);
-      // const newDepth = pathTo.length + this.getItemDepth(dragItem);
-      // if (newDepth > maxDepth) return; <<============================================================
 
       // if collapsed by default
       // and move last (by count) child
@@ -324,18 +321,26 @@ var Nestable = function (_Component) {
       var extraProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var _props2 = this.props,
           childrenProp = _props2.childrenProp,
-          confirmChange = _props2.confirmChange;
-
-      var destinationParent = this.getItemByPath(pathTo);
+          confirmChange = _props2.confirmChange,
+          maxDepth = _props2.maxDepth;
       var items = this.state.items;
-
-
-      console.log(destinationParent); // <<============================================================
-      if (!confirmChange(dragItem, destinationParent, pathFrom, pathTo)) return;
 
       // the remove action might affect the next position,
       // so update next coordinates accordingly
+
       var realPathTo = this.getRealNextPath(pathFrom, pathTo);
+
+      // when we move an item from top to bottom
+      // and it has some children
+      // it may try to get into an open group
+      // and total depth may exceed the limit
+      var newDepth = realPathTo.length + this.getItemDepth(dragItem) - 1;
+      if (newDepth > maxDepth) return;
+
+      // user can validate every movement
+      var destinationPath = realPathTo.length > pathTo.length ? pathTo : pathTo.slice(0, -1);
+      var destinationParent = this.getItemByPath(destinationPath);
+      if (!confirmChange(dragItem, destinationParent)) return;
 
       var removePath = this.getSplicePath(pathFrom, {
         numToRemove: 1,
@@ -528,7 +533,7 @@ var Nestable = function (_Component) {
       var npLastIndex = nextPath.length - 1;
 
       if (prevPath.length < nextPath.length) {
-        // move into deep
+        // move into depth
         var wasShifted = false;
 
         return nextPath.map(function (nextIndex, i) {
