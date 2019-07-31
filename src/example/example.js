@@ -47,6 +47,38 @@ const items = [
   }
 ];
 
+const grocery = [
+  {
+    id: 0,
+    text: 'Apples',
+    type: 'fruits'
+  },
+  {
+    id: 1,
+    text: 'Fruit box',
+    accepts: ['fruits'],
+    children: [
+      {
+        id: 2,
+        text: 'Bananas',
+        type: 'fruits'
+      }
+    ]
+  },
+  {
+    id: 3,
+    text: 'Box',
+    accepts: ['fruits', 'sweets'],
+    children: [
+      {
+        id: 4,
+        text: 'Candy',
+        type: 'sweets'
+      }
+    ]
+  }
+];
+
 class Example extends Component {
   state = {
     example: 1,
@@ -116,17 +148,40 @@ class Example extends Component {
     );
   };
 
-  renderExampleTwo = () => (
-    <div>
-      <h2>Example with handlers</h2>
+  renderExampleTwo = () => {
+    return (
+      <div>
+        <h2>Example with handlers</h2>
 
-      <Nestable
-        items={items}
-        renderItem={this.renderItem}
-        handler={<span style={handlerStyles}/>}
-      />
-    </div>
-  );
+        <Nestable
+          items={items}
+          renderItem={this.renderItem}
+          handler={<span style={handlerStyles}/>}
+        />
+      </div>
+    );
+  };
+
+  confirmChange = (dragItem, destinationParent) => {
+    // move to root level
+    if (!destinationParent) return true;
+
+    return (destinationParent.accepts || []).indexOf(dragItem.type) > -1;
+  };
+
+  renderExampleThree = () => {
+    return (
+      <div>
+        <h2>Example with confirmChange</h2>
+
+        <Nestable
+          items={grocery}
+          renderItem={this.renderItem}
+          confirmChange={this.confirmChange}
+        />
+      </div>
+    );
+  };
 
   render() {
     const { example } = this.state;
@@ -137,12 +192,14 @@ class Example extends Component {
         <select onChange={onExampleChange} value={example}>
           <option value={1}>Basic example</option>
           <option value={2}>Example with handlers</option>
+          <option value={3}>Example with confirmChange</option>
         </select>
 
         <hr/>
 
         {example === 1 && this.renderExampleOne()}
         {example === 2 && this.renderExampleTwo()}
+        {example === 3 && this.renderExampleThree()}
       </div>
     );
   }

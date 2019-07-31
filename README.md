@@ -59,6 +59,7 @@ const renderItem = ({ item }) => {
 | renderItem | function | `({ item, index }) => item.toString()` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `index` - index of the item, `collapseIcon` - icon for items with children (allows you to collapse group), `handler` - component which you have passed via the same property, but covered with some additional events. |
 | renderCollapseIcon | function | `({ isCollapsed }) => <DefaultIcon />` | Function for rendering collapse icon. Has a single parameter with keys: `isCollapsed` - boolean, true if this group has children and collapsed. |
 | onChange | function | `() => {}` | Callback which has two parameters: `items` - new array after position was changed, `item` - item which has been moved. |
+| confirmChange | function | `() => true` | Callback which has two parameters: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land. Let function return false if this movement should not happen. |
 
 #### Public methods
 

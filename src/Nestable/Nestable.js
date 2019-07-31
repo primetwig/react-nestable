@@ -53,7 +53,8 @@ class Nestable extends Component {
     renderItem: PropTypes.func,
     renderCollapseIcon: PropTypes.func,
     handler: PropTypes.node,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    confirmChange: PropTypes.func
   };
   static defaultProps = {
     items: [],
@@ -64,7 +65,8 @@ class Nestable extends Component {
     childrenProp: 'children',
     renderItem: ({ item }) => item.toString(),
     onChange: () => {
-    }
+    },
+    confirmChange: () => true
   };
 
   componentDidMount() {
@@ -148,13 +150,26 @@ class Nestable extends Component {
   };
 
   moveItem({ dragItem, pathFrom, pathTo }, extraProps = {}) {
-    const { childrenProp } = this.props;
+    const { childrenProp, confirmChange, maxDepth } = this.props;
     let { items } = this.state;
 
     // the remove action might affect the next position,
     // so update next coordinates accordingly
     const realPathTo = this.getRealNextPath(pathFrom, pathTo);
 
+    // when we move an item from top to bottom
+    // and it has some children
+    // it may try to get into an open group
+    // and total depth may exceed the limit
+    const newDepth = realPathTo.length + this.getItemDepth(dragItem) - 1;
+    if (newDepth > maxDepth) return;
+
+    // user can validate every movement
+    const destinationPath = realPathTo.length > pathTo.length
+      ? pathTo
+      : pathTo.slice(0, -1);
+    const destinationParent = this.getItemByPath(destinationPath);
+    if (!confirmChange(dragItem, destinationParent)) return;
 
     const removePath = this.getSplicePath(pathFrom, {
       numToRemove: 1,
@@ -332,7 +347,7 @@ class Nestable extends Component {
     const npLastIndex = nextPath.length - 1;
 
     if (prevPath.length < nextPath.length) {
-      // move into deep
+      // move into depth
       let wasShifted = false;
 
       return nextPath.map((nextIndex, i) => {

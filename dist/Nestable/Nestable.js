@@ -195,13 +195,16 @@ var Nestable = function (_Component) {
 
       var _this$props3 = _this.props,
           collapsed = _this$props3.collapsed,
-          childrenProp = _this$props3.childrenProp;
+          childrenProp = _this$props3.childrenProp,
+          maxDepth = _this$props3.maxDepth;
       var dragItem = _this.state.dragItem;
 
       if (dragItem.id === item.id) return;
 
       var pathFrom = _this.getPathById(dragItem.id);
       var pathTo = _this.getPathById(item.id);
+      // const newDepth = pathTo.length + this.getItemDepth(dragItem);
+      // if (newDepth > maxDepth) return; <<============================================================
 
       // if collapsed by default
       // and move last (by count) child
@@ -319,12 +322,19 @@ var Nestable = function (_Component) {
           pathFrom = _ref.pathFrom,
           pathTo = _ref.pathTo;
       var extraProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var childrenProp = this.props.childrenProp;
+      var _props2 = this.props,
+          childrenProp = _props2.childrenProp,
+          confirmChange = _props2.confirmChange;
+
+      var destinationParent = this.getItemByPath(pathTo);
       var items = this.state.items;
+
+
+      console.log(destinationParent); // <<============================================================
+      if (!confirmChange(dragItem, destinationParent, pathFrom, pathTo)) return;
 
       // the remove action might affect the next position,
       // so update next coordinates accordingly
-
       var realPathTo = this.getRealNextPath(pathFrom, pathTo);
 
       var removePath = this.getSplicePath(pathFrom, {
@@ -349,10 +359,10 @@ var Nestable = function (_Component) {
   }, {
     key: 'tryIncreaseDepth',
     value: function tryIncreaseDepth(dragItem) {
-      var _props2 = this.props,
-          maxDepth = _props2.maxDepth,
-          childrenProp = _props2.childrenProp,
-          collapsed = _props2.collapsed;
+      var _props3 = this.props,
+          maxDepth = _props3.maxDepth,
+          childrenProp = _props3.childrenProp,
+          collapsed = _props3.collapsed;
 
       var pathFrom = this.getPathById(dragItem.id);
       var itemIndex = pathFrom[pathFrom.length - 1];
@@ -381,9 +391,9 @@ var Nestable = function (_Component) {
   }, {
     key: 'tryDecreaseDepth',
     value: function tryDecreaseDepth(dragItem) {
-      var _props3 = this.props,
-          childrenProp = _props3.childrenProp,
-          collapsed = _props3.collapsed;
+      var _props4 = this.props,
+          childrenProp = _props4.childrenProp,
+          collapsed = _props4.collapsed;
 
       var pathFrom = this.getPathById(dragItem.id);
       var itemIndex = pathFrom[pathFrom.length - 1];
@@ -553,11 +563,11 @@ var Nestable = function (_Component) {
   }, {
     key: 'getItemOptions',
     value: function getItemOptions() {
-      var _props4 = this.props,
-          renderItem = _props4.renderItem,
-          renderCollapseIcon = _props4.renderCollapseIcon,
-          handler = _props4.handler,
-          childrenProp = _props4.childrenProp;
+      var _props5 = this.props,
+          renderItem = _props5.renderItem,
+          renderCollapseIcon = _props5.renderCollapseIcon,
+          handler = _props5.handler,
+          childrenProp = _props5.childrenProp;
       var dragItem = this.state.dragItem;
 
 
@@ -661,7 +671,8 @@ Nestable.propTypes = {
   renderItem: _propTypes2.default.func,
   renderCollapseIcon: _propTypes2.default.func,
   handler: _propTypes2.default.node,
-  onChange: _propTypes2.default.func
+  onChange: _propTypes2.default.func,
+  confirmChange: _propTypes2.default.func
 };
 Nestable.defaultProps = {
   items: [],
@@ -674,6 +685,9 @@ Nestable.defaultProps = {
     var item = _ref2.item;
     return item.toString();
   },
-  onChange: function onChange() {}
+  onChange: function onChange() {},
+  confirmChange: function confirmChange() {
+    return true;
+  }
 };
 exports.default = Nestable;
