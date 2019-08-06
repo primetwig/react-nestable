@@ -18,10 +18,10 @@
 .icon-plus-gray {
   width: 20px;
   height: 20px;
-  background-image: url("icon-plus-gray.svg");
+  background-image: url("./icon-plus-gray.svg");
 }
 .icon-minus-gray {
   width: 20px;
   height: 20px;
-  background-image: url("icon-minus-gray.svg");
+  background-image: url("./icon-minus-gray.svg");
 }
