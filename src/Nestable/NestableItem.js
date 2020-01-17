@@ -7,18 +7,18 @@ import Icon from '../Icon';
 class NestableItem extends Component {
   static propTypes = {
     item: PropTypes.shape({
-      id: PropTypes.any.isRequired
+      id: PropTypes.any.isRequired,
     }),
     isCopy: PropTypes.bool,
     options: PropTypes.object,
-    index: PropTypes.number
+    index: PropTypes.number,
   };
 
   renderCollapseIcon = ({ isCollapsed }) => (
     <Icon
       className={cn("nestable-item-icon", {
         "icon-plus-gray": isCollapsed,
-        "icon-minus-gray": !isCollapsed
+        "icon-minus-gray": !isCollapsed,
       })}
     />
   );
@@ -30,38 +30,28 @@ class NestableItem extends Component {
       renderItem,
       handler,
       childrenProp,
-      renderCollapseIcon = this.renderCollapseIcon
+      renderCollapseIcon = this.renderCollapseIcon,
     } = options;
-    const isCollapsed = options.isCollapsed(item);
 
+    const isCollapsed = options.isCollapsed(item);
     const isDragging = !isCopy && dragItem && dragItem.id === item.id;
     const hasChildren = item[childrenProp] && item[childrenProp].length > 0;
 
-    let Handler;
-
-    let itemProps = {
-      className: cn(
-        "nestable-item" + (isCopy ? '-copy' : ''),
-        "nestable-item" + (isCopy ? '-copy' : '') + '-' + item.id,
-        {
-          'is-dragging': isDragging
-        }
-      )
-    };
-
     let rowProps = {};
     let handlerProps = {};
+    let Handler;
+
     if (!isCopy) {
       if (dragItem) {
         rowProps = {
           ...rowProps,
-          onMouseEnter: (e) => options.onMouseEnter(e, item)
+          onMouseEnter: (e) => options.onMouseEnter(e, item),
         };
       } else {
         handlerProps = {
           ...handlerProps,
           draggable: true,
-          onDragStart: (e) => options.onDragStart(e, item)
+          onDragStart: (e) => options.onDragStart(e, item),
         };
       }
     }
@@ -84,10 +74,28 @@ class NestableItem extends Component {
       )
       : null;
 
+    const baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
+    const itemProps = {
+      className: cn(
+          baseClassName,
+          baseClassName + '-' + item.id,
+          {
+            'is-dragging': isDragging,
+            [baseClassName + '--with-children']: hasChildren,
+            [baseClassName + '--children-open']: hasChildren && !isCollapsed,
+            [baseClassName + '--children-collapsed']: hasChildren && isCollapsed,
+          }
+      )
+    };
+
+    const content = renderItem({ item, collapseIcon, handler: Handler, index });
+
+    if (!content) return null;
+
     return (
       <li {...itemProps}>
         <div className="nestable-item-name" {...rowProps}>
-          {renderItem({ item, collapseIcon, handler: Handler, index })}
+          {content}
         </div>
 
         {hasChildren && !isCollapsed && (

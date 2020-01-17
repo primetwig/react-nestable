@@ -11,7 +11,7 @@ import {
   getTotalScroll,
   getTransformProps,
   listWithChildren,
-  getAllNonEmptyNodesIds
+  getAllNonEmptyNodesIds,
 } from '../utils';
 
 import './Nestable.css';
@@ -25,21 +25,22 @@ class Nestable extends Component {
       itemsOld: null, // snap copy in case of canceling drag
       dragItem: null,
       isDirty: false,
-      collapsedGroups: []
+      collapsedGroups: [],
     };
 
     this.el = null;
     this.elCopyStyles = null;
     this.mouse = {
       last: { x: 0 },
-      shift: { x: 0 }
+      shift: { x: 0 },
     };
   }
 
   static propTypes = {
+    className: PropTypes.string,
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.any.isRequired
+        id: PropTypes.any.isRequired,
       })
     ),
     threshold: PropTypes.number,
@@ -47,14 +48,14 @@ class Nestable extends Component {
     collapsed: PropTypes.bool,
     group: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.string
+      PropTypes.string,
     ]),
     childrenProp: PropTypes.string,
     renderItem: PropTypes.func,
     renderCollapseIcon: PropTypes.func,
     handler: PropTypes.node,
     onChange: PropTypes.func,
-    confirmChange: PropTypes.func
+    confirmChange: PropTypes.func,
   };
   static defaultProps = {
     items: [],
@@ -64,9 +65,8 @@ class Nestable extends Component {
     group: Math.random().toString(36).slice(2),
     childrenProp: 'children',
     renderItem: ({ item }) => item.toString(),
-    onChange: () => {
-    },
-    confirmChange: () => true
+    onChange: () => {},
+    confirmChange: () => true,
   };
 
   componentDidMount() {
@@ -111,14 +111,14 @@ class Nestable extends Component {
     const { childrenProp, collapsed } = this.props;
     const { items } = this.state;
 
-    if (itemIds == 'NONE') {
+    if (itemIds === 'NONE') {
       this.setState({
         collapsedGroups: collapsed
           ? getAllNonEmptyNodesIds(items, childrenProp)
           : []
       });
 
-    } else if (itemIds == 'ALL') {
+    } else if (itemIds === 'ALL') {
       this.setState({
         collapsedGroups: collapsed
           ? []
@@ -173,13 +173,13 @@ class Nestable extends Component {
 
     const removePath = this.getSplicePath(pathFrom, {
       numToRemove: 1,
-      childrenProp: childrenProp
+      childrenProp: childrenProp,
     });
 
     const insertPath = this.getSplicePath(realPathTo, {
       numToRemove: 0,
       itemsToInsert: [dragItem],
-      childrenProp: childrenProp
+      childrenProp: childrenProp,
     });
 
     items = update(items, removePath);
@@ -232,7 +232,7 @@ class Nestable extends Component {
       const parent = this.getItemByPath(pathFrom.slice(0, -1));
 
       // is last (by order) item in array
-      if (itemIndex + 1 == parent[childrenProp].length) {
+      if (itemIndex + 1 === parent[childrenProp].length) {
         let pathTo = pathFrom.slice(0, -1);
         pathTo[pathTo.length - 1] += 1;
 
@@ -240,7 +240,7 @@ class Nestable extends Component {
         // and is last (by count) item in array
         // remove this node from list of open nodes
         let collapseProps = {};
-        if (collapsed && parent[childrenProp].length == 1) {
+        if (collapsed && parent[childrenProp].length === 1) {
           collapseProps = this.onToggleCollapse(parent, true);
         }
 
@@ -256,7 +256,7 @@ class Nestable extends Component {
     this.setState({
       itemsOld: null,
       dragItem: null,
-      isDirty: false
+      isDirty: false,
     });
 
     onChange && isDirty && onChange(items, dragItem);
@@ -269,7 +269,7 @@ class Nestable extends Component {
       items: itemsOld,
       itemsOld: null,
       dragItem: null,
-      isDirty: false
+      isDirty: false,
     });
   }
 
@@ -291,7 +291,7 @@ class Nestable extends Component {
         }
       }
 
-      return path.length == 0;
+      return path.length === 0;
     });
 
     return path;
@@ -352,7 +352,7 @@ class Nestable extends Component {
 
       return nextPath.map((nextIndex, i) => {
         if (wasShifted) {
-          return i == npLastIndex
+          return i === npLastIndex
             ? nextIndex + 1
             : nextIndex;
         }
@@ -361,7 +361,7 @@ class Nestable extends Component {
           return nextIndex;
         }
 
-        if (nextPath[i] > prevPath[i] && i == ppLastIndex) {
+        if (nextPath[i] > prevPath[i] && i === ppLastIndex) {
           wasShifted = true;
           return nextIndex - 1;
         }
@@ -369,7 +369,7 @@ class Nestable extends Component {
         return nextIndex;
       });
 
-    } else if (prevPath.length == nextPath.length) {
+    } else if (prevPath.length === nextPath.length) {
       // if move bottom + move to item with children => make it a first child instead of swap
       if (nextPath[npLastIndex] > prevPath[npLastIndex]) {
         const target = this.getItemByPath(nextPath);
@@ -512,7 +512,7 @@ class Nestable extends Component {
     let collapseProps = {};
     if (collapsed && pathFrom.length > 1) {
       const parent = this.getItemByPath(pathFrom.slice(0, -1));
-      if (parent[childrenProp].length == 1) {
+      if (parent[childrenProp].length === 1) {
         collapseProps = this.onToggleCollapse(parent, true);
       }
     }
@@ -527,7 +527,7 @@ class Nestable extends Component {
 
     const newState = {
       collapsedGroups: (isCollapsed ^ collapsed)
-        ? collapsedGroups.filter(id => id != item.id)
+        ? collapsedGroups.filter(id => id !== item.id)
         : collapsedGroups.concat(item.id)
     };
 
@@ -580,12 +580,12 @@ class Nestable extends Component {
   }
 
   render() {
+    const { group, className } = this.props;
     const { items, dragItem } = this.state;
-    const { group } = this.props;
     const options = this.getItemOptions();
 
     return (
-      <div className={cn("nestable", "nestable-" + group, { 'is-drag-active': dragItem })}>
+      <div className={cn(className, 'nestable', 'nestable-' + group, { 'is-drag-active': dragItem })}>
         <ol className="nestable-list nestable-group">
           {items.map((item, i) => {
             return (

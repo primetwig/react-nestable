@@ -23,32 +23,34 @@ npm install -save react-nestable
 ```
 import Nestable from 'react-nestable';
 ```
-every item must have unique `id` in order to distinguish elements
+every item must have a unique `id` in order to distinguish elements
 ```
 const items = [
-    { id: 0, text: 'Andy' },
-    {
-      id: 1, text: 'Harry',
-      children: [{ id: 2, text: 'David' }]
-    },
-    { id: 3, text: 'Lisa' }
+  { id: 0, text: 'Andy' },
+  {
+    id: 1, text: 'Harry',
+    children: [
+      { id: 2, text: 'David' }
+    ]
+  },
+  { id: 3, text: 'Lisa' }
 ];
 
-const renderItem = ({ item }) => {
-    return item.text;
-};
-```
-```
-<Nestable
+const renderItem = ({ item }) => item.text;
+
+const Example = () => (
+  <Nestable
     items={items}
     renderItem={renderItem}
-/>
+  />
+)
 ```
 
 ## Options
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
+| className | string | `undefined` | Extra class name which can be passed to a root element. |
 | items | array | `[]` | Array of items. Every item must be of shape `{ id: @uniq }`. |
 | threshold | int | `30` | Amount of pixels which mouse should move horizontally before increasing/decreasing level (nesting) of current element. |
 | maxDepth | int | `10` | Maximum available level of nesting. |
@@ -72,7 +74,7 @@ const renderItem = ({ item }) => {
 - add touch
 - cover with tests
 
-PS: Please, make an issue or drop me a letter if you need any more functionality.
+PS: Please, make an issue or create a PR if you need any more functionality.
 
 ## License
 
