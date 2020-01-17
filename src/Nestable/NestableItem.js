@@ -16,9 +16,9 @@ class NestableItem extends Component {
 
   renderCollapseIcon = ({ isCollapsed }) => (
     <Icon
-      className={cn("nestable-item-icon", {
-        "icon-plus-gray": isCollapsed,
-        "icon-minus-gray": !isCollapsed,
+      className={cn('nestable-item-icon', {
+        'icon-plus-gray': isCollapsed,
+        'icon-minus-gray': !isCollapsed,
       })}
     />
   );

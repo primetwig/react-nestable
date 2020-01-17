@@ -26,6 +26,8 @@ var _Icon2 = _interopRequireDefault(_Icon);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -49,9 +51,9 @@ var NestableItem = function (_Component) {
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = NestableItem.__proto__ || Object.getPrototypeOf(NestableItem)).call.apply(_ref, [this].concat(args))), _this), _this.renderCollapseIcon = function (_ref2) {
       var isCollapsed = _ref2.isCollapsed;
       return _react2.default.createElement(_Icon2.default, {
-        className: (0, _classnames2.default)("nestable-item-icon", {
-          "icon-plus-gray": isCollapsed,
-          "icon-minus-gray": !isCollapsed
+        className: (0, _classnames2.default)('nestable-item-icon', {
+          'icon-plus-gray': isCollapsed,
+          'icon-minus-gray': !isCollapsed
         })
       });
     }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -60,6 +62,8 @@ var NestableItem = function (_Component) {
   _createClass(NestableItem, [{
     key: 'render',
     value: function render() {
+      var _cn;
+
       var _props = this.props,
           item = _props.item,
           isCopy = _props.isCopy,
@@ -72,21 +76,15 @@ var NestableItem = function (_Component) {
           _options$renderCollap = options.renderCollapseIcon,
           renderCollapseIcon = _options$renderCollap === undefined ? this.renderCollapseIcon : _options$renderCollap;
 
-      var isCollapsed = options.isCollapsed(item);
 
+      var isCollapsed = options.isCollapsed(item);
       var isDragging = !isCopy && dragItem && dragItem.id === item.id;
       var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
 
-      var Handler = void 0;
-
-      var itemProps = {
-        className: (0, _classnames2.default)("nestable-item" + (isCopy ? '-copy' : ''), "nestable-item" + (isCopy ? '-copy' : '') + '-' + item.id, {
-          'is-dragging': isDragging
-        })
-      };
-
       var rowProps = {};
       var handlerProps = {};
+      var Handler = void 0;
+
       if (!isCopy) {
         if (dragItem) {
           rowProps = _extends({}, rowProps, {
@@ -123,13 +121,24 @@ var NestableItem = function (_Component) {
         renderCollapseIcon({ isCollapsed: isCollapsed })
       ) : null;
 
+      var baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
+      var itemProps = {
+        className: (0, _classnames2.default)(baseClassName, baseClassName + '-' + item.id, (_cn = {
+          'is-dragging': isDragging
+        }, _defineProperty(_cn, baseClassName + '--with-children', hasChildren), _defineProperty(_cn, baseClassName + '--children-open', hasChildren && !isCollapsed), _defineProperty(_cn, baseClassName + '--children-collapsed', hasChildren && isCollapsed), _cn))
+      };
+
+      var content = renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler, index: index });
+
+      if (!content) return null;
+
       return _react2.default.createElement(
         'li',
         itemProps,
         _react2.default.createElement(
           'div',
           _extends({ className: 'nestable-item-name' }, rowProps),
-          renderItem({ item: item, collapseIcon: collapseIcon, handler: Handler, index: index })
+          content
         ),
         hasChildren && !isCollapsed && _react2.default.createElement(
           'ol',

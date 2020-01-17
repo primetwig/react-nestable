@@ -10,14 +10,14 @@ class Icon extends Component {
     const { children, className, ...props } = this.props;
 
     return (
-      <i className={cn("nestable-icon", className)} {...props} />
+      <i className={cn('nestable-icon', className)} {...props} />
     );
   }
 }
 
 Icon.propTypes = {
   children: PropTypes.any,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default Icon;
