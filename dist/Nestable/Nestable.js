@@ -322,22 +322,17 @@ var Nestable = function (_Component) {
       var extraProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var _props3 = this.props,
           childrenProp = _props3.childrenProp,
-          confirmChange = _props3.confirmChange,
-          maxDepth = _props3.maxDepth;
+          confirmChange = _props3.confirmChange;
+
+      var dragItemSize = this.getItemDepth(dragItem);
       var items = this.state.items;
 
       // the remove action might affect the next position,
       // so update next coordinates accordingly
 
-      var realPathTo = this.getRealNextPath(pathFrom, pathTo);
+      var realPathTo = this.getRealNextPath(pathFrom, pathTo, dragItemSize);
 
-      // when we move an item from top to bottom
-      // and it has some children
-      // it may try to get into an open group
-      // and total depth may exceed the limit
-      var newDepth = realPathTo.length + this.getItemDepth(dragItem) - 1;
-      console.log({ newDepth: newDepth, realPathTo: realPathTo });
-      if (newDepth > maxDepth) return;
+      if (realPathTo.length === 0) return;
 
       // user can validate every movement
       var destinationPath = realPathTo.length > pathTo.length ? pathTo : pathTo.slice(0, -1);
@@ -528,15 +523,23 @@ var Nestable = function (_Component) {
     }
   }, {
     key: 'getRealNextPath',
-    value: function getRealNextPath(prevPath, nextPath) {
-      var childrenProp = this.props.childrenProp;
+    value: function getRealNextPath(prevPath, nextPath, dragItemSize) {
+      var _props6 = this.props,
+          childrenProp = _props6.childrenProp,
+          maxDepth = _props6.maxDepth;
 
       var ppLastIndex = prevPath.length - 1;
       var npLastIndex = nextPath.length - 1;
+      var newDepth = nextPath.length + dragItemSize - 1;
 
       if (prevPath.length < nextPath.length) {
         // move into depth
         var wasShifted = false;
+
+        // if new depth exceeds max, try to put after item instead of into item
+        if (newDepth > maxDepth && nextPath.length) {
+          return this.getRealNextPath(prevPath, nextPath.slice(0, -1), dragItemSize);
+        }
 
         return nextPath.map(function (nextIndex, i) {
           if (wasShifted) {
@@ -555,11 +558,11 @@ var Nestable = function (_Component) {
           return nextIndex;
         });
       } else if (prevPath.length === nextPath.length) {
-        // if move bottom + move to item with children => make it a first child instead of swap
+        // if move bottom + move to item with children --> make it a first child instead of swap
         if (nextPath[npLastIndex] > prevPath[npLastIndex]) {
           var target = this.getItemByPath(nextPath);
 
-          if (target[childrenProp] && target[childrenProp].length && !this.isCollapsed(target)) {
+          if (newDepth < maxDepth && target[childrenProp] && target[childrenProp].length && !this.isCollapsed(target)) {
             return nextPath.slice(0, -1).concat(nextPath[npLastIndex] - 1).concat(0);
           }
         }
@@ -570,11 +573,11 @@ var Nestable = function (_Component) {
   }, {
     key: 'getItemOptions',
     value: function getItemOptions() {
-      var _props6 = this.props,
-          renderItem = _props6.renderItem,
-          renderCollapseIcon = _props6.renderCollapseIcon,
-          handler = _props6.handler,
-          childrenProp = _props6.childrenProp;
+      var _props7 = this.props,
+          renderItem = _props7.renderItem,
+          renderCollapseIcon = _props7.renderCollapseIcon,
+          handler = _props7.handler,
+          childrenProp = _props7.childrenProp;
       var dragItem = this.state.dragItem;
 
 
@@ -636,9 +639,9 @@ var Nestable = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _props7 = this.props,
-          group = _props7.group,
-          className = _props7.className;
+      var _props8 = this.props,
+          group = _props8.group,
+          className = _props8.className;
       var _state2 = this.state,
           items = _state2.items,
           dragItem = _state2.dragItem;
