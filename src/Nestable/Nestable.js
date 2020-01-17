@@ -78,16 +78,16 @@ class Nestable extends Component {
     this.setState({ items });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { items: itemsNew, childrenProp } = nextProps;
-    const isPropsUpdated = shallowCompare({ props: this.props, state: {} }, nextProps, {});
+  componentDidUpdate(prevProps){
+    const { items: itemsNew, childrenProp } = this.props;
+    const isPropsUpdated = shallowCompare({ props: prevProps, state: {} }, this.props, {});
 
     if (isPropsUpdated) {
       this.stopTrackMouse();
 
       let extra = {};
 
-      if (this.props.collapsed !== nextProps.collapsed) {
+      if (prevProps.collapsed !== this.props.collapsed) {
         extra.collapsedGroups = [];
       }
 
