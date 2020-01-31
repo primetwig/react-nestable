@@ -448,6 +448,9 @@ class Nestable extends Component {
     const { clientX, clientY } = e;
     const transformProps = getTransformProps(clientX, clientY);
     const elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
+    const elCopyCoordX = elCopy && getOffsetRect(elCopy.firstChild).left;
+    const elDragging = document.querySelector('.is-dragging');
+    const elDraggingCoordX = elDragging && getOffsetRect(elDragging).left
 
     if (!this.elCopyStyles) {
       const offset = getOffsetRect(this.el);
@@ -482,9 +485,9 @@ class Nestable extends Component {
       this.mouse.last.x = clientX;
 
       if (Math.abs(this.mouse.shift.x) > threshold) {
-        if (this.mouse.shift.x > 0) {
+        if (this.mouse.shift.x > 0 && elCopyCoordX > elDraggingCoordX) {
           this.tryIncreaseDepth(dragItem);
-        } else {
+        } else if (elCopyCoordX < elDraggingCoordX){
           this.tryDecreaseDepth(dragItem);
         }
 
