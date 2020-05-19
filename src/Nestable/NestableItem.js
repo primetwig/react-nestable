@@ -76,11 +76,12 @@ class NestableItem extends Component {
       : null;
 
     const baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
+    const rootItemClassName = itemClassName ? itemClassName(item) : '';
     const itemProps = {
       className: cn(
           baseClassName,
           baseClassName + '-' + item.id,
-          itemClassName,
+          rootItemClassName,
           {
             'is-dragging': isDragging,
             [baseClassName + '--with-children']: hasChildren,
