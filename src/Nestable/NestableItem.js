@@ -30,6 +30,7 @@ class NestableItem extends Component {
       renderItem,
       handler,
       childrenProp,
+      itemClassName,
       renderCollapseIcon = this.renderCollapseIcon,
     } = options;
 
@@ -79,6 +80,7 @@ class NestableItem extends Component {
       className: cn(
           baseClassName,
           baseClassName + '-' + item.id,
+          itemClassName,
           {
             'is-dragging': isDragging,
             [baseClassName + '--with-children']: hasChildren,
