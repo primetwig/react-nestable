@@ -30,6 +30,7 @@ class NestableItem extends Component {
       renderItem,
       handler,
       childrenProp,
+      isKeyBoard,
       renderCollapseIcon = this.renderCollapseIcon,
     } = options;
 
@@ -45,19 +46,20 @@ class NestableItem extends Component {
       if (dragItem) {
         rowProps = {
           ...rowProps,
-          onMouseEnter: (e) => options.onMouseEnter(e, item),
+          onMouseEnter: isKeyBoard ? undefined: (e) => options.onMouseEnter(e, item),
         };
       } else {
         handlerProps = {
-          ...handlerProps,
+          ...handlerProps,    
           draggable: true,
           onDragStart: (e) => options.onDragStart(e, item),
+          onKeyDown: (e) => options.onKeyDown(e, item),
         };
       }
     }
 
     if (handler) {
-      Handler = <span className="nestable-item-handler" {...handlerProps}>{handler}</span>;
+      Handler = <span className="nestable-item-handler" tabIndex={0} {...handlerProps}>{handler}</span>;
       //Handler = React.cloneElement(handler, handlerProps);
     } else {
       rowProps = {
@@ -94,7 +96,7 @@ class NestableItem extends Component {
 
     return (
       <li {...itemProps}>
-        <div className="nestable-item-name" {...rowProps}>
+        <div className="nestable-item-name" {...rowProps} tabIndex={0}>
           {content}
         </div>
 
