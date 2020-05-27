@@ -6,13 +6,13 @@
   "scripts": {
     "prestart": "npm run build",
     "start": "node tools/devServer.js",
-    "clean": "rimraf ./dist",
+    "clean": "npx rimraf ./dist",
     "webpack": "webpack --colors --progress",
     "build": "babel src -d dist",
-    "build:html": "cpy ./**/*.html ../dist/ --cwd=src --parents",
-    "build:css": "cpy ./**/*.css ../dist/ --cwd=src --parents",
-    "build:images": "cpy ./**/*.svg ../dist/ --cwd=src --parents",
-    "prebuild": "npm run clean && mkdirp dist",
+    "build:html": "npx cpy ./**/*.html ../dist/ --cwd=src --parents",
+    "build:css": "npx cpy ./**/*.css ../dist/ --cwd=src --parents",
+    "build:images": "npx cpy ./**/*.svg ../dist/ --cwd=src --parents",
+    "prebuild": "npm run clean && npx mkdirp dist",
     "postbuild": "npm run build:html && npm run build:css && npm run build:images && npm run webpack",
     "prepublishOnly": "npm run build"
   },

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
@@ -26,6 +27,7 @@ class Nestable extends Component {
       dragItem: null,
       isDirty: false,
       collapsedGroups: [],
+      isKeyBoard: false,
     };
 
     this.el = null;
@@ -395,7 +397,7 @@ class Nestable extends Component {
 
   getItemOptions() {
     const { renderItem, renderCollapseIcon, handler, childrenProp } = this.props;
-    const { dragItem } = this.state;
+    const { dragItem, isKeyBoard } = this.state;
 
     return {
       dragItem,
@@ -403,9 +405,11 @@ class Nestable extends Component {
       renderItem,
       renderCollapseIcon,
       handler,
+      isKeyBoard,
 
       onDragStart: this.onDragStart,
       onMouseEnter: this.onMouseEnter,
+      onKeyDown: this.onKeyDown,
       isCollapsed: this.isCollapsed,
       onToggleCollapse: this.onToggleCollapse
     };
@@ -501,6 +505,33 @@ class Nestable extends Component {
   };
 
   onMouseEnter = (e, item) => {
+    this.onReorderItem(e, item);
+  };
+
+  onStartMoveItem = (e, item) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    this.setState({
+      dragItem: item,
+      itemsOld: this.state.items,
+      isKeyBoard: true
+    });
+
+    document.addEventListener('keydown', this.onKeyDown);
+  };
+
+  onEndMoveItem = (e) => {
+    e && e.preventDefault();
+
+    this.dragApply();
+    document.removeEventListener('keydown', this.onKeyDown);
+    this.setState({isKeyBoard: false});
+  }
+
+  onReorderItem = (e, item) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -508,11 +539,10 @@ class Nestable extends Component {
 
     const { collapsed, childrenProp } = this.props;
     const { dragItem } = this.state;
-    if (dragItem.id === item.id) return;
+    if (!item || dragItem.id === item.id) return;
 
     const pathFrom = this.getPathById(dragItem.id);
     const pathTo = this.getPathById(item.id);
-
     // if collapsed by default
     // and move last (by count) child
     // remove parent node from list of open nodes
@@ -525,7 +555,7 @@ class Nestable extends Component {
     }
 
     this.moveItem({ dragItem, pathFrom, pathTo }, collapseProps);
-  };
+  }
 
   onToggleCollapse = (item, isGetter) => {
     const { collapsed } = this.props;
@@ -545,10 +575,25 @@ class Nestable extends Component {
     }
   };
 
-  onKeyDown = (e) => {
-    if (e.which === 27) {
-      // ESC
-      this.onDragEnd(null, true);
+  onKeyDown = (e, item) => {
+    const {dragItem, isKeyBoard} = this.state;
+    // SPACE
+    if (e.which === 32) {
+      if (!isKeyBoard) {
+        this.onStartMoveItem(e, item);
+      }
+    } else if (e.which === 27) {
+     this.onEndMoveItem(null);
+    } else if (e.which == 37) {
+      this.tryDecreaseDepth(dragItem);
+    } else if (e.which == 39) {
+      this.tryIncreaseDepth(dragItem);
+    } else if (e.which == 38) {
+      const prevItem = this.getPrevItem();
+      this.onReorderItem(e, prevItem);
+    } else if (e.which == 40) {
+      const nextItem = this.getNextItem();
+      this.onReorderItem(e, nextItem);
     }
   };
 
@@ -586,9 +631,54 @@ class Nestable extends Component {
     );
   }
 
+  getItemOrder = (item, items, arr) => {
+    if (!items || items.length === 0) {
+      return;
+    }
+
+    const {childrenProp} = this.props;
+    for (let i = 0; i < items.length; i++) {
+      const currentItem  = items[i];
+      arr.push(currentItem);
+       if (currentItem.id !== item.id && !this.isCollapsed(currentItem)) {
+        const newItems = currentItem[childrenProp];
+        this.getItemOrder(item, newItems, arr);
+      } 
+    }
+  }
+
+  getPrevItem = () => {
+    const {items, dragItem} = this.state;
+    const itemOrderArr = [];
+    this.getItemOrder(dragItem, items, itemOrderArr);
+    let dragItemIndex = 0;
+    for (let i = 0; i < itemOrderArr.length; i++ ) {
+      if (itemOrderArr[i].id === dragItem.id) {
+        dragItemIndex = i;
+        break;
+      }
+    }
+    
+    return dragItemIndex === 0 ? null: itemOrderArr[dragItemIndex - 1];
+  }
+
+  getNextItem = () => {
+    const {items, dragItem} = this.state;
+    const itemOrderArr = [];
+    this.getItemOrder(dragItem, items, itemOrderArr);
+    let dragItemIndex = 0;
+    for (let i = 0; i < itemOrderArr.length; i++) {
+      if (itemOrderArr[i].id == dragItem.id) {
+        dragItemIndex = i;
+        break;
+      }
+    }
+    return dragItemIndex === itemOrderArr.length - 1 ? null: itemOrderArr[dragItemIndex + 1];
+  }
+  
   render() {
     const { group, className } = this.props;
-    const { items, dragItem } = this.state;
+    const { items, dragItem, isKeyBoard} = this.state;
     const options = this.getItemOptions();
 
     return (
@@ -606,7 +696,7 @@ class Nestable extends Component {
           })}
         </ol>
 
-        {dragItem && this.renderDragLayer()}
+        {!isKeyBoard && dragItem && this.renderDragLayer()}
       </div>
     );
   }
