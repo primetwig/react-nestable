@@ -73,6 +73,7 @@ var NestableItem = function (_Component) {
           renderItem = options.renderItem,
           handler = options.handler,
           childrenProp = options.childrenProp,
+          isKeyBoard = options.isKeyBoard,
           _options$renderCollap = options.renderCollapseIcon,
           renderCollapseIcon = _options$renderCollap === undefined ? this.renderCollapseIcon : _options$renderCollap;
 
@@ -88,7 +89,7 @@ var NestableItem = function (_Component) {
       if (!isCopy) {
         if (dragItem) {
           rowProps = _extends({}, rowProps, {
-            onMouseEnter: function onMouseEnter(e) {
+            onMouseEnter: isKeyBoard ? undefined : function (e) {
               return options.onMouseEnter(e, item);
             }
           });
@@ -97,6 +98,9 @@ var NestableItem = function (_Component) {
             draggable: true,
             onDragStart: function onDragStart(e) {
               return options.onDragStart(e, item);
+            },
+            onKeyDown: function onKeyDown(e) {
+              return options.onKeyDown(e, item);
             }
           });
         }
@@ -105,7 +109,7 @@ var NestableItem = function (_Component) {
       if (handler) {
         Handler = _react2.default.createElement(
           'span',
-          _extends({ className: 'nestable-item-handler' }, handlerProps),
+          _extends({ className: 'nestable-item-handler', tabIndex: 0 }, handlerProps),
           handler
         );
         //Handler = React.cloneElement(handler, handlerProps);

@@ -28,9 +28,7 @@
   pointer-events: none;
 }
 .nestable-item.is-dragging * {
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
+  opacity: 0.8;
 }
 .nestable-item.is-dragging:before {
   content: ' ';
