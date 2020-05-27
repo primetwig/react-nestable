@@ -96,7 +96,7 @@ class NestableItem extends Component {
 
     return (
       <li {...itemProps}>
-        <div className="nestable-item-name" {...rowProps} tabIndex={0}>
+        <div className="nestable-item-name" {...rowProps}>
           {content}
         </div>
 
