@@ -5,7 +5,7 @@ const webpackHotMiddleware = require("webpack-hot-middleware");
 const express = require("express");
 
 const ip = 'localhost';
-const port = 8888;
+const port = process.env.DEV_SERVER_PORT || 8888;
 const config = require("../webpack.config");
 
 const app = new express(); // eslint-disable-line new-cap
