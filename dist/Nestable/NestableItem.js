@@ -109,7 +109,7 @@ var NestableItem = function (_Component) {
       if (handler) {
         Handler = _react2.default.createElement(
           'span',
-          _extends({ className: 'nestable-item-handler', tabIndex: 0 }, handlerProps),
+          _extends({ className: 'nestable-item-handler' }, handlerProps),
           handler
         );
         //Handler = React.cloneElement(handler, handlerProps);
@@ -128,7 +128,8 @@ var NestableItem = function (_Component) {
       var baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
       var itemProps = {
         className: (0, _classnames2.default)(baseClassName, baseClassName + '-' + item.id, (_cn = {
-          'is-dragging': isDragging
+          'is-dragging': isDragging,
+          'keyboard': isKeyBoard
         }, _defineProperty(_cn, baseClassName + '--with-children', hasChildren), _defineProperty(_cn, baseClassName + '--children-open', hasChildren && !isCollapsed), _defineProperty(_cn, baseClassName + '--children-collapsed', hasChildren && isCollapsed), _cn))
       };
 

@@ -50,7 +50,7 @@ class NestableItem extends Component {
         };
       } else {
         handlerProps = {
-          ...handlerProps,    
+          ...handlerProps,
           draggable: true,
           onDragStart: (e) => options.onDragStart(e, item),
           onKeyDown: (e) => options.onKeyDown(e, item),
@@ -59,7 +59,7 @@ class NestableItem extends Component {
     }
 
     if (handler) {
-      Handler = <span className="nestable-item-handler" tabIndex={0} {...handlerProps}>{handler}</span>;
+      Handler = <span className="nestable-item-handler" {...handlerProps}>{handler}</span>;
       //Handler = React.cloneElement(handler, handlerProps);
     } else {
       rowProps = {
@@ -69,13 +69,13 @@ class NestableItem extends Component {
     }
 
     const collapseIcon = hasChildren
-      ? (
-        <span onClick={() => options.onToggleCollapse(item)}>
-          {renderCollapseIcon({ isCollapsed })}
-        </span>
-      )
-      : null;
-
+    ? (
+      <span onClick={() => options.onToggleCollapse(item)}>
+        {renderCollapseIcon({ isCollapsed })}
+      </span>
+    )
+    : null;
+    
     const baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
     const itemProps = {
       className: cn(
@@ -83,6 +83,7 @@ class NestableItem extends Component {
           baseClassName + '-' + item.id,
           {
             'is-dragging': isDragging,
+            'keyboard':isKeyBoard,
             [baseClassName + '--with-children']: hasChildren,
             [baseClassName + '--children-open']: hasChildren && !isCollapsed,
             [baseClassName + '--children-collapsed']: hasChildren && isCollapsed,
