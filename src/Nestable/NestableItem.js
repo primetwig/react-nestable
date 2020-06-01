@@ -30,6 +30,7 @@ class NestableItem extends Component {
       renderItem,
       handler,
       childrenProp,
+      isKeyBoard,
       renderCollapseIcon = this.renderCollapseIcon,
     } = options;
 
@@ -45,13 +46,14 @@ class NestableItem extends Component {
       if (dragItem) {
         rowProps = {
           ...rowProps,
-          onMouseEnter: (e) => options.onMouseEnter(e, item),
+          onMouseEnter: isKeyBoard ? undefined: (e) => options.onMouseEnter(e, item),
         };
       } else {
         handlerProps = {
           ...handlerProps,
           draggable: true,
           onDragStart: (e) => options.onDragStart(e, item),
+          onKeyDown: (e) => options.onKeyDown(e, item),
         };
       }
     }
@@ -67,13 +69,13 @@ class NestableItem extends Component {
     }
 
     const collapseIcon = hasChildren
-      ? (
-        <span onClick={() => options.onToggleCollapse(item)}>
-          {renderCollapseIcon({ isCollapsed })}
-        </span>
-      )
-      : null;
-
+    ? (
+      <span onClick={() => options.onToggleCollapse(item)}>
+        {renderCollapseIcon({ isCollapsed })}
+      </span>
+    )
+    : null;
+    
     const baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
     const itemProps = {
       className: cn(
@@ -81,6 +83,7 @@ class NestableItem extends Component {
           baseClassName + '-' + item.id,
           {
             'is-dragging': isDragging,
+            'keyboard':isKeyBoard,
             [baseClassName + '--with-children']: hasChildren,
             [baseClassName + '--children-open']: hasChildren && !isCollapsed,
             [baseClassName + '--children-collapsed']: hasChildren && isCollapsed,

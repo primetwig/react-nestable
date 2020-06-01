@@ -73,6 +73,7 @@ var NestableItem = function (_Component) {
           renderItem = options.renderItem,
           handler = options.handler,
           childrenProp = options.childrenProp,
+          isKeyBoard = options.isKeyBoard,
           _options$renderCollap = options.renderCollapseIcon,
           renderCollapseIcon = _options$renderCollap === undefined ? this.renderCollapseIcon : _options$renderCollap;
 
@@ -88,7 +89,7 @@ var NestableItem = function (_Component) {
       if (!isCopy) {
         if (dragItem) {
           rowProps = _extends({}, rowProps, {
-            onMouseEnter: function onMouseEnter(e) {
+            onMouseEnter: isKeyBoard ? undefined : function (e) {
               return options.onMouseEnter(e, item);
             }
           });
@@ -97,6 +98,9 @@ var NestableItem = function (_Component) {
             draggable: true,
             onDragStart: function onDragStart(e) {
               return options.onDragStart(e, item);
+            },
+            onKeyDown: function onKeyDown(e) {
+              return options.onKeyDown(e, item);
             }
           });
         }
@@ -124,7 +128,8 @@ var NestableItem = function (_Component) {
       var baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
       var itemProps = {
         className: (0, _classnames2.default)(baseClassName, baseClassName + '-' + item.id, (_cn = {
-          'is-dragging': isDragging
+          'is-dragging': isDragging,
+          'keyboard': isKeyBoard
         }, _defineProperty(_cn, baseClassName + '--with-children', hasChildren), _defineProperty(_cn, baseClassName + '--children-open', hasChildren && !isCollapsed), _defineProperty(_cn, baseClassName + '--children-collapsed', hasChildren && isCollapsed), _cn))
       };
 

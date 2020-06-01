@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "81d9eadb31be6d8859b2"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a90e2d79ed3d4d8d5295"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -5267,7 +5267,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".nestable {\n  position: relative;\n}\n.nestable .nestable-list {\n  margin: 0;\n  padding: 0 0 0 40px;\n  list-style-type: none;\n}\n.nestable > .nestable-list {\n  padding: 0;\n}\n.nestable-item,\n.nestable-item-copy {\n  margin: 10px 0 0;\n}\n.nestable-item:first-child,\n.nestable-item-copy:first-child {\n  margin-top: 0;\n}\n.nestable-item .nestable-list,\n.nestable-item-copy .nestable-list {\n  margin-top: 10px;\n}\n.nestable-item {\n  position: relative;\n}\n.nestable-item.is-dragging .nestable-list {\n  pointer-events: none;\n}\n.nestable-item.is-dragging * {\n  opacity: 0;\n  -ms-filter: \"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)\";\n  filter: alpha(opacity=0);\n}\n.nestable-item.is-dragging:before {\n  content: ' ';\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: #87ceeb;\n  border: 1px dashed #4682b4;\n  border-radius: 5px;\n}\n.nestable-item-icon {\n  margin-right: 5px;\n  cursor: pointer;\n}\n.nestable-drag-layer {\n  position: fixed;\n  top: 0;\n  left: 0;\n  z-index: 100;\n  pointer-events: none;\n}\n.nestable-drag-layer > .nestable-list {\n  position: absolute;\n  top: 0;\n  left: 0;\n  padding: 0;\n}\n", ""]);
+	exports.push([module.id, ".nestable {\n  position: relative;\n}\n.nestable .nestable-list {\n  margin: 0;\n  padding: 0 0 0 40px;\n  list-style-type: none;\n}\n.nestable > .nestable-list {\n  padding: 0;\n}\n.nestable-item,\n.nestable-item-copy {\n  margin: 10px 0 0;\n}\n.nestable-item:first-child,\n.nestable-item-copy:first-child {\n  margin-top: 0;\n}\n.nestable-item .nestable-list,\n.nestable-item-copy .nestable-list {\n  margin-top: 10px;\n}\n.nestable-item {\n  position: relative;\n}\n.nestable-item.is-dragging .nestable-list {\n  pointer-events: none;\n}\n.nestable-item.is-dragging * {\n  opacity: 0;\n}\n.nestable-item.is-dragging.keyboard * {\n  opacity: 0.95;\n}\n.nestable-item.is-dragging:before {\n  content: \" \";\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background: #87ceeb;\n  border: 1px dashed #4682b4;\n  border-radius: 5px;\n}\n.nestable-item-icon {\n  margin-right: 5px;\n  cursor: pointer;\n}\n.nestable-drag-layer {\n  position: fixed;\n  top: 0;\n  left: 0;\n  z-index: 100;\n  pointer-events: none;\n}\n.nestable-drag-layer > .nestable-list {\n  position: absolute;\n  top: 0;\n  left: 0;\n  padding: 0;\n}\n", ""]);
 	
 	// exports
 
@@ -11308,6 +11308,32 @@
 	    };
 	
 	    _this.onMouseEnter = function (e, item) {
+	      _this.onReorderItem(e, item);
+	    };
+	
+	    _this.onStartMoveItem = function (e, item) {
+	      if (e) {
+	        e.preventDefault();
+	        e.stopPropagation();
+	      }
+	
+	      _this.setState({
+	        dragItem: item,
+	        itemsOld: _this.state.items,
+	        isKeyBoard: true
+	      });
+	
+	      document.addEventListener('keydown', _this.onKeyDown);
+	    };
+	
+	    _this.onEndMoveItem = function (e) {
+	      e && e.preventDefault();
+	
+	      _this.dragApply();
+	      document.removeEventListener('keydown', _this.onKeyDown);
+	    };
+	
+	    _this.onReorderItem = function (e, item) {
 	      if (e) {
 	        e.preventDefault();
 	        e.stopPropagation();
@@ -11318,11 +11344,10 @@
 	          childrenProp = _this$props3.childrenProp;
 	      var dragItem = _this.state.dragItem;
 	
-	      if (dragItem.id === item.id) return;
+	      if (!item || dragItem.id === item.id) return;
 	
 	      var pathFrom = _this.getPathById(dragItem.id);
 	      var pathTo = _this.getPathById(item.id);
-	
 	      // if collapsed by default
 	      // and move last (by count) child
 	      // remove parent node from list of open nodes
@@ -11356,11 +11381,80 @@
 	      }
 	    };
 	
-	    _this.onKeyDown = function (e) {
-	      if (e.which === 27) {
-	        // ESC
-	        _this.onDragEnd(null, true);
+	    _this.onKeyDown = function (e, item) {
+	      var _this$state = _this.state,
+	          dragItem = _this$state.dragItem,
+	          isKeyBoard = _this$state.isKeyBoard;
+	      // SPACE
+	
+	      if (e.which === 32) {
+	        if (!isKeyBoard) {
+	          _this.onStartMoveItem(e, item);
+	        }
+	      } else if (e.which === 27) {
+	        _this.onEndMoveItem(null);
+	      } else if (e.which == 37) {
+	        _this.tryDecreaseDepth(dragItem);
+	      } else if (e.which == 39) {
+	        _this.tryIncreaseDepth(dragItem);
+	      } else if (e.which == 38) {
+	        var prevItem = _this.getPrevItem();
+	        _this.onReorderItem(e, prevItem);
+	      } else if (e.which == 40) {
+	        var nextItem = _this.getNextItem();
+	        _this.onReorderItem(e, nextItem);
 	      }
+	    };
+	
+	    _this.getItemOrder = function (item, items, arr) {
+	      if (!item || !items || items.length === 0) {
+	        return;
+	      }
+	
+	      var childrenProp = _this.props.childrenProp;
+	
+	      for (var i = 0; i < items.length; i++) {
+	        var currentItem = items[i];
+	        arr.push(currentItem);
+	        if (currentItem.id !== item.id && !_this.isCollapsed(currentItem)) {
+	          var newItems = currentItem[childrenProp];
+	          _this.getItemOrder(item, newItems, arr);
+	        }
+	      }
+	    };
+	
+	    _this.getPrevItem = function () {
+	      var _this$state2 = _this.state,
+	          items = _this$state2.items,
+	          dragItem = _this$state2.dragItem;
+	
+	      var itemOrderArr = [];
+	      _this.getItemOrder(dragItem, items, itemOrderArr);
+	      var dragItemIndex = 0;
+	      for (var i = 0; i < itemOrderArr.length; i++) {
+	        if (itemOrderArr[i].id === dragItem.id) {
+	          dragItemIndex = i;
+	          break;
+	        }
+	      }
+	      return dragItemIndex === 0 ? null : itemOrderArr[dragItemIndex - 1];
+	    };
+	
+	    _this.getNextItem = function () {
+	      var _this$state3 = _this.state,
+	          items = _this$state3.items,
+	          dragItem = _this$state3.dragItem;
+	
+	      var itemOrderArr = [];
+	      _this.getItemOrder(dragItem, items, itemOrderArr);
+	      var dragItemIndex = 0;
+	      for (var i = 0; i < itemOrderArr.length; i++) {
+	        if (itemOrderArr[i].id == dragItem.id) {
+	          dragItemIndex = i;
+	          break;
+	        }
+	      }
+	      return dragItemIndex === itemOrderArr.length - 1 ? null : itemOrderArr[dragItemIndex + 1];
 	    };
 	
 	    _this.state = {
@@ -11368,7 +11462,8 @@
 	      itemsOld: null, // snap copy in case of canceling drag
 	      dragItem: null,
 	      isDirty: false,
-	      collapsedGroups: []
+	      collapsedGroups: [],
+	      isKeyBoard: false
 	    };
 	
 	    _this.el = null;
@@ -11414,6 +11509,7 @@
 	        this.setState(_extends({
 	          items: (0, _utils.listWithChildren)(itemsNew, childrenProp),
 	          dragItem: null,
+	          isKeyBoard: false,
 	          isDirty: false
 	        }, extra));
 	      }
@@ -11472,7 +11568,6 @@
 	
 	      items = (0, _reactAddonsUpdate2.default)(items, removePath);
 	      items = (0, _reactAddonsUpdate2.default)(items, insertPath);
-	
 	      this.setState(_extends({
 	        items: items,
 	        isDirty: true
@@ -11481,6 +11576,9 @@
 	  }, {
 	    key: 'tryIncreaseDepth',
 	    value: function tryIncreaseDepth(dragItem) {
+	      if (!dragItem) {
+	        return;
+	      }
 	      var _props4 = this.props,
 	          maxDepth = _props4.maxDepth,
 	          childrenProp = _props4.childrenProp,
@@ -11513,6 +11611,9 @@
 	  }, {
 	    key: 'tryDecreaseDepth',
 	    value: function tryDecreaseDepth(dragItem) {
+	      if (!dragItem) {
+	        return;
+	      }
 	      var _props5 = this.props,
 	          childrenProp = _props5.childrenProp,
 	          collapsed = _props5.collapsed;
@@ -11554,6 +11655,7 @@
 	      this.setState({
 	        itemsOld: null,
 	        dragItem: null,
+	        isKeyboard: false,
 	        isDirty: false
 	      });
 	
@@ -11569,6 +11671,7 @@
 	        items: itemsOld,
 	        itemsOld: null,
 	        dragItem: null,
+	        isKeyboard: false,
 	        isDirty: false
 	      });
 	    }
@@ -11698,7 +11801,9 @@
 	          renderCollapseIcon = _props7.renderCollapseIcon,
 	          handler = _props7.handler,
 	          childrenProp = _props7.childrenProp;
-	      var dragItem = this.state.dragItem;
+	      var _state2 = this.state,
+	          dragItem = _state2.dragItem,
+	          isKeyBoard = _state2.isKeyBoard;
 	
 	
 	      return {
@@ -11707,9 +11812,11 @@
 	        renderItem: renderItem,
 	        renderCollapseIcon: renderCollapseIcon,
 	        handler: handler,
+	        isKeyBoard: isKeyBoard,
 	
 	        onDragStart: this.onDragStart,
 	        onMouseEnter: this.onMouseEnter,
+	        onKeyDown: this.onKeyDown,
 	        isCollapsed: this.isCollapsed,
 	        onToggleCollapse: this.onToggleCollapse
 	      };
@@ -11762,9 +11869,10 @@
 	      var _props8 = this.props,
 	          group = _props8.group,
 	          className = _props8.className;
-	      var _state2 = this.state,
-	          items = _state2.items,
-	          dragItem = _state2.dragItem;
+	      var _state3 = this.state,
+	          items = _state3.items,
+	          dragItem = _state3.dragItem,
+	          isKeyBoard = _state3.isKeyBoard;
 	
 	      var options = this.getItemOptions();
 	
@@ -11783,7 +11891,7 @@
 	            });
 	          })
 	        ),
-	        dragItem && this.renderDragLayer()
+	        !isKeyBoard && dragItem && this.renderDragLayer()
 	      );
 	    }
 	  }]);
@@ -11904,6 +12012,7 @@
 	          renderItem = options.renderItem,
 	          handler = options.handler,
 	          childrenProp = options.childrenProp,
+	          isKeyBoard = options.isKeyBoard,
 	          _options$renderCollap = options.renderCollapseIcon,
 	          renderCollapseIcon = _options$renderCollap === undefined ? this.renderCollapseIcon : _options$renderCollap;
 	
@@ -11919,7 +12028,7 @@
 	      if (!isCopy) {
 	        if (dragItem) {
 	          rowProps = _extends({}, rowProps, {
-	            onMouseEnter: function onMouseEnter(e) {
+	            onMouseEnter: isKeyBoard ? undefined : function (e) {
 	              return options.onMouseEnter(e, item);
 	            }
 	          });
@@ -11928,6 +12037,9 @@
 	            draggable: true,
 	            onDragStart: function onDragStart(e) {
 	              return options.onDragStart(e, item);
+	            },
+	            onKeyDown: function onKeyDown(e) {
+	              return options.onKeyDown(e, item);
 	            }
 	          });
 	        }
@@ -11955,7 +12067,8 @@
 	      var baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
 	      var itemProps = {
 	        className: (0, _classnames2.default)(baseClassName, baseClassName + '-' + item.id, (_cn = {
-	          'is-dragging': isDragging
+	          'is-dragging': isDragging,
+	          'keyboard': isKeyBoard
 	        }, _defineProperty(_cn, baseClassName + '--with-children', hasChildren), _defineProperty(_cn, baseClassName + '--children-open', hasChildren && !isCollapsed), _defineProperty(_cn, baseClassName + '--children-collapsed', hasChildren && isCollapsed), _cn))
 	      };
 	

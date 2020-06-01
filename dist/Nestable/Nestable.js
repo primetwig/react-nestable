@@ -188,6 +188,32 @@ var Nestable = function (_Component) {
     };
 
     _this.onMouseEnter = function (e, item) {
+      _this.onReorderItem(e, item);
+    };
+
+    _this.onStartMoveItem = function (e, item) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      _this.setState({
+        dragItem: item,
+        itemsOld: _this.state.items,
+        isKeyBoard: true
+      });
+
+      document.addEventListener('keydown', _this.onKeyDown);
+    };
+
+    _this.onEndMoveItem = function (e) {
+      e && e.preventDefault();
+
+      _this.dragApply();
+      document.removeEventListener('keydown', _this.onKeyDown);
+    };
+
+    _this.onReorderItem = function (e, item) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -198,11 +224,10 @@ var Nestable = function (_Component) {
           childrenProp = _this$props3.childrenProp;
       var dragItem = _this.state.dragItem;
 
-      if (dragItem.id === item.id) return;
+      if (!item || dragItem.id === item.id) return;
 
       var pathFrom = _this.getPathById(dragItem.id);
       var pathTo = _this.getPathById(item.id);
-
       // if collapsed by default
       // and move last (by count) child
       // remove parent node from list of open nodes
@@ -236,11 +261,80 @@ var Nestable = function (_Component) {
       }
     };
 
-    _this.onKeyDown = function (e) {
-      if (e.which === 27) {
-        // ESC
-        _this.onDragEnd(null, true);
+    _this.onKeyDown = function (e, item) {
+      var _this$state = _this.state,
+          dragItem = _this$state.dragItem,
+          isKeyBoard = _this$state.isKeyBoard;
+      // SPACE
+
+      if (e.which === 32) {
+        if (!isKeyBoard) {
+          _this.onStartMoveItem(e, item);
+        }
+      } else if (e.which === 27) {
+        _this.onEndMoveItem(null);
+      } else if (e.which == 37) {
+        _this.tryDecreaseDepth(dragItem);
+      } else if (e.which == 39) {
+        _this.tryIncreaseDepth(dragItem);
+      } else if (e.which == 38) {
+        var prevItem = _this.getPrevItem();
+        _this.onReorderItem(e, prevItem);
+      } else if (e.which == 40) {
+        var nextItem = _this.getNextItem();
+        _this.onReorderItem(e, nextItem);
       }
+    };
+
+    _this.getItemOrder = function (item, items, arr) {
+      if (!item || !items || items.length === 0) {
+        return;
+      }
+
+      var childrenProp = _this.props.childrenProp;
+
+      for (var i = 0; i < items.length; i++) {
+        var currentItem = items[i];
+        arr.push(currentItem);
+        if (currentItem.id !== item.id && !_this.isCollapsed(currentItem)) {
+          var newItems = currentItem[childrenProp];
+          _this.getItemOrder(item, newItems, arr);
+        }
+      }
+    };
+
+    _this.getPrevItem = function () {
+      var _this$state2 = _this.state,
+          items = _this$state2.items,
+          dragItem = _this$state2.dragItem;
+
+      var itemOrderArr = [];
+      _this.getItemOrder(dragItem, items, itemOrderArr);
+      var dragItemIndex = 0;
+      for (var i = 0; i < itemOrderArr.length; i++) {
+        if (itemOrderArr[i].id === dragItem.id) {
+          dragItemIndex = i;
+          break;
+        }
+      }
+      return dragItemIndex === 0 ? null : itemOrderArr[dragItemIndex - 1];
+    };
+
+    _this.getNextItem = function () {
+      var _this$state3 = _this.state,
+          items = _this$state3.items,
+          dragItem = _this$state3.dragItem;
+
+      var itemOrderArr = [];
+      _this.getItemOrder(dragItem, items, itemOrderArr);
+      var dragItemIndex = 0;
+      for (var i = 0; i < itemOrderArr.length; i++) {
+        if (itemOrderArr[i].id == dragItem.id) {
+          dragItemIndex = i;
+          break;
+        }
+      }
+      return dragItemIndex === itemOrderArr.length - 1 ? null : itemOrderArr[dragItemIndex + 1];
     };
 
     _this.state = {
@@ -248,7 +342,8 @@ var Nestable = function (_Component) {
       itemsOld: null, // snap copy in case of canceling drag
       dragItem: null,
       isDirty: false,
-      collapsedGroups: []
+      collapsedGroups: [],
+      isKeyBoard: false
     };
 
     _this.el = null;
@@ -294,6 +389,7 @@ var Nestable = function (_Component) {
         this.setState(_extends({
           items: (0, _utils.listWithChildren)(itemsNew, childrenProp),
           dragItem: null,
+          isKeyBoard: false,
           isDirty: false
         }, extra));
       }
@@ -352,7 +448,6 @@ var Nestable = function (_Component) {
 
       items = (0, _reactAddonsUpdate2.default)(items, removePath);
       items = (0, _reactAddonsUpdate2.default)(items, insertPath);
-
       this.setState(_extends({
         items: items,
         isDirty: true
@@ -361,6 +456,9 @@ var Nestable = function (_Component) {
   }, {
     key: 'tryIncreaseDepth',
     value: function tryIncreaseDepth(dragItem) {
+      if (!dragItem) {
+        return;
+      }
       var _props4 = this.props,
           maxDepth = _props4.maxDepth,
           childrenProp = _props4.childrenProp,
@@ -393,6 +491,9 @@ var Nestable = function (_Component) {
   }, {
     key: 'tryDecreaseDepth',
     value: function tryDecreaseDepth(dragItem) {
+      if (!dragItem) {
+        return;
+      }
       var _props5 = this.props,
           childrenProp = _props5.childrenProp,
           collapsed = _props5.collapsed;
@@ -434,6 +535,7 @@ var Nestable = function (_Component) {
       this.setState({
         itemsOld: null,
         dragItem: null,
+        isKeyboard: false,
         isDirty: false
       });
 
@@ -449,6 +551,7 @@ var Nestable = function (_Component) {
         items: itemsOld,
         itemsOld: null,
         dragItem: null,
+        isKeyboard: false,
         isDirty: false
       });
     }
@@ -578,7 +681,9 @@ var Nestable = function (_Component) {
           renderCollapseIcon = _props7.renderCollapseIcon,
           handler = _props7.handler,
           childrenProp = _props7.childrenProp;
-      var dragItem = this.state.dragItem;
+      var _state2 = this.state,
+          dragItem = _state2.dragItem,
+          isKeyBoard = _state2.isKeyBoard;
 
 
       return {
@@ -587,9 +692,11 @@ var Nestable = function (_Component) {
         renderItem: renderItem,
         renderCollapseIcon: renderCollapseIcon,
         handler: handler,
+        isKeyBoard: isKeyBoard,
 
         onDragStart: this.onDragStart,
         onMouseEnter: this.onMouseEnter,
+        onKeyDown: this.onKeyDown,
         isCollapsed: this.isCollapsed,
         onToggleCollapse: this.onToggleCollapse
       };
@@ -642,9 +749,10 @@ var Nestable = function (_Component) {
       var _props8 = this.props,
           group = _props8.group,
           className = _props8.className;
-      var _state2 = this.state,
-          items = _state2.items,
-          dragItem = _state2.dragItem;
+      var _state3 = this.state,
+          items = _state3.items,
+          dragItem = _state3.dragItem,
+          isKeyBoard = _state3.isKeyBoard;
 
       var options = this.getItemOptions();
 
@@ -663,7 +771,7 @@ var Nestable = function (_Component) {
             });
           })
         ),
-        dragItem && this.renderDragLayer()
+        !isKeyBoard && dragItem && this.renderDragLayer()
       );
     }
   }]);

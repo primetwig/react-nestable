@@ -29,11 +29,12 @@
 }
 .nestable-item.is-dragging * {
   opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
+}
+.nestable-item.is-dragging.keyboard * {
+  opacity: 0.95;
 }
 .nestable-item.is-dragging:before {
-  content: ' ';
+  content: " ";
   position: absolute;
   top: 0;
   left: 0;
