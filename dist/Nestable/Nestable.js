@@ -153,11 +153,10 @@ var Nestable = function (_Component) {
 
       if (!_this.elCopyStyles) {
         var offset = (0, _utils.getOffsetRect)(_this.el);
-        var scroll = (0, _utils.getTotalScroll)(_this.el);
 
         _this.elCopyStyles = _extends({
-          marginTop: offset.top - clientY - scroll.top,
-          marginLeft: offset.left - clientX - scroll.left
+          marginTop: offset.top - clientY,
+          marginLeft: offset.left - clientX
         }, transformProps);
       } else {
         _this.elCopyStyles = _extends({}, _this.elCopyStyles, transformProps);
