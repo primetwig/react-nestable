@@ -457,7 +457,7 @@ class Nestable extends Component {
     const { dragItem } = this.state;
     const { clientX, clientY } = e;
     const transformProps = getTransformProps(clientX, clientY);
-    const elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
+    const elCopy = document.querySelector(`.nestable-${group} .nestable-drag-layer > .nestable-list`);
 
     if (!this.elCopyStyles) {
       const offset = getOffsetRect(this.el);
