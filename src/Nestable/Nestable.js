@@ -561,7 +561,7 @@ class Nestable extends Component {
   renderDragLayer() {
     const { group } = this.props;
     const { dragItem } = this.state;
-    const el = document.querySelector('.nestable-' + group + ' .nestable-item-' + dragItem.id);
+    const el = document.querySelector(`.nestable-${group} .nestable-item-${dragItem.id}`);
 
     let listStyles = {};
     if (el) {
