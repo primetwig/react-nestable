@@ -52,6 +52,7 @@ class Nestable extends Component {
     ]),
     childrenProp: PropTypes.string,
     renderItem: PropTypes.func,
+    itemClassName: PropTypes.func,
     renderCollapseIcon: PropTypes.func,
     handler: PropTypes.node,
     onChange: PropTypes.func,
@@ -65,6 +66,7 @@ class Nestable extends Component {
     group: Math.random().toString(36).slice(2),
     childrenProp: 'children',
     renderItem: ({ item }) => item.toString(),
+    itemClassName: item => '',
     onChange: () => {},
     confirmChange: () => true,
   };
@@ -394,13 +396,14 @@ class Nestable extends Component {
   }
 
   getItemOptions() {
-    const { renderItem, renderCollapseIcon, handler, childrenProp } = this.props;
+    const { renderItem, renderCollapseIcon, handler, childrenProp, itemClassName } = this.props;
     const { dragItem } = this.state;
 
     return {
       dragItem,
       childrenProp,
       renderItem,
+      itemClassName,
       renderCollapseIcon,
       handler,
 
@@ -454,7 +457,7 @@ class Nestable extends Component {
     const { dragItem } = this.state;
     const { clientX, clientY } = e;
     const transformProps = getTransformProps(clientX, clientY);
-    const elCopy = document.querySelector('.nestable-' + group + ' .nestable-drag-layer > .nestable-list');
+    const elCopy = document.querySelector(`.nestable-${group} .nestable-drag-layer > .nestable-list`);
 
     if (!this.elCopyStyles) {
       const offset = getOffsetRect(this.el);
@@ -558,7 +561,7 @@ class Nestable extends Component {
   renderDragLayer() {
     const { group } = this.props;
     const { dragItem } = this.state;
-    const el = document.querySelector('.nestable-' + group + ' .nestable-item-' + dragItem.id);
+    const el = document.querySelector(`.nestable-${group} .nestable-item-${dragItem.id}`);
 
     let listStyles = {};
     if (el) {
