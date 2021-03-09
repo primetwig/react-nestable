@@ -103,7 +103,7 @@ class NestableItem extends Component {
             {item[childrenProp].map((item, i) => {
               return (
                 <NestableItem
-                  key={i}
+                  key={item.id}
                   index={i}
                   item={item}
                   options={options}

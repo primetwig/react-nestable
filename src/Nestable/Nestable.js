@@ -597,7 +597,7 @@ class Nestable extends Component {
           {items.map((item, i) => {
             return (
               <NestableItem
-                key={i}
+                key={item.id}
                 index={i}
                 item={item}
                 options={options}
