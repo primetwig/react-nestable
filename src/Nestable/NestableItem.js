@@ -10,6 +10,10 @@ class NestableItem extends Component {
     isCopy: PropTypes.bool,
     options: PropTypes.object,
     index: PropTypes.number,
+    depth: PropTypes.number,
+  };
+  static defaultProps = {
+    depth: 0,
   };
 
   renderCollapseIcon = ({ isCollapsed }) => (
@@ -22,7 +26,7 @@ class NestableItem extends Component {
   );
 
   render() {
-    const { item, isCopy, options, index } = this.props;
+    const { item, isCopy, options, index, depth } = this.props;
     const {
       dragItem,
       renderItem,
@@ -38,7 +42,7 @@ class NestableItem extends Component {
 
     let rowProps = {};
     let handlerProps = {};
-    let Handler;
+    let wrappedHandler;
 
     if (!isCopy) {
       if (dragItem) {
@@ -56,8 +60,8 @@ class NestableItem extends Component {
     }
 
     if (handler) {
-      Handler = <span className="nestable-item-handler" {...handlerProps}>{handler}</span>;
-      //Handler = React.cloneElement(handler, handlerProps);
+      wrappedHandler = <span className="nestable-item-handler" {...handlerProps}>{handler}</span>;
+      // wrappedHandler = React.cloneElement(handler, handlerProps);
     } else {
       rowProps = {
         ...rowProps,
@@ -87,7 +91,7 @@ class NestableItem extends Component {
       )
     };
 
-    const content = renderItem({ item, collapseIcon, handler: Handler, index });
+    const content = renderItem({ item, collapseIcon, handler: wrappedHandler, index, depth });
 
     if (!content) return null;
 
@@ -104,6 +108,7 @@ class NestableItem extends Component {
                 <NestableItem
                   key={i}
                   index={i}
+                  depth={depth + 1}
                   item={item}
                   options={options}
                   isCopy={isCopy}

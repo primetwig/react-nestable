@@ -61,10 +61,10 @@ const Example = () => (
 | maxDepth | number | `10` | Maximum available level of nesting. |
 | collapsed | boolean | `false` | Are groups collapsed by default. |
 | group | string or number | `random string` | Different group numbers may be passed if you have more than one nestable component on a page and want some extra styles for portal instances. |
-| handler | component | | If you pass react component here, you may use it in your render method. |
+| handler | node | | If you pass it, it will get wrapped with drag handlers and you may use it in your render method. |
 | idProp | string | `"id"` | Optional name of property for id. |
 | childrenProp | string | `"children"` | Optional name of property for children. |
-| renderItem | function | `({item}) => String(item)` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `index` - index of the item, `collapseIcon` - icon for items with children (allows you to collapse the group), `handler` - component which you have passed via the same property, but covered with some additional events. |
+| renderItem | function | `({item}) => String(item)` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `index` - number, index of the item, `depth` - number, depth of the item, `collapseIcon` - node, icon for items with children (allows you to collapse the group), `handler` - node, which you have passed via the same property, but wrapped with some additional events. |
 | renderCollapseIcon | function | `() => <DefaultIcon />` | Function for rendering collapse icon. Has a single parameter with keys: `isCollapsed` - boolean, true if this group has children and is collapsed. |
 | onChange | function | `() => {}` | Callback which has two parameters: `items` - new array after position was changed, `item` - item which has been moved. |
 | confirmChange | function | `() => true` | Callback which has two parameters: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land. Let function return `false` if this movement should not happen. |
