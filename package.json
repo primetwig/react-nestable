@@ -8,6 +8,7 @@
     "start": "node tools/devServer.js",
     "clean": "rimraf ./dist",
     "webpack": "webpack --colors --progress",
+    "watch:css": "stylus -w ./src --use ./node_modules/nib/lib/nib",
     "build": "babel src -d dist",
     "build:html": "cpy ./**/*.html ../dist/ --cwd=src --parents",
     "build:css": "cpy ./**/*.css ../dist/ --cwd=src --parents",
