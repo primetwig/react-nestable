@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cn from 'classnames';
+import cx from 'classnames';
 
 class Icon extends Component {
   render() {
@@ -8,7 +8,7 @@ class Icon extends Component {
     const { children, className, ...props } = this.props;
 
     return (
-      <i className={cn('nestable-icon', className)} {...props} />
+      <i className={cx('nestable-icon', className)} {...props} />
     );
   }
 }

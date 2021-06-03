@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import cn from 'classnames';
+import cx from 'classnames';
 
 import Icon from '../Icon';
 
 class NestableItem extends Component {
   static propTypes = {
-    item: PropTypes.shape({
-      id: PropTypes.any.isRequired,
-    }),
+    item: PropTypes.object,
     isCopy: PropTypes.bool,
     options: PropTypes.object,
     index: PropTypes.number,
@@ -16,7 +14,7 @@ class NestableItem extends Component {
 
   renderCollapseIcon = ({ isCollapsed }) => (
     <Icon
-      className={cn('nestable-item-icon', {
+      className={cx('nestable-item-icon', {
         'icon-plus-gray': isCollapsed,
         'icon-minus-gray': !isCollapsed,
       })}
@@ -29,12 +27,13 @@ class NestableItem extends Component {
       dragItem,
       renderItem,
       handler,
+      idProp,
       childrenProp,
       renderCollapseIcon = this.renderCollapseIcon,
     } = options;
 
     const isCollapsed = options.isCollapsed(item);
-    const isDragging = !isCopy && dragItem && dragItem.id === item.id;
+    const isDragging = !isCopy && dragItem && dragItem[idProp] === item[idProp];
     const hasChildren = item[childrenProp] && item[childrenProp].length > 0;
 
     let rowProps = {};
@@ -76,9 +75,9 @@ class NestableItem extends Component {
 
     const baseClassName = 'nestable-item' + (isCopy ? '-copy' : '');
     const itemProps = {
-      className: cn(
+      className: cx(
           baseClassName,
-          baseClassName + '-' + item.id,
+          baseClassName + '-' + item[idProp],
           {
             'is-dragging': isDragging,
             [baseClassName + '--with-children']: hasChildren,
