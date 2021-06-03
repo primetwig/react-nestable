@@ -14,7 +14,6 @@ import {
   getAllNonEmptyNodesIds,
 } from '../utils';
 
-import './Nestable.css';
 import NestableItem from './NestableItem';
 
 class Nestable extends Component {

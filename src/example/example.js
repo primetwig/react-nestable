@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import Nestable from '../Nestable';
+import '../index.css';
 
 const styles = {
   position: "relative",

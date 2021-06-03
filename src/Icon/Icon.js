@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-import './Icon.css';
-
 class Icon extends Component {
   render() {
     // eslint-disable-next-line no-unused-vars

@@ -41,7 +41,6 @@
   bottom: 0;
   background: #87ceeb;
   border: 1px dashed #4682b4;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 .nestable-item-icon {
@@ -60,4 +59,30 @@
   top: 0;
   left: 0;
   padding: 0;
+}
+.nestable-icon {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.nestable-icon:before {
+  content: '-';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.icon-plus-gray {
+  width: 20px;
+  height: 20px;
+  background-image: url("./icon-plus-gray.svg");
+}
+.icon-minus-gray {
+  width: 20px;
+  height: 20px;
+  background-image: url("./icon-minus-gray.svg");
 }
