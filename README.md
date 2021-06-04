@@ -26,7 +26,7 @@ import Nestable from 'react-nestable';
 // this usually goes once
 // to the entry point of the whole app
 // (e.g. src/index.js)
-import '../index.css';
+import 'react-nestable/dist/styles/index.css';
 ```
 every item must have a unique `id` in order to distinguish elements
 ```

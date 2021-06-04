@@ -391,11 +391,18 @@ class Nestable extends Component {
   }
 
   getItemOptions() {
-    const { renderItem, renderCollapseIcon, handler, childrenProp } = this.props;
+    const {
+      renderItem,
+      renderCollapseIcon,
+      handler,
+      idProp,
+      childrenProp,
+    } = this.props;
     const { dragItem } = this.state;
 
     return {
       dragItem,
+      idProp,
       childrenProp,
       renderItem,
       renderCollapseIcon,
@@ -404,7 +411,7 @@ class Nestable extends Component {
       onDragStart: this.onDragStart,
       onMouseEnter: this.onMouseEnter,
       isCollapsed: this.isCollapsed,
-      onToggleCollapse: this.onToggleCollapse
+      onToggleCollapse: this.onToggleCollapse,
     };
   }
 

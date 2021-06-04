@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import Nestable from '../Nestable';
-import '../index.css';
+import '../styles/index.css';
 
 const styles = {
   position: "relative",
@@ -82,7 +82,7 @@ const grocery = [
 
 class Example extends Component {
   state = {
-    example: 1,
+    example: 0,
     defaultCollapsed: false
   };
 
@@ -184,23 +184,30 @@ class Example extends Component {
     );
   };
 
+  getExamples = () => {
+    return [
+      { name: 'Basic example', renderer: this.renderExampleOne },
+      { name: 'Example with handlers', renderer: this.renderExampleTwo },
+      { name: 'Example with confirmChange', renderer: this.renderExampleThree },
+    ]
+  }
+
   render() {
     const { example } = this.state;
+    const examples = this.getExamples()
     const onExampleChange = e => this.setState({ example: +e.target.value });
 
     return (
       <div>
         <select onChange={onExampleChange} value={example}>
-          <option value={1}>Basic example</option>
-          <option value={2}>Example with handlers</option>
-          <option value={3}>Example with confirmChange</option>
+          {examples.map(({name}, i) => (
+            <option key={i} value={i}>{name}</option>
+          ))}
         </select>
 
         <hr/>
 
-        {example === 1 && this.renderExampleOne()}
-        {example === 2 && this.renderExampleTwo()}
-        {example === 3 && this.renderExampleThree()}
+        {examples[example].renderer()}
       </div>
     );
   }
