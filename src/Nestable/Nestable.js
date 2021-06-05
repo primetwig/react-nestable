@@ -36,34 +36,31 @@ class Nestable extends Component {
   }
 
   static propTypes = {
-    className: PropTypes.string,
-    items: PropTypes.array,
-    threshold: PropTypes.number,
-    maxDepth: PropTypes.number,
-    collapsed: PropTypes.bool,
-    group: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]),
-    idProp: PropTypes.string,
     childrenProp: PropTypes.string,
-    renderItem: PropTypes.func,
-    renderCollapseIcon: PropTypes.func,
-    handler: PropTypes.node,
-    onChange: PropTypes.func,
+    className: PropTypes.string,
+    collapsed: PropTypes.bool,
     confirmChange: PropTypes.func,
+    group: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    handler: PropTypes.node,
+    idProp: PropTypes.string,
+    items: PropTypes.array,
+    maxDepth: PropTypes.number,
+    onChange: PropTypes.func,
+    renderCollapseIcon: PropTypes.func,
+    renderItem: PropTypes.func,
+    threshold: PropTypes.number,
   };
   static defaultProps = {
-    items: [],
-    threshold: 30,
-    maxDepth: 10,
+    childrenProp: 'children',
     collapsed: false,
+    confirmChange: () => true,
     group: Math.random().toString(36).slice(2),
     idProp: 'id',
-    childrenProp: 'children',
-    renderItem: ({ item }) => String(item),
+    items: [],
+    maxDepth: 10,
     onChange: () => {},
-    confirmChange: () => true,
+    renderItem: ({ item }) => String(item),
+    threshold: 30,
   };
 
   componentDidMount() {

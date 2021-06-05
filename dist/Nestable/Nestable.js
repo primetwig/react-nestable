@@ -673,37 +673,37 @@ var Nestable = /*#__PURE__*/function (_Component) {
 }(_react.Component);
 
 _defineProperty(Nestable, "propTypes", {
-  className: _propTypes["default"].string,
-  items: _propTypes["default"].array,
-  threshold: _propTypes["default"].number,
-  maxDepth: _propTypes["default"].number,
-  collapsed: _propTypes["default"].bool,
-  group: _propTypes["default"].oneOfType([_propTypes["default"].number, _propTypes["default"].string]),
-  idProp: _propTypes["default"].string,
   childrenProp: _propTypes["default"].string,
-  renderItem: _propTypes["default"].func,
-  renderCollapseIcon: _propTypes["default"].func,
+  className: _propTypes["default"].string,
+  collapsed: _propTypes["default"].bool,
+  confirmChange: _propTypes["default"].func,
+  group: _propTypes["default"].oneOfType([_propTypes["default"].number, _propTypes["default"].string]),
   handler: _propTypes["default"].node,
+  idProp: _propTypes["default"].string,
+  items: _propTypes["default"].array,
+  maxDepth: _propTypes["default"].number,
   onChange: _propTypes["default"].func,
-  confirmChange: _propTypes["default"].func
+  renderCollapseIcon: _propTypes["default"].func,
+  renderItem: _propTypes["default"].func,
+  threshold: _propTypes["default"].number
 });
 
 _defineProperty(Nestable, "defaultProps", {
-  items: [],
-  threshold: 30,
-  maxDepth: 10,
+  childrenProp: 'children',
   collapsed: false,
+  confirmChange: function confirmChange() {
+    return true;
+  },
   group: Math.random().toString(36).slice(2),
   idProp: 'id',
-  childrenProp: 'children',
+  items: [],
+  maxDepth: 10,
+  onChange: function onChange() {},
   renderItem: function renderItem(_ref2) {
     var item = _ref2.item;
     return String(item);
   },
-  onChange: function onChange() {},
-  confirmChange: function confirmChange() {
-    return true;
-  }
+  threshold: 30
 });
 
 var _default = Nestable;

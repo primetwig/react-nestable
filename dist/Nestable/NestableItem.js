@@ -142,11 +142,11 @@ var NestableItem = /*#__PURE__*/function (_Component) {
         }, _defineProperty(_cx, baseClassName + '--with-children', hasChildren), _defineProperty(_cx, baseClassName + '--children-open', hasChildren && !isCollapsed), _defineProperty(_cx, baseClassName + '--children-collapsed', hasChildren && isCollapsed), _cx))
       };
       var content = renderItem({
-        item: item,
         collapseIcon: collapseIcon,
+        depth: depth,
         handler: wrappedHandler,
         index: index,
-        depth: depth
+        item: item
       });
       if (!content) return null;
       return /*#__PURE__*/_react["default"].createElement("li", itemProps, /*#__PURE__*/_react["default"].createElement("div", _extends({

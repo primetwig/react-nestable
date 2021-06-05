@@ -91,7 +91,13 @@ class NestableItem extends Component {
       )
     };
 
-    const content = renderItem({ item, collapseIcon, handler: wrappedHandler, index, depth });
+    const content = renderItem({
+      collapseIcon,
+      depth,
+      handler: wrappedHandler,
+      index,
+      item,
+    });
 
     if (!content) return null;
 
