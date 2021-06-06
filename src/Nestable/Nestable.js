@@ -240,7 +240,7 @@ class Nestable extends Component {
   }
 
   dragApply() {
-    const { onChange } = this.props;
+    const { onChange, idProp } = this.props;
     const { items, isDirty, dragItem } = this.state;
 
     this.setState({
@@ -249,7 +249,10 @@ class Nestable extends Component {
       isDirty: false,
     });
 
-    onChange && isDirty && onChange(items, dragItem);
+    if (onChange && isDirty) {
+      const targetPath = this.getPathById(dragItem[idProp], items)
+      onChange({items, dragItem, targetPath});
+    }
   }
 
   dragRevert() {
