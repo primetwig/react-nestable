@@ -67,7 +67,7 @@ const Example = () => (
 | renderItem | function | `({item}) => String(item)` | Function for rendering every item. Has a single parameter with keys: `item` - item from your array, `index` - number, index of the item, `depth` - number, depth of the item, `collapseIcon` - node, icon for items with children (allows you to collapse the group), `handler` - node, which you have passed via the same property, but wrapped with some additional events. |
 | renderCollapseIcon | function | `() => <DefaultIcon />` | Function for rendering collapse icon. Has a single parameter with keys: `isCollapsed` - boolean, true if this group has children and is collapsed. |
 | onChange | function | `() => {}` | Callback which has a single parameter with keys: `items` - new array after position was changed, `dragItem` - item which has been moved, `targetPath` - array of numbers, those numbers are indices and they make path to a location, to where item has been moved. |
-| confirmChange | function | `() => true` | Callback which has two parameters: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land. Let function return `false` if this movement should not happen. |
+| confirmChange | function | `() => true` | Callback which has a single parameter with keys: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land (or `null` if moving to root). Let function return `false` if this movement should not happen. |
 
 #### Public methods
 

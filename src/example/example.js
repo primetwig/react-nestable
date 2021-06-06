@@ -163,7 +163,7 @@ class Example extends Component {
     );
   };
 
-  confirmChange = (dragItem, destinationParent) => {
+  confirmChange = ({dragItem, destinationParent}) => {
     // move to root level
     if (!destinationParent) return true;
 

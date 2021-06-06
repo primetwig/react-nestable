@@ -159,7 +159,7 @@ class Nestable extends Component {
       ? pathTo
       : pathTo.slice(0, -1);
     const destinationParent = this.getItemByPath(destinationPath);
-    if (!confirmChange(dragItem, destinationParent)) return;
+    if (!confirmChange({dragItem, destinationParent})) return;
 
     const removePath = this.getSplicePath(pathFrom, {
       numToRemove: 1,
