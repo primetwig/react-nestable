@@ -369,7 +369,10 @@ var Nestable = /*#__PURE__*/function (_Component) {
 
       var destinationPath = realPathTo.length > pathTo.length ? pathTo : pathTo.slice(0, -1);
       var destinationParent = this.getItemByPath(destinationPath);
-      if (!confirmChange(dragItem, destinationParent)) return;
+      if (!confirmChange({
+        dragItem: dragItem,
+        destinationParent: destinationParent
+      })) return;
       var removePath = this.getSplicePath(pathFrom, {
         numToRemove: 1,
         childrenProp: childrenProp
@@ -456,7 +459,9 @@ var Nestable = /*#__PURE__*/function (_Component) {
   }, {
     key: "dragApply",
     value: function dragApply() {
-      var onChange = this.props.onChange;
+      var _this$props11 = this.props,
+          onChange = _this$props11.onChange,
+          idProp = _this$props11.idProp;
       var _this$state = this.state,
           items = _this$state.items,
           isDirty = _this$state.isDirty,
@@ -466,7 +471,15 @@ var Nestable = /*#__PURE__*/function (_Component) {
         dragItem: null,
         isDirty: false
       });
-      onChange && isDirty && onChange(items, dragItem);
+
+      if (onChange && isDirty) {
+        var targetPath = this.getPathById(dragItem[idProp], items);
+        onChange({
+          items: items,
+          dragItem: dragItem,
+          targetPath: targetPath
+        });
+      }
     }
   }, {
     key: "dragRevert",
@@ -488,9 +501,9 @@ var Nestable = /*#__PURE__*/function (_Component) {
       var _this2 = this;
 
       var items = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.state.items;
-      var _this$props11 = this.props,
-          idProp = _this$props11.idProp,
-          childrenProp = _this$props11.childrenProp;
+      var _this$props12 = this.props,
+          idProp = _this$props12.idProp,
+          childrenProp = _this$props12.childrenProp;
       var path = [];
       items.every(function (item, i) {
         if (item[idProp] === id) {
@@ -542,9 +555,9 @@ var Nestable = /*#__PURE__*/function (_Component) {
   }, {
     key: "getRealNextPath",
     value: function getRealNextPath(prevPath, nextPath, dragItemSize) {
-      var _this$props12 = this.props,
-          childrenProp = _this$props12.childrenProp,
-          maxDepth = _this$props12.maxDepth;
+      var _this$props13 = this.props,
+          childrenProp = _this$props13.childrenProp,
+          maxDepth = _this$props13.maxDepth;
       var ppLastIndex = prevPath.length - 1;
       var npLastIndex = nextPath.length - 1;
       var newDepth = nextPath.length + dragItemSize - 1;
@@ -589,12 +602,12 @@ var Nestable = /*#__PURE__*/function (_Component) {
   }, {
     key: "getItemOptions",
     value: function getItemOptions() {
-      var _this$props13 = this.props,
-          renderItem = _this$props13.renderItem,
-          renderCollapseIcon = _this$props13.renderCollapseIcon,
-          handler = _this$props13.handler,
-          idProp = _this$props13.idProp,
-          childrenProp = _this$props13.childrenProp;
+      var _this$props14 = this.props,
+          renderItem = _this$props14.renderItem,
+          renderCollapseIcon = _this$props14.renderCollapseIcon,
+          handler = _this$props14.handler,
+          idProp = _this$props14.idProp,
+          childrenProp = _this$props14.childrenProp;
       var dragItem = this.state.dragItem;
       return {
         dragItem: dragItem,
@@ -615,9 +628,9 @@ var Nestable = /*#__PURE__*/function (_Component) {
     // Render methods
     // ––––––––––––––––––––––––––––––––––––
     function renderDragLayer() {
-      var _this$props14 = this.props,
-          group = _this$props14.group,
-          idProp = _this$props14.idProp;
+      var _this$props15 = this.props,
+          group = _this$props15.group,
+          idProp = _this$props15.idProp;
       var dragItem = this.state.dragItem;
       var el = document.querySelector('.nestable-' + group + ' .nestable-item-' + dragItem[idProp]);
       var listStyles = {};
@@ -645,9 +658,9 @@ var Nestable = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props15 = this.props,
-          group = _this$props15.group,
-          className = _this$props15.className;
+      var _this$props16 = this.props,
+          group = _this$props16.group,
+          className = _this$props16.className;
       var _this$state2 = this.state,
           items = _this$state2.items,
           dragItem = _this$state2.dragItem;
