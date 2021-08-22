@@ -60,6 +60,7 @@ const Example = () => (
 | threshold | number | `30` | Amount of pixels which mouse should move horizontally before increasing/decreasing level (nesting) of current element. |
 | maxDepth | number | `10` | Maximum available level of nesting. |
 | collapsed | boolean | `false` | Are groups collapsed by default. |
+| collapsedIds | number[] | `[1,2,3]` | Array of collapsedIds. Any item with an id in this array will be collapsed by default. |
 | group | string or number | `random string` | Different group numbers may be passed if you have more than one nestable component on a page and want some extra styles for portal instances. |
 | handler | node | | If you pass it, it will get wrapped with drag handlers and you may use it in your render method. |
 | idProp | string | `"id"` | Optional name of property for id. |

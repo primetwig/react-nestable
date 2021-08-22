@@ -7,6 +7,7 @@ declare module 'react-nestable' {
     childrenProp?: string;
     className?: string;
     collapsed?: boolean;
+    collapsedIds?: number[];
     confirmChange?: (
       arg: {
         dragItem: Item;
@@ -40,5 +41,5 @@ declare module 'react-nestable' {
       }
     ) => React.ReactNode;
     threshold?: number;
-  }> {}
+  }> { }
 }

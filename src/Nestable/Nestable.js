@@ -49,6 +49,7 @@ class Nestable extends Component {
     renderCollapseIcon: PropTypes.func,
     renderItem: PropTypes.func,
     threshold: PropTypes.number,
+    collapsedIds: PropTypes.arrayOf(PropTypes.number)
   };
   static defaultProps = {
     childrenProp: 'children',
@@ -58,21 +59,26 @@ class Nestable extends Component {
     idProp: 'id',
     items: [],
     maxDepth: 10,
-    onChange: () => {},
+    onChange: () => { },
     renderItem: ({ item }) => String(item),
     threshold: 30,
+    collapsedIds: []
   };
 
   componentDidMount() {
-    let { items, childrenProp } = this.props;
+    let { items, childrenProp, idProp, collapsed, collapsedIds } = this.props;
 
     // make sure every item has property 'children'
     items = listWithChildren(items, childrenProp);
 
-    this.setState({ items });
+    this.setState({
+      items,
+      collapsedGroups: getAllNonEmptyNodesIds(items, { idProp, childrenProp })
+        .filter(id => (collapsedIds.indexOf(id) > -1) ^ collapsed)
+    });
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(prevProps) {
     const { items: itemsNew, childrenProp } = this.props;
     const isPropsUpdated = shallowCompare({ props: prevProps, state: {} }, this.props, {});
 
@@ -108,7 +114,7 @@ class Nestable extends Component {
     if (itemIds === 'NONE') {
       this.setState({
         collapsedGroups: collapsed
-          ? getAllNonEmptyNodesIds(items, {idProp, childrenProp})
+          ? getAllNonEmptyNodesIds(items, { idProp, childrenProp })
           : []
       });
 
@@ -116,12 +122,12 @@ class Nestable extends Component {
       this.setState({
         collapsedGroups: collapsed
           ? []
-          : getAllNonEmptyNodesIds(items, {idProp, childrenProp})
+          : getAllNonEmptyNodesIds(items, { idProp, childrenProp })
       });
 
     } else if (isArray(itemIds)) {
       this.setState({
-        collapsedGroups: getAllNonEmptyNodesIds(items, {idProp, childrenProp})
+        collapsedGroups: getAllNonEmptyNodesIds(items, { idProp, childrenProp })
           .filter(id => (itemIds.indexOf(id) > -1) ^ collapsed)
       });
     }
@@ -159,7 +165,7 @@ class Nestable extends Component {
       ? pathTo
       : pathTo.slice(0, -1);
     const destinationParent = this.getItemByPath(destinationPath);
-    if (!confirmChange({dragItem, destinationParent})) return;
+    if (!confirmChange({ dragItem, destinationParent })) return;
 
     const removePath = this.getSplicePath(pathFrom, {
       numToRemove: 1,
@@ -251,7 +257,7 @@ class Nestable extends Component {
 
     if (onChange && isDirty) {
       const targetPath = this.getPathById(dragItem[idProp], items)
-      onChange({items, dragItem, targetPath});
+      onChange({ items, dragItem, targetPath });
     }
   }
 
@@ -374,10 +380,10 @@ class Nestable extends Component {
         const target = this.getItemByPath(nextPath);
 
         if (
-            newDepth < maxDepth &&
-            target[childrenProp] &&
-            target[childrenProp].length &&
-            !this.isCollapsed(target)
+          newDepth < maxDepth &&
+          target[childrenProp] &&
+          target[childrenProp].length &&
+          !this.isCollapsed(target)
         ) {
           return nextPath
             .slice(0, -1)

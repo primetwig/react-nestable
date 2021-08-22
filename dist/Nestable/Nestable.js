@@ -309,11 +309,20 @@ var Nestable = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this$props6 = this.props,
           items = _this$props6.items,
-          childrenProp = _this$props6.childrenProp; // make sure every item has property 'children'
+          childrenProp = _this$props6.childrenProp,
+          idProp = _this$props6.idProp,
+          collapsed = _this$props6.collapsed,
+          collapsedIds = _this$props6.collapsedIds; // make sure every item has property 'children'
 
       items = (0, _utils.listWithChildren)(items, childrenProp);
       this.setState({
-        items: items
+        items: items,
+        collapsedGroups: (0, _utils.getAllNonEmptyNodesIds)(items, {
+          idProp: idProp,
+          childrenProp: childrenProp
+        }).filter(function (id) {
+          return collapsedIds.indexOf(id) > -1 ^ collapsed;
+        })
       });
     }
   }, {
@@ -698,7 +707,8 @@ _defineProperty(Nestable, "propTypes", {
   onChange: _propTypes["default"].func,
   renderCollapseIcon: _propTypes["default"].func,
   renderItem: _propTypes["default"].func,
-  threshold: _propTypes["default"].number
+  threshold: _propTypes["default"].number,
+  collapsedIds: _propTypes["default"].arrayOf(_propTypes["default"].number)
 });
 
 _defineProperty(Nestable, "defaultProps", {
@@ -716,7 +726,8 @@ _defineProperty(Nestable, "defaultProps", {
     var item = _ref2.item;
     return String(item);
   },
-  threshold: 30
+  threshold: 30,
+  collapsedIds: []
 });
 
 var _default = Nestable;
