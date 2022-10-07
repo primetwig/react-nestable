@@ -7,6 +7,8 @@
 - [Todo](#todo)
 - [License](#license)
 
+
+
 ## Demo
 
 [Demo](https://primetwig.github.io/react-nestable/dist/example/)
@@ -15,7 +17,9 @@
 ## Installation
 
 ```
-npm install -save react-nestable
+npm install -save react-nestable-boost
+
+yarn add react-nestable-boost
 ```
 
 ## Usage
@@ -74,13 +78,6 @@ const Example = () => (
 | Method | Accepts | Description |
 |--------|---------|-------------|
 | collapse | string or array | `"NONE"` - expand all groups; `"ALL"` - collapse all groups; `[]` - collapse all groups with ids from given array |
-
-## Todo
-
-- add touch
-- cover with tests
-
-PS: Please, make an issue or create a PR if you need any more functionality.
 
 ## License
 

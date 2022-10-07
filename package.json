@@ -1,10 +1,13 @@
 {
-  "name": "react-nestable",
-  "version": "2.0.0",
+  "name": "react-nestable-boost",
+  "version": "2.0.1",
   "description": "Drag & drop hierarchical list made as a react component",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "primetwig",
+  "maintainers": [
+    "rymopl"
+  ],
   "license": "ISC",
   "scripts": {
     "prestart": "npm run build",
@@ -65,12 +68,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/primetwig/react-nestable"
+    "url": "https://github.com/rymopl/react-nestable-boost"
   },
   "keywords": [
     "react",
     "nestable",
     "react-nestable",
+    "react-nestable-boost",
     "sortable",
     "dragndrop",
     "draggable"
