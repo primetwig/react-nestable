@@ -1,0 +1,27 @@
+@import 'nib'
+
+icon_bg($name)
+  background-image url( join('', './icon-', $name, '.svg') )
+
+.nestable-icon
+  position relative
+  display inline-block
+  width 20px
+  height 20px
+  background-color transparent
+  background-position center center
+  background-repeat no-repeat
+  &:before
+    content '-'
+    display inline-block
+    width 0
+    height 0
+    overflow hidden
+
+/* 20x20 */
+$icons20x20 = plus-gray, minus-gray
+
+for $class in $icons20x20
+  .nestable-icon--{$class}
+    size(20px)
+    icon_bg($class)

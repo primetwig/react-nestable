@@ -1,0 +1,12 @@
+# User files
+node_modules/
+.DS_Store
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# VS Code
+.vscode/
