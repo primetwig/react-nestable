@@ -353,10 +353,10 @@ eval("\nvar __assign = (this && this.__assign) || function () {\n    __assign = 
 /*!****************************************!*\
   !*** ./src/styles/icon-minus-gray.svg ***!
   \****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "icon-minus-gray.svg";
+module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjEzcHgiIGhlaWdodD0iM3B4IiB2aWV3Qm94PSIwIDAgMTMgMyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDAgKDMzNzYyKSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5Db21iaW5lZCBTaGFwZTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSIwNV9OYXZpZ2F0aW9uIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTmF2aWdhdGlvbl9OZXctaXRlbTEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00NDQuMDAwMDAwLCAtMzc2LjAwMDAwMCkiIGZpbGw9IiM5Nzk3OTciPgogICAgICAgICAgICA8ZyBpZD0idGVhdC1hcmVhIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0MjQuMDAwMDAwLCAxNDYuMDAwMDAwKSI+CiAgICAgICAgICAgICAgICA8ZyBpZD0ib3JnYW5pemF0aW9uIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMjAxLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJDb21iaW5lZC1TaGFwZSIgeD0iMjAiIHk9IjI5LjUiIHdpZHRoPSIxMyIgaGVpZ2h0PSIyIiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=";
 
 /***/ }),
 
@@ -364,10 +364,10 @@ module.exports = __webpack_require__.p + "icon-minus-gray.svg";
 /*!***************************************!*\
   !*** ./src/styles/icon-plus-gray.svg ***!
   \***************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "icon-plus-gray.svg";
+module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjE0cHgiIGhlaWdodD0iMTNweCIgdmlld0JveD0iMCAwIDE0IDEzIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCA0MCAoMzM3NjIpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPkNvbWJpbmVkIFNoYXBlPC90aXRsZT4KICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPgogICAgPGRlZnM+PC9kZWZzPgogICAgPGcgaWQ9IjA1X05hdmlnYXRpb24iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJOYXZpZ2F0aW9uX05ldy1pdGVtMSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQ0NC4wMDAwMDAsIC0yODEuMDAwMDAwKSIgZmlsbD0iIzk3OTc5NyI+CiAgICAgICAgICAgIDxnIGlkPSJ0ZWF0LWFyZWEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQyNC4wMDAwMDAsIDE0Ni4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJrbm93bGVkZ2UtaHViIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwgMTExLjAwMDAwMCkiPgogICAgICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik0yNS41NjIyMDY2LDI5LjUgTDIxLjA0Nzc5NDYsMjkuNSBDMjAuNDk1NDg4MiwyOS41IDIwLjA0Njk0ODQsMjkuOTQ3NzE1MyAyMC4wNDY5NDg0LDMwLjUgQzIwLjA0Njk0ODQsMzEuMDU2MTM1MiAyMC40OTUwNDI1LDMxLjUgMjEuMDQ3Nzk0NiwzMS41IEwyNS41NjIyMDY2LDMxLjUgTDI1LjU2MjIwNjYsMzYuMDE0NDEyIEMyNS41NjIyMDY2LDM2LjU2NjcxODMgMjYuMDA5OTIxOCwzNy4wMTUyNTgyIDI2LjU2MjIwNjYsMzcuMDE1MjU4MiBDMjcuMTE4MzQxOCwzNy4wMTUyNTgyIDI3LjU2MjIwNjYsMzYuNTY3MTY0MSAyNy41NjIyMDY2LDM2LjAxNDQxMiBMMjcuNTYyMjA2NiwzMS41IEwzMi4wNzY2MTg2LDMxLjUgQzMyLjYyODkyNDksMzEuNSAzMy4wNzc0NjQ4LDMxLjA1MjI4NDcgMzMuMDc3NDY0OCwzMC41IEMzMy4wNzc0NjQ4LDI5Ljk0Mzg2NDggMzIuNjI5MzcwNywyOS41IDMyLjA3NjYxODYsMjkuNSBMMjcuNTYyMjA2NiwyOS41IEwyNy41NjIyMDY2LDI0Ljk4NTU4OCBDMjcuNTYyMjA2NiwyNC40MzMyODE3IDI3LjExNDQ5MTMsMjMuOTg0NzQxOCAyNi41NjIyMDY2LDIzLjk4NDc0MTggQzI2LjAwNjA3MTQsMjMuOTg0NzQxOCAyNS41NjIyMDY2LDI0LjQzMjgzNTkgMjUuNTYyMjA2NiwyNC45ODU1ODggTDI1LjU2MjIwNjYsMjkuNSBaIiBpZD0iQ29tYmluZWQtU2hhcGUiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+";
 
 /***/ })
 
@@ -459,7 +459,7 @@ module.exports = __webpack_require__.p + "icon-plus-gray.svg";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("b6414bda0b0ce9ab4ffc")
+/******/ 		__webpack_require__.h = () => ("3f95f395502b461eb526")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

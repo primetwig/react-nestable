@@ -7,6 +7,7 @@
 - [*] stop using (and uninstall) `prop-types` package
 - switch all files from `js` to `ts`/`tsx` and set better types
 - add `onDragStart` and `onDragEnd` props
+- make plus/minus icons to be inline in the default css file
 
 ## 2.0.0
 

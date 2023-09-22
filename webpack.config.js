@@ -44,19 +44,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        type: 'asset/resource',
-        generator: {
-          filename: '[name][ext]',
-        },
-        // use: [
-        //   {
-        //     loader: 'url-loader',
-        //     options: {
-        //       limit: 10000,
-        //       mimetype: 'image/svg+xml',
-        //     },
-        //   },
-        // ],
+        type: 'asset/inline',
       },
     ],
   },
