@@ -76,7 +76,7 @@ var NestableItem = /** @class */ (function (_super) {
     NestableItem.prototype.render = function () {
         var _a;
         var _b = this.props, item = _b.item, isCopy = _b.isCopy, options = _b.options, index = _b.index, depth = _b.depth;
-        var dragItem = options.dragItem, renderItem = options.renderItem, handler = options.handler, idProp = options.idProp, childrenProp = options.childrenProp, checkIfCollapsed = options.checkIfCollapsed, _c = options.renderCollapseIcon, renderCollapseIcon = _c === void 0 ? this.renderCollapseIcon : _c;
+        var dragItem = options.dragItem, renderItem = options.renderItem, handler = options.handler, disableCollapse = options.disableCollapse, disableDrag = options.disableDrag, idProp = options.idProp, childrenProp = options.childrenProp, checkIfCollapsed = options.checkIfCollapsed, _c = options.renderCollapseIcon, renderCollapseIcon = _c === void 0 ? this.renderCollapseIcon : _c;
         var isCollapsed = checkIfCollapsed(item);
         var isDragging = !isCopy && dragItem && dragItem[idProp] === item[idProp];
         var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
@@ -88,7 +88,9 @@ var NestableItem = /** @class */ (function (_super) {
                 rowProps = __assign(__assign({}, rowProps), { onMouseEnter: this.onMouseEnter });
             }
             else {
-                handlerProps = __assign(__assign({}, handlerProps), { draggable: true, onDragStart: this.onDragStart });
+                if (!disableDrag) {
+                    handlerProps = __assign(__assign({}, handlerProps), { draggable: true, onDragStart: this.onDragStart });
+                }
             }
         }
         if (handler) {
@@ -98,8 +100,11 @@ var NestableItem = /** @class */ (function (_super) {
         else {
             rowProps = __assign(__assign({}, rowProps), handlerProps);
         }
+        var handleCollapseIconClick = disableCollapse
+            ? undefined :
+            function () { return options.onToggleCollapse(item); };
         var collapseIcon = hasChildren
-            ? (react_1.default.createElement("span", { onClick: function () { return options.onToggleCollapse(item); } }, renderCollapseIcon({ isCollapsed: isCollapsed })))
+            ? (react_1.default.createElement("span", { onClick: handleCollapseIconClick }, renderCollapseIcon({ isCollapsed: isCollapsed })))
             : null;
         var baseClassName = "nestable-item".concat(isCopy ? '-copy' : '');
         var itemProps = {
@@ -109,6 +114,7 @@ var NestableItem = /** @class */ (function (_super) {
                 _a["".concat(baseClassName, "--with-children")] = hasChildren,
                 _a["".concat(baseClassName, "--children-open")] = hasChildren && !isCollapsed,
                 _a["".concat(baseClassName, "--children-collapsed")] = hasChildren && isCollapsed,
+                _a["".concat(baseClassName, "--children-no-collapse")] = hasChildren && disableCollapse,
                 _a)),
         };
         var content = renderItem({

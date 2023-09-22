@@ -42,6 +42,8 @@ declare class Nestable extends Component<NestableProps, NestableState> {
         dragItem: Item;
         idProp: string;
         childrenProp: string;
+        disableCollapse: boolean;
+        disableDrag: boolean;
         renderItem: import("../types").RenderItem;
         renderCollapseIcon: import("../types").RenderCollapseIcon;
         handler: React.ReactNode;

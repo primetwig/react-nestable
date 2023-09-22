@@ -466,12 +466,14 @@ var Nestable = /** @class */ (function (_super) {
         return nextPath;
     };
     Nestable.prototype.getItemOptions = function () {
-        var _a = this.props, renderItem = _a.renderItem, renderCollapseIcon = _a.renderCollapseIcon, handler = _a.handler, idProp = _a.idProp, childrenProp = _a.childrenProp;
+        var _a = this.props, renderItem = _a.renderItem, renderCollapseIcon = _a.renderCollapseIcon, handler = _a.handler, disableCollapse = _a.disableCollapse, disableDrag = _a.disableDrag, idProp = _a.idProp, childrenProp = _a.childrenProp;
         var dragItem = this.state.dragItem;
         return {
             dragItem: dragItem,
             idProp: idProp,
             childrenProp: childrenProp,
+            disableCollapse: disableCollapse,
+            disableDrag: disableDrag,
             renderItem: renderItem,
             renderCollapseIcon: renderCollapseIcon,
             handler: handler,
@@ -514,6 +516,8 @@ var Nestable = /** @class */ (function (_super) {
         childrenProp: 'children',
         collapsed: false,
         confirmChange: function () { return true; },
+        disableCollapse: false,
+        disableDrag: false,
         group: Math.random().toString(36).slice(2),
         idProp: 'id',
         items: [],

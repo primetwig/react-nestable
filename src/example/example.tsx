@@ -42,12 +42,14 @@ const grocery = [
   {
     id: 1,
     text: 'Fruit box',
+    type: 'box',
     accepts: ['fruits'],
     children: [{ id: 2, text: 'Bananas', type: 'fruits' }],
   },
   {
     id: 3,
     text: 'Box',
+    type: 'box',
     accepts: ['fruits', 'sweets'],
     children: [{ id: 4, text: 'Candy', type: 'sweets' }],
   },
@@ -59,6 +61,8 @@ class Example extends Component {
   state = {
     example: 0,
     defaultCollapsed: false,
+    isCollapsingAllowed: true,
+    isDraggingAllowed: true,
   };
 
   collapse = (collapseCase: 0 | 1 | 2) => {
@@ -88,7 +92,19 @@ class Example extends Component {
     this.setState({ defaultCollapsed: !defaultCollapsed })
   };
 
+  toggleCollapsingAllowed = () => {
+    const { isCollapsingAllowed } = this.state;
+    this.setState({ isCollapsingAllowed: !isCollapsingAllowed })
+  };
+
+  toggleDraggingAllowed = () => {
+    const { isDraggingAllowed } = this.state;
+    this.setState({ isDraggingAllowed: !isDraggingAllowed })
+  };
+
   renderItem: NestableProps['renderItem'] = ({ item, collapseIcon, handler }) => {
+    const { isDraggingAllowed } = this.state;
+
     return (
       <div style={styles}>
         {handler}
@@ -99,7 +115,7 @@ class Example extends Component {
   };
 
   renderExampleOne = (title: string) => {
-    const { defaultCollapsed } = this.state;
+    const { defaultCollapsed, isCollapsingAllowed, isDraggingAllowed } = this.state;
 
     return (
       <div>
@@ -107,6 +123,8 @@ class Example extends Component {
         <Nestable
           items={names}
           collapsed={defaultCollapsed}
+          disableCollapse={!isCollapsingAllowed}
+          disableDrag={!isDraggingAllowed}
           renderItem={this.renderItem}
           ref={el => this.refNestable = el}
         />
@@ -119,6 +137,14 @@ class Example extends Component {
           <label>
             <input type="checkbox" onChange={this.toggleDefaultCollapsed}/>
             Collapsed by default
+          </label>
+          <label>
+            <input type="checkbox" onChange={this.toggleCollapsingAllowed}/>
+            Is collapsing allowed
+          </label>
+          <label>
+            <input type="checkbox" onChange={this.toggleDraggingAllowed}/>
+            Is dragging allowed
           </label>
         </form>
       </div>

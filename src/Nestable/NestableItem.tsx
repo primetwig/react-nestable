@@ -34,6 +34,8 @@ class NestableItem extends PureComponent<NestableItemProps> {
       dragItem,
       renderItem,
       handler,
+      disableCollapse,
+      disableDrag,
       idProp,
       childrenProp,
       checkIfCollapsed,
@@ -55,11 +57,13 @@ class NestableItem extends PureComponent<NestableItemProps> {
           onMouseEnter: this.onMouseEnter,
         };
       } else {
-        handlerProps = {
-          ...handlerProps,
-          draggable: true,
-          onDragStart: this.onDragStart,
-        };
+        if (!disableDrag) {
+          handlerProps = {
+            ...handlerProps,
+            draggable: true,
+            onDragStart: this.onDragStart,
+          };
+        }
       }
     }
 
@@ -69,13 +73,17 @@ class NestableItem extends PureComponent<NestableItemProps> {
     } else {
       rowProps = {
         ...rowProps,
-        ...handlerProps
+        ...handlerProps,
       };
     }
 
+    const handleCollapseIconClick = disableCollapse
+      ? undefined :
+      () => options.onToggleCollapse(item);
+
     const collapseIcon = hasChildren
       ? (
-        <span onClick={() => options.onToggleCollapse(item)}>
+        <span onClick={handleCollapseIconClick}>
           {renderCollapseIcon({ isCollapsed })}
         </span>
       )
@@ -91,7 +99,8 @@ class NestableItem extends PureComponent<NestableItemProps> {
             [`${baseClassName}--with-children`]: hasChildren,
             [`${baseClassName}--children-open`]: hasChildren && !isCollapsed,
             [`${baseClassName}--children-collapsed`]: hasChildren && isCollapsed,
-          }
+            [`${baseClassName}--children-no-collapse`]: hasChildren && disableCollapse,
+          },
       ),
     };
 

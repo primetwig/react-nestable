@@ -21,6 +21,10 @@
 .nestable-item-copy .nestable-list {
   margin-top: 10px;
 }
+.nestable-item--children-no-collapse .nestable-item-icon,
+.nestable-item-copy--children-no-collapse .nestable-item-icon {
+  cursor: initial;
+}
 .nestable-item {
   position: relative;
 }

@@ -8,6 +8,8 @@ export interface NestableProps {
   className?: string;
   collapsed?: boolean;
   confirmChange?: ConfirmChange;
+  disableCollapse?: boolean;
+  disableDrag?: boolean;
   group?: number | string;
   handler?: ReactNode;
   idProp?: string;
@@ -81,17 +83,19 @@ export type Collapse = (condition: CollapseCondition) => void;
 // NestableItem
 // -------------------------
 export interface NestableItemProps {
-  item: Item,
-  options: NestableItemOptions,
-  isCopy?: boolean,
-  index?: number,
-  depth?: number,
+  item: Item;
+  options: NestableItemOptions;
+  isCopy?: boolean;
+  index?: number;
+  depth?: number;
 }
 
 export interface NestableItemOptions {
   dragItem: Item;
   idProp: NestableProps['idProp'];
   childrenProp: NestableProps['childrenProp'];
+  disableCollapse: NestableProps['disableCollapse'];
+  disableDrag: NestableProps['disableDrag'];
   renderItem: NestableProps['renderItem'];
   renderCollapseIcon: NestableProps['renderCollapseIcon'];
   handler: NestableProps['handler'];
@@ -110,11 +114,3 @@ export interface IconProps {
   className?: string;
   isCollapsed?: boolean;
 }
-
-
-/*
-Hi there =] Writing a cover letter is like coming up with a pick up line.
-I was never good in hooking up with strangers, but I can develop clean and solid UI,
-and I have a passion for improving things I touch.
-So I believe I can be a good addition to your business. Let's chat?
-*/

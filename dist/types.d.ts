@@ -4,6 +4,8 @@ export interface NestableProps {
     className?: string;
     collapsed?: boolean;
     confirmChange?: ConfirmChange;
+    disableCollapse?: boolean;
+    disableDrag?: boolean;
     group?: number | string;
     handler?: ReactNode;
     idProp?: string;
@@ -60,6 +62,8 @@ export interface NestableItemOptions {
     dragItem: Item;
     idProp: NestableProps['idProp'];
     childrenProp: NestableProps['childrenProp'];
+    disableCollapse: NestableProps['disableCollapse'];
+    disableDrag: NestableProps['disableDrag'];
     renderItem: NestableProps['renderItem'];
     renderCollapseIcon: NestableProps['renderCollapseIcon'];
     handler: NestableProps['handler'];
