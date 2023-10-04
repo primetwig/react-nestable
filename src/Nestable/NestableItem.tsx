@@ -45,6 +45,7 @@ class NestableItem extends PureComponent<NestableItemProps> {
     const isCollapsed = checkIfCollapsed(item);
     const isDragging = !isCopy && dragItem && dragItem[idProp] === item[idProp];
     const hasChildren = item[childrenProp] && item[childrenProp].length > 0;
+    let isDraggable = true;
 
     let rowProps = {};
     let handlerProps = {};
@@ -57,7 +58,13 @@ class NestableItem extends PureComponent<NestableItemProps> {
           onMouseEnter: this.onMouseEnter,
         };
       } else {
-        if (!disableDrag) {
+        if (typeof disableDrag === 'function') {
+          isDraggable = disableDrag({ item, index, depth });
+        } else if (typeof disableDrag !== 'undefined') {
+          isDraggable = !disableDrag;
+        }
+
+        if (isDraggable) {
           handlerProps = {
             ...handlerProps,
             draggable: true,
@@ -109,6 +116,7 @@ class NestableItem extends PureComponent<NestableItemProps> {
       depth,
       handler: wrappedHandler,
       index,
+      isDraggable,
       item,
     });
 

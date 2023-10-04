@@ -12,7 +12,7 @@ import {
   listWithChildren,
   getAllNonEmptyNodesIds,
 } from '../utils';
-import { NestableProps, NestableState, Item, Collapse } from '../types';
+import { NestableProps, NestableState, NestableItemOptions, Item, Collapse } from '../types';
 
 import NestableItem from './NestableItem';
 
@@ -387,7 +387,7 @@ class Nestable extends Component<NestableProps, NestableState> {
     return nextPath;
   }
 
-  getItemOptions() {
+  getItemOptions(): NestableItemOptions {
     const {
       renderItem,
       renderCollapseIcon,

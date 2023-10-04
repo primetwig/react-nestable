@@ -9,7 +9,7 @@ export interface NestableProps {
   collapsed?: boolean;
   confirmChange?: ConfirmChange;
   disableCollapse?: boolean;
-  disableDrag?: boolean;
+  disableDrag?: boolean | DisableDragFn;
   group?: number | string;
   handler?: ReactNode;
   idProp?: string;
@@ -40,6 +40,14 @@ export type ConfirmChange = (
   }
 ) => boolean;
 
+export type DisableDragFn = (
+  options: {
+    item: Item;
+    index: number;
+    depth: number;
+  }
+) => boolean;
+
 export type OnChange = (
   options: {
     items: Item[];
@@ -67,6 +75,7 @@ export type RenderItem = (
     item: Item;
     index: number;
     depth: number;
+    isDraggable: boolean;
     collapseIcon: ReactNode;
     handler: ReactNode;
   }
@@ -91,7 +100,7 @@ export interface NestableItemProps {
 }
 
 export interface NestableItemOptions {
-  dragItem: Item;
+  dragItem: Item | null;
   idProp: NestableProps['idProp'];
   childrenProp: NestableProps['childrenProp'];
   disableCollapse: NestableProps['disableCollapse'];
