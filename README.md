@@ -67,6 +67,7 @@ const Example = () => (
 | items | array | `[]` | Array of items. Every item must be of shape `{id: @uniq}` to distinguish elements. |
 | maxDepth | number | `10` | Maximum available level of nesting. |
 | onChange | function | `() => {}` | Callback which has a single parameter with keys: `items` - new array after position was changed, `dragItem` - item which has been moved, `targetPath` - array of numbers, those numbers are indices and they make path to a location, to where item has been moved. |
+| onCollapseChange | function | `() => {}` | Callback which has a single parameter with one of two possible keys: `openIds` - array of ids which are open if `collapsed` is set to `ture`, or `closedIds` - array of ids which are closed if `collapsed` is set to `false`. **Note:** this callback is triggered not only when user explicitly opens or closes an item, but when implicit events happen as well, like when the only child of open item is moved out. |
 | onDragEnd | function | `() => {}` | Callback which has no parameters. It is invoked when dragging ends via drop or cancel. |
 | onDragStart | function | `() => {}` | Callback which has a single parameter with keys: `dragItem` - item which has been moved. |
 | renderCollapseIcon | function | `() => <DefaultIcon />` | Function for rendering collapse icon. Has a single parameter with keys: `isCollapsed` - boolean, true if this group has children and is collapsed. |

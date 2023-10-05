@@ -9,6 +9,7 @@
 - add `onDragStart` and `onDragEnd` props
 - make plus/minus icons to be inline in the default css file
 - add `disableCollapse` and `disableDrag` props
+- add `onCollapseChange` prop
 
 ## 2.0.0
 

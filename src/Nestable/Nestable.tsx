@@ -46,6 +46,7 @@ class Nestable extends Component<NestableProps, NestableState> {
     items: [],
     maxDepth: 10,
     onChange: () => {},
+    onCollapseChange: () => {},
     onDragEnd: () => {},
     onDragStart: () => {},
     renderItem: ({ item }) => String(item),
@@ -68,15 +69,21 @@ class Nestable extends Component<NestableProps, NestableState> {
     if (isPropsChanged) {
       this.stopTrackMouse();
 
-      this.setState(prevState => ({
-        ...prevState,
-        items: listWithChildren(itemsNew, childrenProp),
-        dragItem: null,
-        isDirty: false,
-        collapsedItems: prevProps.collapsed === this.props.collapsed
-          ? prevState.collapsedItems
-          : [],
-      }));
+      this.setState(prevState => {
+        const newState: NestableState = {
+          ...prevState,
+          items: listWithChildren(itemsNew, childrenProp),
+          dragItem: null,
+          isDirty: false,
+        };
+
+        if (prevProps.collapsed !== this.props.collapsed) {
+          newState.collapsedItems = [];
+          this.onCollapseChange(newState.collapsedItems);
+        }
+
+        return newState;
+      });
     }
   }
 
@@ -170,6 +177,10 @@ class Nestable extends Component<NestableProps, NestableState> {
       isDirty: true,
       ...extraProps
     }));
+
+    if (extraProps.collapsedItems !== this.state.collapsedItems) {
+      this.onCollapseChange(extraProps.collapsedItems);
+    }
   }
 
   tryIncreaseDepth(dragItem: Item) {
@@ -521,7 +532,7 @@ class Nestable extends Component<NestableProps, NestableState> {
     const pathTo = this.getPathById(item[idProp]);
 
     // if collapsed by default
-    // and move last (by count) child
+    // and move out the only child
     // remove parent node from list of open nodes
     let collapseProps = {};
     if (collapsed && pathFrom.length > 1) {
@@ -549,7 +560,14 @@ class Nestable extends Component<NestableProps, NestableState> {
       return newState;
     } else {
       this.setState(newState);
+      this.onCollapseChange(newState.collapsedItems);
     }
+  };
+
+  onCollapseChange = (ids: NestableState['collapsedItems']) => {
+    const { collapsed, onCollapseChange } = this.props;
+
+    onCollapseChange(collapsed ? { openIds: ids } : { closedIds: ids });
   };
 
   onKeyDown = (e: KeyboardEvent) => {
@@ -600,7 +618,7 @@ class Nestable extends Component<NestableProps, NestableState> {
 
     return (
       <div className={cx(className, 'nestable', `nestable-${group}`, { 'is-drag-active': dragItem })}>
-        <ol className="nestable-list nestable-group">
+        <ol className="nestable-list">
           {items.map((item, i) => {
             return (
               <NestableItem

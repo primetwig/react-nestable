@@ -89,24 +89,24 @@ class Example extends Component {
 
   toggleDefaultCollapsed = () => {
     const { defaultCollapsed } = this.state;
-    this.setState({ defaultCollapsed: !defaultCollapsed })
+    this.setState({ defaultCollapsed: !defaultCollapsed });
   };
 
   toggleCollapsingAllowed = () => {
     const { isCollapsingAllowed } = this.state;
-    this.setState({ isCollapsingAllowed: !isCollapsingAllowed })
+    this.setState({ isCollapsingAllowed: !isCollapsingAllowed });
   };
 
   toggleDraggingAllowed = () => {
     const { isDraggingAllowed } = this.state;
-    this.setState({ isDraggingAllowed: !isDraggingAllowed })
+    this.setState({ isDraggingAllowed: !isDraggingAllowed });
   };
 
   renderItem: NestableProps['renderItem'] = ({ item, collapseIcon, handler }) => {
     const { isDraggingAllowed } = this.state;
 
     return (
-      <div style={styles}>
+      <div style={isDraggingAllowed ? styles : { ...styles, cursor: 'inherit' }}>
         {handler}
         {collapseIcon}
         {item.text}

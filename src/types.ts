@@ -16,6 +16,7 @@ export interface NestableProps {
   items?: Item[];
   maxDepth?: number;
   onChange?: OnChange;
+  onCollapseChange?: OnCollapseChange;
   onDragEnd?: OnDragEnd;
   onDragStart?: OnDragStart;
   renderCollapseIcon?: RenderCollapseIcon;
@@ -54,6 +55,12 @@ export type OnChange = (
     dragItem: Item;
     targetPath: number[];
   }
+) => void;
+
+export type OnCollapseChange = (
+  options:
+    | { openIds?: NestableState['collapsedItems'] }
+    | { closedIds?: NestableState['collapsedItems'] }
 ) => void;
 
 export type OnDragStart = (
