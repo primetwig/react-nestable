@@ -41,7 +41,7 @@ declare class Nestable extends Component<NestableProps, NestableState> {
     getItemOptions(): NestableItemOptions;
     checkIfCollapsed: (item: Item) => boolean;
     onDragStart: (e: MouseEvent, item: Item) => void;
-    onDragEnd: (e: MouseEvent, isCancel?: boolean) => void;
+    onDragEnd: (e: MouseEvent | null, isCancel?: boolean) => void;
     onMouseMove: (e: MouseEvent) => void;
     onMouseEnter: (e: MouseEvent, item: Item) => void;
     onToggleCollapse: (item: Item, isGetter?: true) => {

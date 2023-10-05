@@ -152,7 +152,7 @@ var Nestable = /** @class */ (function (_super) {
         };
         _this.onDragEnd = function (e, isCancel) {
             var onDragEnd = _this.props.onDragEnd;
-            e.preventDefault();
+            e === null || e === void 0 ? void 0 : e.preventDefault();
             _this.stopTrackMouse();
             _this.el = null;
             onDragEnd();

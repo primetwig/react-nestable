@@ -457,10 +457,10 @@ class Nestable extends Component<NestableProps, NestableState> {
     });
   };
 
-  onDragEnd = (e: MouseEvent, isCancel?: boolean) => {
+  onDragEnd = (e: MouseEvent | null, isCancel?: boolean) => {
     const { onDragEnd } = this.props;
 
-    e.preventDefault();
+    e?.preventDefault();
 
     this.stopTrackMouse();
     this.el = null;
