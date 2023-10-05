@@ -5,13 +5,14 @@ export interface NestableProps {
     collapsed?: boolean;
     confirmChange?: ConfirmChange;
     disableCollapse?: boolean;
-    disableDrag?: boolean;
+    disableDrag?: boolean | DisableDragFn;
     group?: number | string;
     handler?: ReactNode;
     idProp?: string;
     items?: Item[];
     maxDepth?: number;
     onChange?: OnChange;
+    onCollapseChange?: OnCollapseChange;
     onDragEnd?: OnDragEnd;
     onDragStart?: OnDragStart;
     renderCollapseIcon?: RenderCollapseIcon;
@@ -30,10 +31,20 @@ export type ConfirmChange = (options: {
     dragItem: Item;
     destinationParent: Item | null;
 }) => boolean;
+export type DisableDragFn = (options: {
+    item: Item;
+    index: number;
+    depth: number;
+}) => boolean;
 export type OnChange = (options: {
     items: Item[];
     dragItem: Item;
     targetPath: number[];
+}) => void;
+export type OnCollapseChange = (options: {
+    openIds?: NestableState['collapsedItems'];
+} | {
+    closedIds?: NestableState['collapsedItems'];
 }) => void;
 export type OnDragStart = (options: {
     dragItem: Item;
@@ -46,6 +57,7 @@ export type RenderItem = (options: {
     item: Item;
     index: number;
     depth: number;
+    isDraggable: boolean;
     collapseIcon: ReactNode;
     handler: ReactNode;
 }) => ReactNode;
@@ -59,7 +71,7 @@ export interface NestableItemProps {
     depth?: number;
 }
 export interface NestableItemOptions {
-    dragItem: Item;
+    dragItem: Item | null;
     idProp: NestableProps['idProp'];
     childrenProp: NestableProps['childrenProp'];
     disableCollapse: NestableProps['disableCollapse'];

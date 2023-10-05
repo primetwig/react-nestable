@@ -23,7 +23,7 @@
 }
 .nestable-item--children-no-collapse .nestable-item-icon,
 .nestable-item-copy--children-no-collapse .nestable-item-icon {
-  cursor: initial;
+  cursor: inherit;
 }
 .nestable-item {
   position: relative;

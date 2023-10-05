@@ -206,7 +206,7 @@ var Nestable = /** @class */ (function (_super) {
             var pathFrom = _this.getPathById(dragItem[idProp]);
             var pathTo = _this.getPathById(item[idProp]);
             // if collapsed by default
-            // and move last (by count) child
+            // and move out the only child
             // remove parent node from list of open nodes
             var collapseProps = {};
             if (collapsed && pathFrom.length > 1) {
@@ -231,7 +231,12 @@ var Nestable = /** @class */ (function (_super) {
             }
             else {
                 _this.setState(newState);
+                _this.onCollapseChange(newState.collapsedItems);
             }
+        };
+        _this.onCollapseChange = function (ids) {
+            var _a = _this.props, collapsed = _a.collapsed, onCollapseChange = _a.onCollapseChange;
+            onCollapseChange(collapsed ? { openIds: ids } : { closedIds: ids });
         };
         _this.onKeyDown = function (e) {
             if (e.which === 27) {
@@ -260,9 +265,14 @@ var Nestable = /** @class */ (function (_super) {
         var isPropsChanged = (0, react_addons_shallow_compare_1.default)(__assign(__assign({}, this), { props: prevProps, state: state }), this.props, state);
         if (isPropsChanged) {
             this.stopTrackMouse();
-            this.setState(function (prevState) { return (__assign(__assign({}, prevState), { items: (0, utils_1.listWithChildren)(itemsNew, childrenProp), dragItem: null, isDirty: false, collapsedItems: prevProps.collapsed === _this.props.collapsed
-                    ? prevState.collapsedItems
-                    : [] })); });
+            this.setState(function (prevState) {
+                var newState = __assign(__assign({}, prevState), { items: (0, utils_1.listWithChildren)(itemsNew, childrenProp), dragItem: null, isDirty: false });
+                if (prevProps.collapsed !== _this.props.collapsed) {
+                    newState.collapsedItems = [];
+                    _this.onCollapseChange(newState.collapsedItems);
+                }
+                return newState;
+            });
         }
     };
     Nestable.prototype.componentWillUnmount = function () {
@@ -298,6 +308,9 @@ var Nestable = /** @class */ (function (_super) {
         items = (0, react_addons_update_1.default)(items, removePath);
         items = (0, react_addons_update_1.default)(items, insertPath);
         this.setState(function (prevState) { return (__assign(__assign(__assign({}, prevState), { items: items, isDirty: true }), extraProps)); });
+        if (extraProps.collapsedItems !== this.state.collapsedItems) {
+            this.onCollapseChange(extraProps.collapsedItems);
+        }
     };
     Nestable.prototype.tryIncreaseDepth = function (dragItem) {
         var _a = this.props, maxDepth = _a.maxDepth, idProp = _a.idProp, childrenProp = _a.childrenProp, collapsed = _a.collapsed;
@@ -507,7 +520,7 @@ var Nestable = /** @class */ (function (_super) {
         var _b = this.state, items = _b.items, dragItem = _b.dragItem;
         var options = this.getItemOptions();
         return (react_1.default.createElement("div", { className: (0, classnames_1.default)(className, 'nestable', "nestable-".concat(group), { 'is-drag-active': dragItem }) },
-            react_1.default.createElement("ol", { className: "nestable-list nestable-group" }, items.map(function (item, i) {
+            react_1.default.createElement("ol", { className: "nestable-list" }, items.map(function (item, i) {
                 return (react_1.default.createElement(NestableItem_1.default, { key: item[idProp], index: i, item: item, options: options }));
             })),
             dragItem && this.renderDragLayer()));
@@ -523,6 +536,7 @@ var Nestable = /** @class */ (function (_super) {
         items: [],
         maxDepth: 10,
         onChange: function () { },
+        onCollapseChange: function () { },
         onDragEnd: function () { },
         onDragStart: function () { },
         renderItem: function (_a) {

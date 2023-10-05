@@ -80,6 +80,7 @@ var NestableItem = /** @class */ (function (_super) {
         var isCollapsed = checkIfCollapsed(item);
         var isDragging = !isCopy && dragItem && dragItem[idProp] === item[idProp];
         var hasChildren = item[childrenProp] && item[childrenProp].length > 0;
+        var isDraggable = true;
         var rowProps = {};
         var handlerProps = {};
         var wrappedHandler;
@@ -88,7 +89,13 @@ var NestableItem = /** @class */ (function (_super) {
                 rowProps = __assign(__assign({}, rowProps), { onMouseEnter: this.onMouseEnter });
             }
             else {
-                if (!disableDrag) {
+                if (typeof disableDrag === 'function') {
+                    isDraggable = disableDrag({ item: item, index: index, depth: depth });
+                }
+                else if (typeof disableDrag !== 'undefined') {
+                    isDraggable = !disableDrag;
+                }
+                if (isDraggable) {
                     handlerProps = __assign(__assign({}, handlerProps), { draggable: true, onDragStart: this.onDragStart });
                 }
             }
@@ -122,6 +129,7 @@ var NestableItem = /** @class */ (function (_super) {
             depth: depth,
             handler: wrappedHandler,
             index: index,
+            isDraggable: isDraggable,
             item: item,
         });
         if (!content)

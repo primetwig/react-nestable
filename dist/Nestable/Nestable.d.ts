@@ -1,6 +1,6 @@
 /// <reference types="react-addons-update" />
 import React, { Component, CSSProperties } from 'react';
-import { NestableProps, NestableState, Item, Collapse } from '../types';
+import { NestableProps, NestableState, NestableItemOptions, Item, Collapse } from '../types';
 declare class Nestable extends Component<NestableProps, NestableState> {
     el: Element | null;
     elCopyStyles: CSSProperties | null;
@@ -38,22 +38,7 @@ declare class Nestable extends Component<NestableProps, NestableState> {
         childrenProp?: NestableProps['childrenProp'];
     }): React.UpdateSpecPath;
     getRealNextPath(prevPath: number[], nextPath: number[], dragItemSize: number): number[];
-    getItemOptions(): {
-        dragItem: Item;
-        idProp: string;
-        childrenProp: string;
-        disableCollapse: boolean;
-        disableDrag: boolean;
-        renderItem: import("../types").RenderItem;
-        renderCollapseIcon: import("../types").RenderCollapseIcon;
-        handler: React.ReactNode;
-        checkIfCollapsed: (item: Item) => boolean;
-        onDragStart: (e: MouseEvent, item: Item) => void;
-        onMouseEnter: (e: MouseEvent, item: Item) => void;
-        onToggleCollapse: (item: Item, isGetter?: true) => {
-            collapsedItems: unknown[];
-        };
-    };
+    getItemOptions(): NestableItemOptions;
     checkIfCollapsed: (item: Item) => boolean;
     onDragStart: (e: MouseEvent, item: Item) => void;
     onDragEnd: (e: MouseEvent, isCancel?: boolean) => void;
@@ -62,6 +47,7 @@ declare class Nestable extends Component<NestableProps, NestableState> {
     onToggleCollapse: (item: Item, isGetter?: true) => {
         collapsedItems: unknown[];
     };
+    onCollapseChange: (ids: NestableState['collapsedItems']) => void;
     onKeyDown: (e: KeyboardEvent) => void;
     renderDragLayer(): React.JSX.Element;
     render(): React.JSX.Element;
