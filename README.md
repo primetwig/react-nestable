@@ -90,7 +90,3 @@ PS: Please, make an issue or create a PR if you need any more functionality.
 ## License
 
 ISC
-
-Номер звернення: 315269
-Дата звернення: 24-08-2023
-E-mail: primetwig@gmail.com
