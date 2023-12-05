@@ -60,8 +60,8 @@ var NestableItem = /** @class */ (function (_super) {
     function NestableItem() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.renderCollapseIcon = function (_a) {
-            var isCollapsed = _a.isCollapsed;
-            return (react_1.default.createElement(Icon_1.default, { className: "nestable-item-icon", isCollapsed: isCollapsed }));
+            var item = _a.item, isCollapsed = _a.isCollapsed;
+            return (react_1.default.createElement(Icon_1.default, { className: "nestable-item-icon", item: item, isCollapsed: isCollapsed }));
         };
         _this.onMouseEnter = function (e) {
             var _a = _this.props, item = _a.item, options = _a.options;
@@ -111,7 +111,7 @@ var NestableItem = /** @class */ (function (_super) {
             ? undefined :
             function () { return options.onToggleCollapse(item); };
         var collapseIcon = hasChildren
-            ? (react_1.default.createElement("span", { onClick: handleCollapseIconClick }, renderCollapseIcon({ isCollapsed: isCollapsed })))
+            ? (react_1.default.createElement("span", { onClick: handleCollapseIconClick }, renderCollapseIcon({ item: item, isCollapsed: isCollapsed })))
             : null;
         var baseClassName = "nestable-item".concat(isCopy ? '-copy' : '');
         var itemProps = {

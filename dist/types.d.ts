@@ -51,6 +51,7 @@ export type OnDragStart = (options: {
 }) => void;
 export type OnDragEnd = VoidFunction;
 export type RenderCollapseIcon = (options: {
+    item: Item;
     isCollapsed: boolean;
 }) => ReactNode;
 export type RenderItem = (options: {
@@ -87,5 +88,6 @@ export interface NestableItemOptions {
 export interface IconProps {
     children?: ReactNode;
     className?: string;
+    item?: Item;
     isCollapsed?: boolean;
 }

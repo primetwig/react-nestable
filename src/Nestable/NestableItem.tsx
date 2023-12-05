@@ -9,9 +9,10 @@ class NestableItem extends PureComponent<NestableItemProps> {
     depth: 0,
   };
 
-  renderCollapseIcon: NestableItemOptions['renderCollapseIcon'] = ({ isCollapsed }) => (
+  renderCollapseIcon: NestableItemOptions['renderCollapseIcon'] = ({ item, isCollapsed }) => (
     <Icon
       className="nestable-item-icon"
+      item={item}
       isCollapsed={isCollapsed}
     />
   );
@@ -91,7 +92,7 @@ class NestableItem extends PureComponent<NestableItemProps> {
     const collapseIcon = hasChildren
       ? (
         <span onClick={handleCollapseIconClick}>
-          {renderCollapseIcon({ isCollapsed })}
+          {renderCollapseIcon({ item, isCollapsed })}
         </span>
       )
       : null;

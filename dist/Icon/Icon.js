@@ -71,7 +71,7 @@ var Icon = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     Icon.prototype.render = function () {
-        var _a = this.props, children = _a.children, className = _a.className, isCollapsed = _a.isCollapsed, props = __rest(_a, ["children", "className", "isCollapsed"]);
+        var _a = this.props, children = _a.children, className = _a.className, item = _a.item, isCollapsed = _a.isCollapsed, props = __rest(_a, ["children", "className", "item", "isCollapsed"]);
         var finalClassName = (0, classnames_1.default)('nestable-icon', className, {
             'nestable-icon--plus-gray': isCollapsed,
             'nestable-icon--minus-gray': !isCollapsed,

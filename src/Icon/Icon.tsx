@@ -5,7 +5,7 @@ import { IconProps } from '../types';
 
 class Icon extends PureComponent<IconProps> {
   render() {
-    const { children, className, isCollapsed, ...props } = this.props;
+    const { children, className, item, isCollapsed, ...props } = this.props;
     const finalClassName = cx('nestable-icon', className, {
       'nestable-icon--plus-gray': isCollapsed,
       'nestable-icon--minus-gray': !isCollapsed,
