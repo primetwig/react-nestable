@@ -294,8 +294,6 @@ var Nestable = /** @class */ (function (_super) {
             ? pathTo
             : pathTo.slice(0, -1);
         var destinationParent = this.getItemByPath(destinationPath);
-        if (!confirmChange({ dragItem: dragItem, destinationParent: destinationParent }))
-            return;
         var removePath = this.getSplicePath(pathFrom, {
             numToRemove: 1,
             childrenProp: childrenProp,
@@ -307,6 +305,8 @@ var Nestable = /** @class */ (function (_super) {
         });
         items = (0, react_addons_update_1.default)(items, removePath);
         items = (0, react_addons_update_1.default)(items, insertPath);
+        if (!confirmChange({ dragItem: dragItem, destinationParent: destinationParent, items: items }))
+            return;
         this.setState(function (prevState) { return (__assign(__assign(__assign({}, prevState), { items: items, isDirty: true }), extraProps)); });
         if (extraProps.collapsedItems !== this.state.collapsedItems) {
             this.onCollapseChange(extraProps.collapsedItems);
