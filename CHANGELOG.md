@@ -2,6 +2,9 @@
 
 [*] - a breaking change
 
+## 3.0.2
+- add `item` prop in `renderCollapseIcon` method
+
 ## 3.0.0
 - [*] update all packages to the latest versions
 - [*] stop using (and uninstall) `prop-types` package
