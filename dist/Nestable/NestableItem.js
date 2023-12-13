@@ -111,7 +111,7 @@ var NestableItem = /** @class */ (function (_super) {
             ? undefined :
             function () { return options.onToggleCollapse(item); };
         var collapseIcon = hasChildren
-            ? (react_1.default.createElement("span", { onClick: handleCollapseIconClick }, renderCollapseIcon({ isCollapsed: isCollapsed })))
+            ? (react_1.default.createElement("span", { onClick: handleCollapseIconClick }, renderCollapseIcon({ isCollapsed: isCollapsed, item: item })))
             : null;
         var baseClassName = "nestable-item".concat(isCopy ? '-copy' : '');
         var itemProps = {
