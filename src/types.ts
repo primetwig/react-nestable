@@ -38,6 +38,7 @@ export type ConfirmChange = (
   options: {
     dragItem: Item;
     destinationParent: Item | null;
+    items: Item[];
   }
 ) => boolean;
 

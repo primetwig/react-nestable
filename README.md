@@ -58,7 +58,7 @@ const Example = () => (
 | childrenProp | string | `"children"` | Name of a property for children. |
 | className | string | `undefined` | Extra class name which can be passed to a root element. |
 | collapsed | boolean | `false` | Makes groups collapsed by default. |
-| confirmChange | function | `() => true` | Callback which has a single parameter with keys: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land (or `null` if moving to root). Let function return `false` if this movement should not happen. |
+| confirmChange | function | `() => true` | Callback which has a single parameter with keys: `dragItem` - item which is being dragged, `destinationParent` - item where dragItem is about to land (or `null` if moving to root), `items` - new array after position change. Let function return `false` if this movement should not happen. |
 | disableCollapse | boolean | `false` | Disable toggling a collapsed state of items with children. If you need to set a specific initial state, then it is still possible to do so with the public method `collapse`. |
 | disableDrag | boolean or function | `false` | Disable dragging. Pass boolean to apply to all items. Pass a callback to target individual items. It has a single parameter with keys: `item` - item from your array, `index` - number, index of the item, `depth` - number, depth of the item. |
 | group | string or number | `random string` | Different group names may be passed if you have more than one nestable component on a page and want some extra styles for portal instances. |
